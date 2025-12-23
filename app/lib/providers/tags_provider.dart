@@ -1,5 +1,6 @@
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../models/tag.dart';
 import '../services/api_service.dart';
 
@@ -21,17 +22,30 @@ class TagsController {
 
   late PagingController<int, Tag> _pagingController;
 
+  PagingController<int, Tag> get pagingController => _pagingController;
+
   int _pageSize = 20;
   int get pageSize => _pageSize;
+
+  void refresh() {
+    _pagingController.refresh();
+  }
+
+  void retryLastFailedRequest() {
+    _pagingController.fetchNextPage();
+  }
+
+  set pageSize(int value) {
+    _pageSize = value;
+    refresh();
+  }
 
   void init() {
     _pagingController = PagingController<int, Tag>(
       fetchPage: _fetchPage,
       getNextPageKey: (state) {
         final lastPage = state.pages?.lastOrNull;
-        return state.lastPageIsEmpty || (lastPage?.length ?? 0) < _pageSize
-            ? null
-            : state.nextIntPageKey;
+        return state.lastPageIsEmpty || (lastPage?.length ?? 0) < _pageSize ? null : state.nextIntPageKey;
       },
     );
   }

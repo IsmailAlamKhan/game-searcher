@@ -9,11 +9,12 @@ part of 'tags_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(TagsController)
+@ProviderFor(tagsController)
 const tagsControllerProvider = TagsControllerProvider._();
 
 final class TagsControllerProvider
-    extends $AsyncNotifierProvider<TagsController, List<Tag>> {
+    extends $FunctionalProvider<TagsController, TagsController, TagsController>
+    with $Provider<TagsController> {
   const TagsControllerProvider._()
     : super(
         from: null,
@@ -30,26 +31,21 @@ final class TagsControllerProvider
 
   @$internal
   @override
-  TagsController create() => TagsController();
-}
+  $ProviderElement<TagsController> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
-String _$tagsControllerHash() => r'0ee6f5debe83bf328a27d556459216d85cb44e90';
-
-abstract class _$TagsController extends $AsyncNotifier<List<Tag>> {
-  FutureOr<List<Tag>> build();
-  @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<AsyncValue<List<Tag>>, List<Tag>>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<Tag>>, List<Tag>>,
-              AsyncValue<List<Tag>>,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
+  TagsController create(Ref ref) {
+    return tagsController(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(TagsController value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<TagsController>(value),
+    );
   }
 }
+
+String _$tagsControllerHash() => r'cf3c0c9cc25071bd3c07a829765fb86884074464';
