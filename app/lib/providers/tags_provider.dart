@@ -60,9 +60,17 @@ class TagsController {
     _pagingController.dispose();
   }
 
+  String _searchQuery = '';
+
+  void search(String query) {
+    if (_searchQuery == query) return;
+    _searchQuery = query;
+    _pagingController.refresh();
+  }
+
   Future<List<Tag>> _fetchPage(int pageKey) async {
     final api = ref.read(apiServiceProvider);
-    final newTags = await api.getTags(page: pageKey, pageSize: _pageSize);
+    final newTags = await api.getTags(query: _searchQuery, page: pageKey, pageSize: _pageSize);
     return newTags;
   }
 

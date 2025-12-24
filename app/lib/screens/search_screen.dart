@@ -22,76 +22,69 @@ class SearchScreen extends HookConsumerWidget {
       return () {};
     }, [searchController.query]);
 
-    final scrollController = useScrollController();
-
     return Scaffold(
-      body: CustomScrollView(
-        controller: scrollController,
-        physics: BouncingScrollPhysics(),
-        slivers: [
-          SliverAppBar(
-            title: const Text("Search Games"),
-            pinned: true,
-            // expandedHeight: 120,
-            collapsedHeight: 120,
-            flexibleSpace: Padding(
-              padding: const EdgeInsets.only(top: 50, left: 16, right: 16),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: searchTextController,
-                      decoration: const InputDecoration(hintText: "Enter game title...", border: OutlineInputBorder()),
-                      onSubmitted: (value) => searchController.search(value),
-                    ),
+      appBar: AppBar(title: const Text("Search Games")),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: searchTextController,
+                    decoration: const InputDecoration(hintText: "Enter game title...", border: OutlineInputBorder()),
+                    onSubmitted: (value) => searchController.search(value),
                   ),
-                  const SizedBox(width: 8),
-                  IconButton(
-                    onPressed: () => searchController.search(searchTextController.text),
-                    icon: const Icon(Icons.search),
-                  ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: () => searchController.search(searchTextController.text),
+                  icon: const Icon(Icons.search),
+                ),
+              ],
             ),
           ),
 
-          PagingListener(
-            controller: searchController.pagingController,
-            builder: (context, state, fetchNextPage) {
-              return PagedSliverList<int, GameRecord>.separated(
-                separatorBuilder: (context, index) => const SizedBox(height: 8),
-                state: state,
-                fetchNextPage: fetchNextPage,
-                builderDelegate: PagedChildBuilderDelegate<GameRecord>(
-                  itemBuilder: (context, item, index) => GameTile(item: item),
-                  firstPageErrorIndicatorBuilder: (context) => Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Something went wrong.'),
-                        const SizedBox(height: 16),
-                        FilledButton(onPressed: () => searchController.refresh(), child: const Text('Retry')),
-                      ],
-                    ),
-                  ),
-                  newPageErrorIndicatorBuilder: (context) => Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(
-                      child: IconButton(
-                        onPressed: () => searchController.retryLastFailedRequest(),
-                        icon: const Icon(Icons.refresh),
+          Expanded(
+            child: PagingListener(
+              controller: searchController.pagingController,
+              builder: (context, state, fetchNextPage) {
+                return PagedListView<int, GameRecord>.separated(
+                  separatorBuilder: (context, index) => const SizedBox(height: 8),
+                  state: state,
+                  fetchNextPage: fetchNextPage,
+                  builderDelegate: PagedChildBuilderDelegate<GameRecord>(
+                    itemBuilder: (context, item, index) => GameTile(item: item),
+                    firstPageErrorIndicatorBuilder: (context) => Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text('Something went wrong.'),
+                          const SizedBox(height: 16),
+                          FilledButton(onPressed: () => searchController.refresh(), child: const Text('Retry')),
+                        ],
                       ),
                     ),
+                    newPageErrorIndicatorBuilder: (context) => Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: IconButton(
+                          onPressed: () => searchController.retryLastFailedRequest(),
+                          icon: const Icon(Icons.refresh),
+                        ),
+                      ),
+                    ),
+                    firstPageProgressIndicatorBuilder: (context) => Column(
+                      children: [
+                        for (int i = 0; i < 5; i++) ...[const SizedBox(height: 8), GameTile()],
+                      ],
+                    ),
+                    newPageProgressIndicatorBuilder: (context) => GameTile(),
                   ),
-                  firstPageProgressIndicatorBuilder: (context) => Column(
-                    children: [
-                      for (int i = 0; i < 5; i++) ...[const SizedBox(height: 8), GameTile()],
-                    ],
-                  ),
-                  newPageProgressIndicatorBuilder: (context) => GameTile(),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
         ],
       ),
