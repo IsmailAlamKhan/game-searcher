@@ -21,7 +21,7 @@ final class TagsControllerProvider
         argument: null,
         retry: null,
         name: r'tagsControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -48,4 +48,4 @@ final class TagsControllerProvider
   }
 }
 
-String _$tagsControllerHash() => r'5a75103e426d5e917c35c82697cf3ac361353964';
+String _$tagsControllerHash() => r'929dbaa7482a08b91a5d998cd80a004afcdb627e';

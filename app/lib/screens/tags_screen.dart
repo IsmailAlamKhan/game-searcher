@@ -15,6 +15,7 @@ class TagsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(tagsControllerProvider);
     final searchTextController = useTextEditingController();
+    final searchController = ref.watch(searchControllerProvider);
     return Scaffold(
       appBar: AppBar(title: const Text("Discovery Tags")),
       body: Column(
@@ -83,6 +84,15 @@ class TagsScreen extends HookConsumerWidget {
           ),
         ],
       ),
+      floatingActionButton: searchController.selectedTags.isNotEmpty
+          ? FloatingActionButton.extended(
+              onPressed: () {
+                ref.read(appControllerProvider.notifier).setSelectedIndex(0);
+              },
+              icon: const Icon(Icons.search),
+              label: Text("Search (${searchController.selectedTags.length})"),
+            )
+          : null,
     );
   }
 }
@@ -94,36 +104,53 @@ class TagCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final appController = ref.watch(appControllerProvider.notifier);
     final searchController = ref.watch(searchControllerProvider);
+    final isSelected = searchController.selectedTags.contains(item);
+
     Widget Function(Widget child) childBuilder;
     if (item.imageBackground != null) {
       childBuilder = (child) => Ink.image(
         image: CachedNetworkImageProvider(item.imageBackground!),
         fit: BoxFit.cover,
-        colorFilter: ColorFilter.mode(Colors.black45, BlendMode.darken),
+        colorFilter: ColorFilter.mode(
+          isSelected ? Colors.green.withValues(alpha: .6) : Colors.black45,
+          BlendMode.darken,
+        ),
         child: child,
       );
     } else {
-      childBuilder = (child) => child;
+      childBuilder = (child) => Container(color: isSelected ? Colors.green : Colors.grey[800], child: child);
     }
     return Card(
       clipBehavior: Clip.antiAlias,
+      shape: isSelected
+          ? RoundedRectangleBorder(
+              side: const BorderSide(color: Colors.greenAccent, width: 3),
+              borderRadius: BorderRadius.circular(12),
+            )
+          : null,
       child: childBuilder(
         InkWell(
           onTap: () {
-            appController.setSelectedIndex(0);
-            searchController.search(item.name);
+            // appController.setSelectedIndex(0); // Optional: stay on tags screen to select more?
+            // Let's stay on tags screen to allow multi-select.
+            searchController.toggleTag(item);
           },
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                item.name,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                textAlign: TextAlign.center,
+          child: Stack(
+            children: [
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    item.name,
+                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
               ),
-            ),
+              if (isSelected)
+                const Positioned(top: 8, right: 8, child: Icon(Icons.check_circle, color: Colors.greenAccent)),
+            ],
           ),
         ),
       ),

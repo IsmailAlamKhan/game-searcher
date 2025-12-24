@@ -45,7 +45,22 @@ class SearchScreen extends HookConsumerWidget {
               ],
             ),
           ),
-
+          if (searchController.selectedTags.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: SizedBox(
+                height: 50,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: searchController.selectedTags.length,
+                  separatorBuilder: (context, index) => const SizedBox(width: 8),
+                  itemBuilder: (context, index) {
+                    final tag = searchController.selectedTags[index];
+                    return Chip(label: Text(tag.name), onDeleted: () => searchController.toggleTag(tag));
+                  },
+                ),
+              ),
+            ),
           Expanded(
             child: PagingListener(
               controller: searchController.pagingController,

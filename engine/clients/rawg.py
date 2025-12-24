@@ -23,6 +23,8 @@ class RawgClient(GameApiClient):
             "key": self.api_key,
             "page_size": query.limit,
         }
+
+        logger.info(f"QUERY: {query}")
         
         if query.query:
             params["search"] = query.query

@@ -26,7 +26,7 @@ final class SearchControllerProvider
         argument: null,
         retry: null,
         name: r'searchControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -53,4 +53,4 @@ final class SearchControllerProvider
   }
 }
 
-String _$searchControllerHash() => r'c5a9ec09f0ffa97b5e10035cdb7bd99c1f711ca0';
+String _$searchControllerHash() => r'c5c9697f08be7acf1ac649cb6353bf8acacf6009';

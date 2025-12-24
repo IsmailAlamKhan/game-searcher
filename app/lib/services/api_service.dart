@@ -19,9 +19,17 @@ class ApiService {
 
   ApiService(this._dio);
 
-  Future<List<GameRecord>> search(String query, {int limit = 20, int page = 1}) async {
+  Future<List<GameRecord>> search(String query, {int limit = 20, int page = 1, List<String>? tags}) async {
     try {
-      final response = await _dio.get('/search', queryParameters: {'q': query, 'limit': limit, 'page': page});
+      final response = await _dio.get(
+        '/search',
+        queryParameters: {
+          'q': query,
+          'limit': limit,
+          'page': page,
+          if (tags != null && tags.isNotEmpty) 'tags': tags.join(','),
+        },
+      );
       return (response.data as List).map((e) => GameRecord.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       throw Exception('Search failed: $e');
