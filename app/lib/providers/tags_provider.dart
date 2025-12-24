@@ -12,6 +12,10 @@ TagsController tagsController(Ref ref) {
   controller.init();
 
   ref.onDispose(controller.dispose);
+  controller.pagingController.addListener(() {
+    ref.notifyListeners();
+  });
+
   return controller;
 }
 
@@ -24,8 +28,12 @@ class TagsController {
 
   PagingController<int, Tag> get pagingController => _pagingController;
 
-  int _pageSize = 20;
+  int _pageSize = 50;
   int get pageSize => _pageSize;
+  set pageSize(int value) {
+    _pageSize = value;
+    refresh();
+  }
 
   void refresh() {
     _pagingController.refresh();
@@ -35,17 +43,15 @@ class TagsController {
     _pagingController.fetchNextPage();
   }
 
-  set pageSize(int value) {
-    _pageSize = value;
-    refresh();
-  }
-
   void init() {
     _pagingController = PagingController<int, Tag>(
       fetchPage: _fetchPage,
       getNextPageKey: (state) {
         final lastPage = state.pages?.lastOrNull;
-        return state.lastPageIsEmpty || (lastPage?.length ?? 0) < _pageSize ? null : state.nextIntPageKey;
+        return state.lastPageIsEmpty
+            ///|| (lastPage?.length ?? 0) < _pageSize
+            ? null
+            : state.nextIntPageKey;
       },
     );
   }

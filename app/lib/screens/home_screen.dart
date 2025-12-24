@@ -1,48 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../providers/app_provider.dart';
 import 'search_screen.dart';
 import 'tags_screen.dart';
 
-class HomeScreen extends ConsumerStatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  ConsumerState<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends ConsumerState<HomeScreen> {
-  int _selectedIndex = 0;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appState = ref.watch(appControllerProvider);
+    final appController = ref.watch(appControllerProvider.notifier);
+    final selectedIndex = appState.selectedIndex;
     return Scaffold(
       body: Row(
         children: [
           NavigationRail(
-            selectedIndex: _selectedIndex,
+            selectedIndex: selectedIndex,
             onDestinationSelected: (int index) {
-              setState(() {
-                _selectedIndex = index;
-              });
+              appController.setSelectedIndex(index);
             },
             labelType: NavigationRailLabelType.all,
             destinations: const <NavigationRailDestination>[
-              NavigationRailDestination(
-                icon: Icon(Icons.search),
-                label: Text('Search'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.tag),
-                label: Text('Tags'),
-              ),
-              NavigationRailDestination(
-                icon: Icon(Icons.save),
-                label: Text('Presets'),
-              ),
+              NavigationRailDestination(icon: Icon(Icons.search), label: Text('Search')),
+              NavigationRailDestination(icon: Icon(Icons.tag), label: Text('Tags')),
+              NavigationRailDestination(icon: Icon(Icons.save), label: Text('Presets')),
             ],
           ),
           const VerticalDivider(thickness: 1, width: 1),
-          Expanded(child: _buildScreen(_selectedIndex)),
+          Expanded(child: _buildScreen(selectedIndex)),
         ],
       ),
     );

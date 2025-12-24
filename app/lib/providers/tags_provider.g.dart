@@ -48,4 +48,4 @@ final class TagsControllerProvider
   }
 }
 
-String _$tagsControllerHash() => r'cf3c0c9cc25071bd3c07a829765fb86884074464';
+String _$tagsControllerHash() => r'5a75103e426d5e917c35c82697cf3ac361353964';

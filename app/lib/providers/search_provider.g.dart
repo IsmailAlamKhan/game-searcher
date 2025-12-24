@@ -9,11 +9,17 @@ part of 'search_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(SearchController)
+@ProviderFor(searchController)
 const searchControllerProvider = SearchControllerProvider._();
 
 final class SearchControllerProvider
-    extends $AsyncNotifierProvider<SearchController, List<GameRecord>> {
+    extends
+        $FunctionalProvider<
+          SearchController,
+          SearchController,
+          SearchController
+        >
+    with $Provider<SearchController> {
   const SearchControllerProvider._()
     : super(
         from: null,
@@ -30,27 +36,21 @@ final class SearchControllerProvider
 
   @$internal
   @override
-  SearchController create() => SearchController();
-}
+  $ProviderElement<SearchController> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
-String _$searchControllerHash() => r'e2ce5967eb1f19a48db1d85d465d395ec99b01ad';
-
-abstract class _$SearchController extends $AsyncNotifier<List<GameRecord>> {
-  FutureOr<List<GameRecord>> build();
-  @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
-    final ref =
-        this.ref as $Ref<AsyncValue<List<GameRecord>>, List<GameRecord>>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<GameRecord>>, List<GameRecord>>,
-              AsyncValue<List<GameRecord>>,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
+  SearchController create(Ref ref) {
+    return searchController(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(SearchController value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<SearchController>(value),
+    );
   }
 }
+
+String _$searchControllerHash() => r'c5a9ec09f0ffa97b5e10035cdb7bd99c1f711ca0';
