@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:shimmer_animation/shimmer_animation.dart';
 
 import '../models/game_record.dart';
 import '../providers/search_provider.dart';
+import '../utils/constants.dart';
 
 class SearchScreen extends HookConsumerWidget {
   const SearchScreen({super.key});
@@ -118,22 +120,24 @@ class GameTile extends ConsumerWidget {
     if (item == null) {
       return Shimmer(child: ListTile());
     }
-    return InkWell(
-      onTap: () {},
-      child: ListTile(
-        mouseCursor: SystemMouseCursors.click,
-        leading: Card(
-          clipBehavior: Clip.antiAlias,
-          margin: EdgeInsets.zero,
-          shape: const CircleBorder(),
-          child: item.imageUrl != null
-              ? CachedNetworkImage(imageUrl: item.imageUrl!, width: 50, height: 50, fit: BoxFit.cover)
-              : SizedBox.square(dimension: 50, child: const Icon(Icons.videogame_asset)),
-        ),
-        title: Text(item.title),
-        subtitle: Text("${item.releaseDate ?? 'Unknown'} • ${item.platforms.take(3).join(', ')}"),
-        trailing: item.score != null ? Text(item.score.toString()) : null,
+    return ListTile(
+      onTap: () {
+        context.push('/details/${item.id}?title=${item.title}');
+      },
+      mouseCursor: SystemMouseCursors.click,
+      leading: Card(
+        clipBehavior: Clip.antiAlias,
+        margin: EdgeInsets.zero,
+        shape: const CircleBorder(),
+        child: item.imageUrl != null
+            ? CachedNetworkImage(imageUrl: item.imageUrl!, width: 50, height: 50, fit: BoxFit.cover)
+            : SizedBox.square(dimension: 50, child: const Icon(Icons.videogame_asset)),
       ),
+      title: Text(item.title),
+      subtitle: Text(
+        "${item.releaseDate != null ? appDateFormat.format(item.releaseDate!) : 'Unknown'} • ${item.platforms.map((e) => e.name).take(3).join(', ')}",
+      ),
+      trailing: item.score != null ? Text(item.score.toString()) : null,
     );
   }
 }

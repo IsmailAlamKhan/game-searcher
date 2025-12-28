@@ -22,19 +22,23 @@ def health_check():
 
 @app.get("/search", response_model=List[GameRecord])
 def search_games(
-    q: str = Query(..., description="Search query"),
+    q: Optional[str] = Query(None, description="Search query"),
+    tags: Optional[List[str]] = Query(None, description="Tags/Integers"),
     limit: int = Query(20, description="Max results")
 ):
-    query = SearchQuery(query=q, limit=limit)
+    query = SearchQuery(query=q, limit=limit, tags=tags)
     results = engine.search(query)
     return results
 
 @app.get("/game/{game_id}", response_model=GameRecord)
 def get_game_details(game_id: str, source: str = Query("rawg", description="Source ID")):
-    game = engine.get_game_details(game_id, source)
-    if not game:
-        raise HTTPException(status_code=404, detail="Game not found")
-    return game
+    try:
+        game = engine.get_game_details(game_id, source)
+        if not game:
+            raise HTTPException(status_code=404, detail="Game not found")
+        return game
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to get game details: {str(e)}")
 
 @app.get("/tags", response_model=List[Tag])
 def get_tags(

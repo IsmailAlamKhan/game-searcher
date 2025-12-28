@@ -1,44 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'screens/home_screen.dart';
+import 'utils/logger.dart';
+import 'utils/router.dart';
 
 final class _ProviderObserver extends ProviderObserver {
   @override
-  void didUpdateProvider(ProviderObserverContext context, Object? previousValue, Object? newValue) {
-    super.didUpdateProvider(context, previousValue, newValue);
-    print("Provider ${context.provider.name} updated from $previousValue to $newValue");
-  }
-
-  @override
   void didDisposeProvider(ProviderObserverContext context) {
     super.didDisposeProvider(context);
-    print("Provider ${context.provider.name} disposed");
+    appLogger.d("Provider ${context.provider.name} disposed");
   }
 
   @override
   void didAddProvider(ProviderObserverContext context, Object? value) {
     super.didAddProvider(context, value);
-    print("Provider ${context.provider.name} added with value $value");
+    appLogger.i("Provider ${context.provider.name} added with value $value");
   }
 }
 
 void main() {
-  runApp(ProviderScope(child: GameSearchApp(), observers: [_ProviderObserver()]));
+  runApp(ProviderScope(observers: [_ProviderObserver()], child: GameSearchApp()));
 }
 
-class GameSearchApp extends StatelessWidget {
+class GameSearchApp extends ConsumerWidget {
   const GameSearchApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.watch(appRouterProvider);
+    return MaterialApp.router(
       title: 'GameSearch Studio',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple, brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF5865F2), brightness: Brightness.dark),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      // home: const HomeScreen(),
+      routerConfig: router,
     );
   }
 }

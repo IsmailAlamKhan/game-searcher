@@ -30,7 +30,7 @@ class SearchController {
     _pagingController = PagingController<int, GameRecord>(
       fetchPage: _fetchPage,
       getNextPageKey: (state) {
-        final lastPage = state.pages?.lastOrNull;
+        // final lastPage = state.pages?.lastOrNull;
         return state.lastPageIsEmpty
             ///|| (lastPage?.length ?? 0) < _pageSize
             ? null

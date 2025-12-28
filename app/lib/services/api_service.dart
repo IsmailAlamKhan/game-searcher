@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/game_record.dart';
 import '../models/tag.dart';
-import 'logger_interceptor.dart';
+import '../utils/logger.dart';
 
 part 'api_service.g.dart';
 
@@ -31,7 +31,8 @@ class ApiService {
         },
       );
       return (response.data as List).map((e) => GameRecord.fromJson(e as Map<String, dynamic>)).toList();
-    } catch (e) {
+    } catch (e, s) {
+      appLogger.e('Search failed: $e', error: e, stackTrace: s);
       throw Exception('Search failed: $e');
     }
   }
@@ -45,6 +46,15 @@ class ApiService {
       return (response.data as List).map((e) => Tag.fromJson(e as Map<String, dynamic>)).toList();
     } catch (e) {
       throw Exception('Get tags failed: $e');
+    }
+  }
+
+  Future<GameRecord> getGameDetails(String id) async {
+    try {
+      final response = await _dio.get('/game/$id');
+      return GameRecord.fromJson(response.data as Map<String, dynamic>);
+    } catch (e) {
+      throw Exception('Get game details failed: $e');
     }
   }
 
