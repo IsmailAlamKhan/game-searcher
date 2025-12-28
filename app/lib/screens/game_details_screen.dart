@@ -568,16 +568,28 @@ class _GameDetailsContent extends StatelessWidget {
       "Other": "Additional Notes",
       "Partner Requirements": "Partner",
       "Partner": "Partner",
+      "iPhone": "iPhone",
+      "iPad": "iPad",
+      "iPod": "iPod",
+      "Watch": "Watch",
     };
 
     String remaining = text;
     // Remove initial "Minimum:" or "Recommended:" if present
     remaining = remaining.replaceAll(RegExp(r'^(Minimum|Recommended):'), '').trim();
 
-    // Regex to match "Key:"
-    // We sort keys by length descending to match longer keys first (e.g. "Additional Notes" before "Additional")
+    // Regex to match "Key:" or specific keys without colon (like iPhone)
+    final appleKeys = {"iPhone", "iPad", "iPod", "Watch"};
     final sortedKeys = keyMap.keys.toList()..sort((a, b) => b.length.compareTo(a.length));
-    final regex = RegExp(r'(' + sortedKeys.map(RegExp.escape).join('|') + r'):');
+
+    final pattern = sortedKeys
+        .map((k) {
+          if (appleKeys.contains(k)) return RegExp.escape(k); // Apple keys don't need colon
+          return "${RegExp.escape(k)}:"; // Standard keys need colon
+        })
+        .join('|');
+
+    final regex = RegExp('($pattern)');
 
     final matches = regex.allMatches(remaining).toList();
 
@@ -587,14 +599,17 @@ class _GameDetailsContent extends StatelessWidget {
 
     for (int i = 0; i < matches.length; i++) {
       final match = matches[i];
-      final rawKey = match.group(1)!;
+      // group(1) contains the match, which might include the colon (e.g. "OS:")
+      final rawMatch = match.group(1)!;
+      final rawKey = rawMatch.replaceAll(':', '').trim();
       final normalizedKey = keyMap[rawKey] ?? rawKey;
 
       final start = match.end;
       final end = (i + 1 < matches.length) ? matches[i + 1].start : remaining.length;
 
       var value = remaining.substring(start, end).trim();
-      // Clean up comma at the end if mostly clean
+      // Clean up comma or dash at the start/end if mostly clean
+      if (value.startsWith(',') || value.startsWith('-')) value = value.substring(1).trim();
       if (value.endsWith(',')) value = value.substring(0, value.length - 1);
 
       if (specs.containsKey(normalizedKey)) {
