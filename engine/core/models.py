@@ -1,6 +1,15 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
 
+class Screenshot(BaseModel):
+    id: int
+    image: str
+    width: Optional[int] = None
+    height: Optional[int] = None
+    is_deleted: Optional[bool] = None
+
+
+
 class Store(BaseModel):
     id: int
     name: str
@@ -64,7 +73,7 @@ class SearchQuery(BaseModel):
     query: Optional[str] = None
     tags: Optional[List[str]] = None
     platforms: Optional[List[str]] = None
-    limit: int = 20
+    page_size: int = 20
     page: int = 1
 
 class SearchPreset(BaseModel):
@@ -77,25 +86,25 @@ class SearchPreset(BaseModel):
     query: SearchQuery
 
 
-storeColors:dict[int, str]= {
-   # Steam
-   1: '66C0F4',
-   # Xbox Store
-   2: '107C10',
-   # PlayStation Store
-   3: '0070D1',
-   # Epic Games Store
-   11: 'ffffff',
-   # GOG.com
-   5: '86328A',
-   # itch.io
-   9: 'FA5C5C',
-   # Google Play
-   8: '34A853',
-   # Apple / App Store / Sign in with Apple
-   4: 'A3AAAE',
-   # XBox 360 store
-   7: '92C83E',
+storeColors: dict[int, str] = {
+    # Steam
+    1: '66C0F4',
+    # Xbox Store
+    2: '107C10',
+    # PlayStation Store
+    3: '0070D1',
+    # Epic Games Store
+    11: 'ffffff',
+    # GOG.com
+    5: '86328A',
+    # itch.io
+    9: 'FA5C5C',
+    # Google Play
+    8: '34A853',
+    # Apple / App Store / Sign in with Apple
+    4: 'A3AAAE',
+    # XBox 360 store
+    7: '92C83E',
 }
 
 platformColors: dict[int, str] = {

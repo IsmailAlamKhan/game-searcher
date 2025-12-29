@@ -55,13 +55,17 @@ def setup_logging(app_name: str = "GameSearch Studio"):
     root_logger = logging.getLogger()
     root_logger.setLevel(logging.INFO)
     
+    # Remove existing handlers to avoid duplicates (idempotency)
+    if root_logger.hasHandlers():
+        root_logger.handlers.clear()
+    
     # File Handler
     file_handler = logging.FileHandler(log_file, encoding='utf-8')
     file_handler.setFormatter(file_formatter)
     root_logger.addHandler(file_handler)
     
     # Console Handler
-    console_handler = logging.StreamHandler(sys.stdout)
+    console_handler = logging.StreamHandler(sys.stderr)
     console_handler.setFormatter(console_formatter)
     root_logger.addHandler(console_handler)
     

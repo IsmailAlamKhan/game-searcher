@@ -1,12 +1,17 @@
 import requests
 from typing import List, Optional, Any
 import logging
+from urllib.parse import urlparse, parse_qs
 from .base import GameApiClient
-from core.models import GameRecord, SearchQuery
+from core.models import GameRecord, SearchQuery, Screenshot
 from core.config import settings
 from core.models import storeColors, Store, platformColors
+from fastapi import HTTPException
 
-logger = logging.getLogger(__name__)
+
+
+logger = logging.getLogger()
+
 
 class RawgClient(GameApiClient):
     BASE_URL = "https://api.rawg.io/api"
@@ -22,7 +27,7 @@ class RawgClient(GameApiClient):
             
         params = {
             "key": self.api_key,
-            "page_size": query.limit,
+            "page_size": query.page_size,
             "page": query.page
         }
 
@@ -30,7 +35,7 @@ class RawgClient(GameApiClient):
         
         if query.query:
             params["search"] = query.query
-            
+
         if query.tags:
             # RAWG expects comma-separated slugs for tags
             params["tags"] = ",".join(query.tags)
@@ -66,69 +71,102 @@ class RawgClient(GameApiClient):
             response.raise_for_status()
             data = response.json()
             record = self._map_to_record(data)
-            
+             
             # Fetch Additional Details
             # We use the 'id' or 'slug' from the data for sub-resources
-            pk = str(data.get('id')) 
-            
-            # 1. Screenshots
-            record.screenshots = self._fetch_sub_images(pk, "screenshots", "image")
-            
-            # 2. Trailers (Movies)
-            record.trailers = self._fetch_sub_list(pk, "movies", self._map_trailer, record)
-            
-            # 3. DLCs (Additions)
-            record.dlcs = self._fetch_sub_list(pk, "additions", self._map_simple_game, record)
-            
-            # 4. Series
-            record.same_series = self._fetch_sub_list(pk, "game-series", self._map_simple_game, record)
-            
-            # # 5. Achievements
-            # record.achievements = self._fetch_sub_list(pk, "achievements", self._map_achievement, record, limit=200)
+            pk = str(data.get('id'))
 
-            # 6. Reddit
-            record.reddit_posts = self._fetch_sub_list(pk, "reddit", self._map_reddit, record)
-            
-            # Stores
             record.stores = self._fetch_sub_list(pk, "stores", self._map_store, record)
-
+          
             return record
             
         except Exception as e:
             logger.error(f"RAWG Details failed for {game_id}: {e}")
             return None
-
-    def _fetch_sub_list(self, game_id: str, endpoint: str, mapper_func,record: GameRecord , limit: int = 30) -> List[Any]:
+      
+    def get_game_screenshots(self, game_id: str, page: int = 1, page_size: int = 30) -> dict:
         try:
-            url = f"{self.BASE_URL}/games/{game_id}/{endpoint}"
-            response = requests.get(url, params={"key": self.api_key, "page_size": limit})
-            if response.status_code == 200:
-                results = response.json().get("results", [])
-                mapped = [mapper_func(item, record) for item in results]
-                return mapped
+            url = f"{self.BASE_URL}/games/{game_id}/screenshots"
+            response = requests.get(url, params={"key": self.api_key, "page_size": page_size, "page": page})
+            response.raise_for_status()
+            data = response.json()
+            if data.get("results"):
+                screenshots = [Screenshot(**screenshot) for screenshot in data.get("results", [])]
+                next_page = None
+                next = data.get("next")
+                if next:
+                    next_page = parse_qs(urlparse(next).query).get("page")[0]    
+                return {
+                    "count": data.get("count"),
+                    "next": next_page,
+                    "results": screenshots,
+                }
+            else:
+                return {
+                    "count": 0,
+                    "next": None,
+                    "results": [],
+                }
         except Exception as e:
-            logger.warning(f"Failed to fetch {endpoint} for {game_id}: {e}")
-        return []
+            raise HTTPException(status_code=400, detail={
+                "message": f"Failed to fetch screenshots for {game_id}: {e}",
+                "detail": str(e)
+            })
 
-    def _fetch_sub_images(self, game_id: str, endpoint: str, key: str) -> List[str]:
+    def get_game_trailers(self, game_id: str, page: int = 1, page_size: int = 30) -> dict:
+        return self._fetch_sub_list(game_id, "movies", self._map_trailer, page_size=page_size, page=page)
+    
+    def get_game_achievements(self, game_id: str, page: int = 1, page_size: int = 30) -> dict:
+        return self._fetch_sub_list(game_id, "achievements", self._map_achievement, page_size=page_size, page=page)
+    
+    def get_game_reddit(self, game_id: str, page: int = 1, page_size: int = 30) -> dict:
+        return self._fetch_sub_list(game_id, "reddit", self._map_reddit, page_size=page_size, page=page)
+
+    def get_game_dlcs(self, game_id: str, page: int = 1, page_size: int = 30) -> dict:
+        return self._fetch_sub_list(game_id, "dlcs", self._map_simple_game, page_size=page_size, page=page)
+    
+    def get_game_same_series(self, game_id: str, page: int = 1, page_size: int = 30) -> dict:
+        return self._fetch_sub_list(game_id, "same-series", self._map_simple_game, page_size=page_size, page=page)
+   
+    
+
+    def _fetch_sub_list(self, game_id: str, endpoint: str, mapper_func, record: GameRecord = None, page_size: int = 30, page: int = 1) -> List[Any]:
         try:
             url = f"{self.BASE_URL}/games/{game_id}/{endpoint}"
-            response = requests.get(url, params={"key": self.api_key})
-            if response.status_code == 200:
-                results = response.json().get("results", [])
-                return [item.get(key) for item in results if item.get(key)]
-        except Exception:
-            pass
-        return []
+            response = requests.get(url, params={"key": self.api_key, "page_size": page_size, "page": page})
 
-    def _map_trailer(self, item: dict, record: GameRecord) -> dict:
+            data = response.json()
+            if response.status_code == 200:
+                results = data.get("results", [])
+                mapped = [mapper_func(item) for item in results]
+                next_page = None
+                next = data.get("next")
+                if next:
+                    next_page = parse_qs(urlparse(next).query).get("page")[0]    
+
+                return {
+                    "count": data.get("count"),
+                    "next": next_page,
+                    "results": mapped
+                }
+            else:
+                raise HTTPException(status_code=response.status_code, detail=data)
+                
+        except Exception as e:
+            raise HTTPException(status_code=400, detail={
+                "message": f"Failed to fetch {endpoint} for {game_id}: {e}",
+                "detail": str(e)
+            })
+
+
+    def _map_trailer(self, item: dict) -> dict:
         return {
             "name": item.get("name"),
             "preview": item.get("preview"),
             "video": item.get("data", {}).get("max") or item.get("data", {}).get("480")
         }
 
-    def _map_simple_game(self, item: dict, record: GameRecord) -> dict:
+    def _map_simple_game(self, item: dict) -> dict:
         return {
             "id": item.get("id"),
             "title": item.get("name"),
@@ -136,7 +174,7 @@ class RawgClient(GameApiClient):
             "released": item.get("released")
         }
     
-    def _map_achievement(self, item: dict, record: GameRecord) -> dict:
+    def _map_achievement(self, item: dict) -> dict:
         return {
             "id": item.get("id"),
             "name": item.get("name"),
@@ -144,7 +182,7 @@ class RawgClient(GameApiClient):
             "image": item.get("image")
         }
 
-    def _map_reddit(self, item: dict, record: GameRecord) -> dict:
+    def _map_reddit(self, item: dict) -> dict:
         return {
             "id": item.get("id"),
             "name": item.get("name"),
@@ -193,7 +231,7 @@ class RawgClient(GameApiClient):
         raw_platforms = data.get('platforms') or [] 
         platforms = []
         if raw_platforms:
-             for p in raw_platforms:
+            for p in raw_platforms:
                 platform_info = p.get('platform', {})
                 requirements = p.get('requirements', {})
 
@@ -211,7 +249,7 @@ class RawgClient(GameApiClient):
                 store_info = s.get('store', {})
                 url = s.get('url_en') or s.get('url') # RAWG stricture varies
                 if not url and store_info.get('domain'):
-                     url = f"https://{store_info.get('domain')}"
+                    url = f"https://{store_info.get('domain')}"
                 
                 if store_info.get('name'):
                     stores.append({

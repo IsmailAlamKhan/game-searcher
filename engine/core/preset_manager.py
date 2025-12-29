@@ -1,11 +1,10 @@
 import json
 import logging
 from typing import List, Optional
-from pathlib import Path
 from .models import SearchPreset
 from .logger import get_app_data_dir
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 class PresetManager:
     def __init__(self, app_name: str = "GameSearch Studio"):

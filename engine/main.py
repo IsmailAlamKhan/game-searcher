@@ -1,6 +1,6 @@
 import argparse
 import uvicorn
-from app import app
+
 
 from core.logger import setup_logging
 
@@ -16,6 +16,7 @@ def main():
     print(f"Starting server on {args.host}:{args.port}")
     # Use string "app:app" to enable reload
     uvicorn.run("app:app", host=args.host, port=args.port, reload=True)
+
 
 if __name__ == "__main__":
     main()

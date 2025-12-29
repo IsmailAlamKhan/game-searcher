@@ -1,10 +1,10 @@
 import logging
-from typing import List, Dict, Type, Optional
+from typing import List, Dict, Optional
 from .models import GameRecord, SearchQuery
 from clients.base import GameApiClient
 from clients.rawg import RawgClient
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()
 
 class GameSearchEngine:
     def __init__(self):
@@ -45,6 +45,54 @@ class GameSearchEngine:
             return None
             
         return client.get_game_details(game_id)
+    
+    def get_game_screenshots(self, game_id: str, source: str, page: int = 1, page_size: int = 20) -> Optional[dict]:
+        client = self.clients.get(source)
+        if not client:
+            logger.error(f"Source {source} not found.")
+            return None
+            
+        return client.get_game_screenshots(game_id, page, page_size)
+
+    def get_game_trailers(self, game_id: str, source: str, page: int = 1, page_size: int = 20) -> Optional[dict]:
+        client = self.clients.get(source)
+        if not client:
+            logger.error(f"Source {source} not found.")
+            return None
+            
+        return client.get_game_trailers(game_id, page, page_size)
+
+    def get_game_dlcs(self, game_id: str, source: str, page: int = 1, page_size: int = 20) -> Optional[dict]:
+        client = self.clients.get(source)
+        if not client:
+            logger.error(f"Source {source} not found.")
+            return None
+            
+        return client.get_game_dlcs(game_id, page, page_size)
+
+    def get_game_same_series(self, game_id: str, source: str, page: int = 1, page_size: int = 20) -> Optional[dict]:
+        client = self.clients.get(source)
+        if not client:
+            logger.error(f"Source {source} not found.")
+            return None
+            
+        return client.get_game_same_series(game_id, page, page_size)
+
+    def get_game_achievements(self, game_id: str, source: str, page: int = 1, page_size: int = 20) -> Optional[dict]:
+        client = self.clients.get(source)
+        if not client:
+            logger.error(f"Source {source} not found.")
+            return None
+            
+        return client.get_game_achievements(game_id, page, page_size)
+
+    def get_game_reddit(self, game_id: str, source: str, page: int = 1, page_size: int = 20) -> Optional[dict]:
+        client = self.clients.get(source)
+        if not client:
+            logger.error(f"Source {source} not found.")
+            return None
+            
+        return client.get_game_reddit(game_id, page, page_size)
 
     def get_tags(self, query: str = None, page: int = 1, page_size: int = 20) -> List[dict]:
         """

@@ -90,7 +90,7 @@ class SearchController {
   Future<List<GameRecord>> _fetchPage(int pageKey) async {
     final api = ref.read(apiServiceProvider);
     final tagsParam = _selectedTags.map((t) => t.slug).toList();
-    final newGames = await api.search(_query, page: pageKey, limit: _pageSize, tags: tagsParam);
+    final newGames = await api.search(_query, page: pageKey, pageSize: _pageSize, tags: tagsParam);
     return newGames;
   }
 }

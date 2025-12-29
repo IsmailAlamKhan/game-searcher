@@ -6,7 +6,10 @@ from core.engine_core import GameSearchEngine
 from core.models import GameRecord, SearchQuery, SearchPreset, Tag
 from core.preset_manager import PresetManager
 
-logger = logging.getLogger(__name__)
+from core.logger import setup_logging
+setup_logging()
+
+logger = logging.getLogger()
 
 app = FastAPI(title="GameSearch Engine")
 
@@ -16,6 +19,7 @@ preset_manager = PresetManager()
 
 @app.get("/health")
 def health_check():
+    logger.info("Health check endpoint called")
     return {"status": "ok", "engine": "ready"}
 
 # --- Search Endpoints ---
@@ -24,10 +28,10 @@ def health_check():
 def search_games(
     q: Optional[str] = Query(None, description="Search query"),
     tags: Optional[List[str]] = Query(None, description="Tags/Integers"),
-    limit: int = Query(20, description="Max results"),
+    page_size: int = Query(20, description="Max results"),
     page: int = Query(1, description="Page number")
 ):
-    query = SearchQuery(query=q, limit=limit, tags=tags, page=page)
+    query = SearchQuery(query=q, page_size=page_size, tags=tags, page=page)
     results = engine.search(query)
     return results
 
@@ -39,7 +43,39 @@ def get_game_details(game_id: str, source: str = Query("rawg", description="Sour
             raise HTTPException(status_code=404, detail="Game not found")
         return game
     except Exception as e:
+        logger.error(f"Failed to get game details for {game_id}: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Failed to get game details: {str(e)}")
+
+@app.get('/game/{game_id}/screenshots', response_model=dict)
+def get_game_screenshots(game_id: str, page: int = Query(1, ge=1), page_size: int = Query(20, le=100), source: str = Query("rawg", description="Source ID")):
+    screenshots = engine.get_game_screenshots(game_id, page=page, page_size=page_size, source=source)
+    return screenshots
+
+@app.get('/game/{game_id}/trailers', response_model=dict)
+def get_game_trailers(game_id: str, page: int = Query(1, ge=1), page_size: int = Query(20, le=100), source: str = Query("rawg", description="Source ID")):
+    trailers = engine.get_game_trailers(game_id, page=page, page_size=page_size, source=source)
+    return trailers
+    
+
+@app.get('/game/{game_id}/achievements', response_model=dict)
+def get_game_achievements(game_id: str, page: int = Query(1, ge=1), page_size: int = Query(20, le=100), source: str = Query("rawg", description="Source ID")):
+    achievements = engine.get_game_achievements(game_id, page=page, page_size=page_size, source=source)
+    return achievements
+
+@app.get('/game/{game_id}/reddit', response_model=dict)
+def get_game_reddit(game_id: str, page: int = Query(1, ge=1), page_size: int = Query(20, le=100), source: str = Query("rawg", description="Source ID")):
+    reddit = engine.get_game_reddit(game_id, page=page, page_size=page_size, source=source)
+    return reddit
+
+@app.get('/game/{game_id}/dlcs', response_model=dict)
+def get_game_dlcs(game_id: str, page: int = Query(1, ge=1), page_size: int = Query(20, le=100), source: str = Query("rawg", description="Source ID")):
+    dlcs = engine.get_game_dlcs(game_id, page=page, page_size=page_size, source=source)
+    return dlcs
+
+@app.get('/game/{game_id}/same_series', response_model=dict)
+def get_game_same_series(game_id: str, page: int = Query(1, ge=1), page_size: int = Query(20, le=100), source: str = Query("rawg", description="Source ID")):
+    same_series = engine.get_game_same_series(game_id, page=page, page_size=page_size, source=source)
+    return same_series
 
 @app.get("/tags", response_model=List[Tag])
 def get_tags(
