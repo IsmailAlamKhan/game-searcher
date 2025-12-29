@@ -9,6 +9,7 @@ import 'package:shimmer_animation/shimmer_animation.dart';
 import '../models/game_record.dart';
 import '../providers/search_provider.dart';
 import '../utils/constants.dart';
+import '../widgets/game_score.dart';
 
 class SearchScreen extends HookConsumerWidget {
   const SearchScreen({super.key});
@@ -64,41 +65,61 @@ class SearchScreen extends HookConsumerWidget {
               ),
             ),
           Expanded(
-            child: PagingListener(
-              controller: searchController.pagingController,
-              builder: (context, state, fetchNextPage) {
-                return PagedListView<int, GameRecord>.separated(
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
-                  state: state,
-                  fetchNextPage: fetchNextPage,
-                  builderDelegate: PagedChildBuilderDelegate<GameRecord>(
-                    itemBuilder: (context, item, index) => GameTile(item: item),
-                    firstPageErrorIndicatorBuilder: (context) => Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Something went wrong.'),
-                          const SizedBox(height: 16),
-                          FilledButton(onPressed: () => searchController.refresh(), child: const Text('Retry')),
-                        ],
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                int crossAxisCount = 10;
+                if (constraints.maxWidth < 1200) {
+                  crossAxisCount = 8;
+                }
+                if (constraints.maxWidth < 1000) {
+                  crossAxisCount = 6;
+                }
+                if (constraints.maxWidth < 800) {
+                  crossAxisCount = 4;
+                }
+                if (constraints.maxWidth < 600) {
+                  crossAxisCount = 2;
+                }
+                return PagingListener(
+                  controller: searchController.pagingController,
+                  builder: (context, state, fetchNextPage) {
+                    return PagedGridView<int, GameRecord>(
+                      // separatorBuilder: (context, index) => const SizedBox(height: 8),
+                      state: state,
+                      padding: const EdgeInsets.all(8),
+                      fetchNextPage: fetchNextPage,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 8,
+                        childAspectRatio: .8,
                       ),
-                    ),
-                    newPageErrorIndicatorBuilder: (context) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: IconButton(
-                          onPressed: () => searchController.retryLastFailedRequest(),
-                          icon: const Icon(Icons.refresh),
+                      builderDelegate: PagedChildBuilderDelegate<GameRecord>(
+                        itemBuilder: (context, item, index) => GameTile(item: item),
+                        firstPageErrorIndicatorBuilder: (context) => Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text('Something went wrong.'),
+                              const SizedBox(height: 16),
+                              FilledButton(onPressed: () => searchController.refresh(), child: const Text('Retry')),
+                            ],
+                          ),
                         ),
+                        newPageErrorIndicatorBuilder: (context) => Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(
+                            child: IconButton(
+                              onPressed: () => searchController.retryLastFailedRequest(),
+                              icon: const Icon(Icons.refresh),
+                            ),
+                          ),
+                        ),
+                        // firstPageProgressIndicatorBuilder: (context) => GameTile(),
+                        newPageProgressIndicatorBuilder: (context) => GameTile(),
                       ),
-                    ),
-                    firstPageProgressIndicatorBuilder: (context) => Column(
-                      children: [
-                        for (int i = 0; i < 5; i++) ...[const SizedBox(height: 8), GameTile()],
-                      ],
-                    ),
-                    newPageProgressIndicatorBuilder: (context) => GameTile(),
-                  ),
+                    );
+                  },
                 );
               },
             ),
@@ -118,26 +139,54 @@ class GameTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final item = this.item;
     if (item == null) {
-      return Shimmer(child: ListTile());
-    }
-    return ListTile(
-      onTap: () {
-        context.push('/details/${item.id}?title=${item.title}');
-      },
-      mouseCursor: SystemMouseCursors.click,
-      leading: Card(
+      return Card(
         clipBehavior: Clip.antiAlias,
-        margin: EdgeInsets.zero,
-        shape: const CircleBorder(),
-        child: item.imageUrl != null
-            ? CachedNetworkImage(imageUrl: item.imageUrl!, width: 50, height: 50, fit: BoxFit.cover)
-            : SizedBox.square(dimension: 50, child: const Icon(Icons.videogame_asset)),
+        child: Shimmer(child: Column()),
+      );
+    }
+    Widget Function(Widget child) builder;
+
+    if (item.imageUrl != null) {
+      builder = (child) => Ink.image(
+        image: CachedNetworkImageProvider(item.imageUrl!),
+        colorFilter: ColorFilter.mode(
+          Colors.black45,
+          BlendMode.darken,
+        ),
+        fit: BoxFit.cover,
+        child: child,
+      );
+    } else {
+      builder = (child) => child;
+    }
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: builder(
+        InkWell(
+          onTap: () {
+            context.push('/details/${item.id}');
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.title,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white),
+                ),
+                const Spacer(),
+                Text(
+                  "${item.releaseDate != null ? appDateFormat.format(item.releaseDate!) : 'Unknown'} • ${item.platforms.map((e) => e.name).take(3).join(', ')}",
+                  style: const TextStyle(fontSize: 10, color: Colors.white70),
+                ),
+                const SizedBox(height: 2),
+                if (item.score != null) GameScore(score: item.score!, size: 8),
+              ],
+            ),
+          ),
+        ),
       ),
-      title: Text(item.title),
-      subtitle: Text(
-        "${item.releaseDate != null ? appDateFormat.format(item.releaseDate!) : 'Unknown'} • ${item.platforms.map((e) => e.name).take(3).join(', ')}",
-      ),
-      trailing: item.score != null ? Text(item.score.toString()) : null,
     );
   }
 }

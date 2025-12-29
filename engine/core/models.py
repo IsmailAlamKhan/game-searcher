@@ -5,7 +5,8 @@ class Store(BaseModel):
     id: int
     name: str
     url: str
-    image_background: Optional[str] = None
+    color: Optional[str] = None
+    icon: Optional[str] = None
 
 
 class Requirements(BaseModel):
@@ -17,6 +18,8 @@ class Platform(BaseModel):
     name: str
     requirements: Optional[Requirements] = None
     released: Optional[str] = None
+    color: Optional[str] = None
+    icon: Optional[str] = None
 
 
 class GameRecord(BaseModel):
@@ -62,6 +65,7 @@ class SearchQuery(BaseModel):
     tags: Optional[List[str]] = None
     platforms: Optional[List[str]] = None
     limit: int = 20
+    page: int = 1
 
 class SearchPreset(BaseModel):
     """
@@ -71,3 +75,54 @@ class SearchPreset(BaseModel):
     name: str
     description: Optional[str] = None
     query: SearchQuery
+
+
+storeColors:dict[int, str]= {
+   # Steam
+   1: '66C0F4',
+   # Xbox Store
+   2: '107C10',
+   # PlayStation Store
+   3: '0070D1',
+   # Epic Games Store
+   11: 'ffffff',
+   # GOG.com
+   5: '86328A',
+   # itch.io
+   9: 'FA5C5C',
+   # Google Play
+   8: '34A853',
+   # Apple / App Store / Sign in with Apple
+   4: 'A3AAAE',
+   # XBox 360 store
+   7: '92C83E',
+}
+
+platformColors: dict[int, str] = {
+    # PC
+    4: '0078D6',
+    # iOS
+    3: '0484EB',
+    # Android
+    21: 'A4C639',
+    # Xbox
+    186: '107C10',
+    # Xbox 360
+    14: '92C83E',
+    # Xbox One
+    1: '107C10',
+    # PlayStation 5
+    187: '006FCD',
+    # PlayStation 4
+    18: '006FCD',
+    # PlayStation 3
+    16: '000000',
+    # PlayStation 2
+    15: '000000',
+    # macOS
+    5: 'A3AAAE',
+    # Linux
+    6: 'FDD835',
+    # Nintendo
+    7: 'E60012',
+}

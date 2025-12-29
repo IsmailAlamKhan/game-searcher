@@ -26,3 +26,6 @@ linter:
 custom_lint:
   rules:
     - avoid_public_notifier_properties: false
+
+formatter:
+  trailing_commas: preserve

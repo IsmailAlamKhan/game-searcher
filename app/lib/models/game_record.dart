@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'game_record.freezed.dart';
@@ -29,7 +31,13 @@ abstract class GameRecord with _$GameRecord {
 
 @freezed
 abstract class Store with _$Store {
-  const factory Store({required int id, String? name, String? url, String? image}) = _Store;
+  const factory Store({
+    required int id,
+    String? name,
+    String? url,
+    String? image,
+    @StringToColorConverter() Color? color,
+  }) = _Store;
 
   factory Store.fromJson(Map<String, dynamic> json) => _$StoreFromJson(json);
 }
@@ -84,7 +92,14 @@ abstract class HorizontalList with _$HorizontalList {
 
 @freezed
 abstract class Platform with _$Platform {
-  const factory Platform({required int id, String? name, Requirements? requirements, String? released}) = _Platform;
+  const factory Platform({
+    required int id,
+    String? name,
+    Requirements? requirements,
+    String? released,
+    @StringToColorConverter() Color? color,
+    String? icon,
+  }) = _Platform;
 
   factory Platform.fromJson(Map<String, dynamic> json) => _$PlatformFromJson(json);
 }
@@ -104,4 +119,14 @@ class StringToDateConverter implements JsonConverter<DateTime?, String?> {
 
   @override
   String? toJson(DateTime? object) => object?.toIso8601String();
+}
+
+class StringToColorConverter implements JsonConverter<Color?, String?> {
+  const StringToColorConverter();
+
+  @override
+  Color? fromJson(String? json) => json != null ? Color(int.parse(json, radix: 16)) : null;
+
+  @override
+  String? toJson(Color? object) => null;
 }

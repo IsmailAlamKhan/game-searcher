@@ -24,9 +24,10 @@ def health_check():
 def search_games(
     q: Optional[str] = Query(None, description="Search query"),
     tags: Optional[List[str]] = Query(None, description="Tags/Integers"),
-    limit: int = Query(20, description="Max results")
+    limit: int = Query(20, description="Max results"),
+    page: int = Query(1, description="Page number")
 ):
-    query = SearchQuery(query=q, limit=limit, tags=tags)
+    query = SearchQuery(query=q, limit=limit, tags=tags, page=page)
     results = engine.search(query)
     return results
 

@@ -4,6 +4,7 @@ import logging
 from .base import GameApiClient
 from core.models import GameRecord, SearchQuery
 from core.config import settings
+from core.models import storeColors, Store, platformColors
 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +23,10 @@ class RawgClient(GameApiClient):
         params = {
             "key": self.api_key,
             "page_size": query.limit,
+            "page": query.page
         }
 
-        logger.info(f"QUERY: {query}")
+        print(f"QUERY: {query}")
         
         if query.query:
             params["search"] = query.query
@@ -36,8 +38,10 @@ class RawgClient(GameApiClient):
         # Add platform filtering if needed (RAWG uses platform IDs, would need mapping)
         
         try:
-            print(f"Searching RAWG with params: {params}")
-            response = requests.get(f"{self.BASE_URL}/games", params=params)
+            url = f"{self.BASE_URL}/games"
+            print(f"Searching RAWG with params: {params} url: {url}")
+
+            response = requests.get(url, params=params)
             response.raise_for_status()
             data = response.json()
             
@@ -148,18 +152,18 @@ class RawgClient(GameApiClient):
             "image": item.get("image")
         }
 
-    def _map_store(self, item: dict, record: GameRecord) -> dict:
+    def _map_store(self, item: dict, record: GameRecord) -> Store:
         stores = record.stores
         logger.info(f"Stores: {stores}")
         id = item.get("store_id")
         store = [s for s in stores if s.id == id][0]
-        return {
-            "id": id,   
-            # "name": item.get("name"),
-            "url": item.get("url"),
-            "name": store.name,
-            "image": store.image_background
-        }
+        color = storeColors.get(id)
+        return Store(
+            id=id,
+            name=store.name,
+            url=item.get("url"),
+            color=color
+        )
 
     def get_tags(self, query: str = None, page: int = 1, page_size: int = 20) -> List[dict]:
         """
@@ -197,7 +201,8 @@ class RawgClient(GameApiClient):
                     "id": platform_info.get('id'),
                     "name": platform_info.get('name'),
                     "requirements": requirements if requirements else None,
-                    "released": p.get('released_at')
+                    "released": p.get('released_at'),
+                    "color": platformColors.get(platform_info.get('id'))
                 })                 
         
         stores: List[Store] = []

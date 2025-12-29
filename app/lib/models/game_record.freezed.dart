@@ -371,7 +371,7 @@ as Map<String, dynamic>,
 /// @nodoc
 mixin _$Store {
 
- int get id; String? get name; String? get url; String? get image;
+ int get id; String? get name; String? get url; String? get image;@StringToColorConverter() Color? get color;
 /// Create a copy of Store
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -384,16 +384,16 @@ $StoreCopyWith<Store> get copyWith => _$StoreCopyWithImpl<Store>(this as Store, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Store&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.image, image) || other.image == image));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Store&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.image, image) || other.image == image)&&(identical(other.color, color) || other.color == color));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,url,image);
+int get hashCode => Object.hash(runtimeType,id,name,url,image,color);
 
 @override
 String toString() {
-  return 'Store(id: $id, name: $name, url: $url, image: $image)';
+  return 'Store(id: $id, name: $name, url: $url, image: $image, color: $color)';
 }
 
 
@@ -404,7 +404,7 @@ abstract mixin class $StoreCopyWith<$Res>  {
   factory $StoreCopyWith(Store value, $Res Function(Store) _then) = _$StoreCopyWithImpl;
 @useResult
 $Res call({
- int id, String? name, String? url, String? image
+ int id, String? name, String? url, String? image,@StringToColorConverter() Color? color
 });
 
 
@@ -421,13 +421,14 @@ class _$StoreCopyWithImpl<$Res>
 
 /// Create a copy of Store
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? url = freezed,Object? image = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? url = freezed,Object? image = freezed,Object? color = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,image: freezed == image ? _self.image : image // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as Color?,
   ));
 }
 
@@ -512,10 +513,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  String? url,  String? image)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  String? url,  String? image, @StringToColorConverter()  Color? color)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Store() when $default != null:
-return $default(_that.id,_that.name,_that.url,_that.image);case _:
+return $default(_that.id,_that.name,_that.url,_that.image,_that.color);case _:
   return orElse();
 
 }
@@ -533,10 +534,10 @@ return $default(_that.id,_that.name,_that.url,_that.image);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  String? url,  String? image)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  String? url,  String? image, @StringToColorConverter()  Color? color)  $default,) {final _that = this;
 switch (_that) {
 case _Store():
-return $default(_that.id,_that.name,_that.url,_that.image);case _:
+return $default(_that.id,_that.name,_that.url,_that.image,_that.color);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -553,10 +554,10 @@ return $default(_that.id,_that.name,_that.url,_that.image);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  String? url,  String? image)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  String? url,  String? image, @StringToColorConverter()  Color? color)?  $default,) {final _that = this;
 switch (_that) {
 case _Store() when $default != null:
-return $default(_that.id,_that.name,_that.url,_that.image);case _:
+return $default(_that.id,_that.name,_that.url,_that.image,_that.color);case _:
   return null;
 
 }
@@ -568,13 +569,14 @@ return $default(_that.id,_that.name,_that.url,_that.image);case _:
 @JsonSerializable()
 
 class _Store implements Store {
-  const _Store({required this.id, this.name, this.url, this.image});
+  const _Store({required this.id, this.name, this.url, this.image, @StringToColorConverter() this.color});
   factory _Store.fromJson(Map<String, dynamic> json) => _$StoreFromJson(json);
 
 @override final  int id;
 @override final  String? name;
 @override final  String? url;
 @override final  String? image;
+@override@StringToColorConverter() final  Color? color;
 
 /// Create a copy of Store
 /// with the given fields replaced by the non-null parameter values.
@@ -589,16 +591,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Store&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.image, image) || other.image == image));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Store&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.url, url) || other.url == url)&&(identical(other.image, image) || other.image == image)&&(identical(other.color, color) || other.color == color));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,url,image);
+int get hashCode => Object.hash(runtimeType,id,name,url,image,color);
 
 @override
 String toString() {
-  return 'Store(id: $id, name: $name, url: $url, image: $image)';
+  return 'Store(id: $id, name: $name, url: $url, image: $image, color: $color)';
 }
 
 
@@ -609,7 +611,7 @@ abstract mixin class _$StoreCopyWith<$Res> implements $StoreCopyWith<$Res> {
   factory _$StoreCopyWith(_Store value, $Res Function(_Store) _then) = __$StoreCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? name, String? url, String? image
+ int id, String? name, String? url, String? image,@StringToColorConverter() Color? color
 });
 
 
@@ -626,13 +628,14 @@ class __$StoreCopyWithImpl<$Res>
 
 /// Create a copy of Store
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? url = freezed,Object? image = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? url = freezed,Object? image = freezed,Object? color = freezed,}) {
   return _then(_Store(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,url: freezed == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String?,image: freezed == image ? _self.image : image // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as Color?,
   ));
 }
 
@@ -2272,7 +2275,7 @@ as String?,
 /// @nodoc
 mixin _$Platform {
 
- int get id; String? get name; Requirements? get requirements; String? get released;
+ int get id; String? get name; Requirements? get requirements; String? get released;@StringToColorConverter() Color? get color; String? get icon;
 /// Create a copy of Platform
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2285,16 +2288,16 @@ $PlatformCopyWith<Platform> get copyWith => _$PlatformCopyWithImpl<Platform>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Platform&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.requirements, requirements) || other.requirements == requirements)&&(identical(other.released, released) || other.released == released));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Platform&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.requirements, requirements) || other.requirements == requirements)&&(identical(other.released, released) || other.released == released)&&(identical(other.color, color) || other.color == color)&&(identical(other.icon, icon) || other.icon == icon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,requirements,released);
+int get hashCode => Object.hash(runtimeType,id,name,requirements,released,color,icon);
 
 @override
 String toString() {
-  return 'Platform(id: $id, name: $name, requirements: $requirements, released: $released)';
+  return 'Platform(id: $id, name: $name, requirements: $requirements, released: $released, color: $color, icon: $icon)';
 }
 
 
@@ -2305,7 +2308,7 @@ abstract mixin class $PlatformCopyWith<$Res>  {
   factory $PlatformCopyWith(Platform value, $Res Function(Platform) _then) = _$PlatformCopyWithImpl;
 @useResult
 $Res call({
- int id, String? name, Requirements? requirements, String? released
+ int id, String? name, Requirements? requirements, String? released,@StringToColorConverter() Color? color, String? icon
 });
 
 
@@ -2322,12 +2325,14 @@ class _$PlatformCopyWithImpl<$Res>
 
 /// Create a copy of Platform
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? requirements = freezed,Object? released = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? requirements = freezed,Object? released = freezed,Object? color = freezed,Object? icon = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,requirements: freezed == requirements ? _self.requirements : requirements // ignore: cast_nullable_to_non_nullable
 as Requirements?,released: freezed == released ? _self.released : released // ignore: cast_nullable_to_non_nullable
+as String?,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as Color?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -2425,10 +2430,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  Requirements? requirements,  String? released)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name,  Requirements? requirements,  String? released, @StringToColorConverter()  Color? color,  String? icon)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Platform() when $default != null:
-return $default(_that.id,_that.name,_that.requirements,_that.released);case _:
+return $default(_that.id,_that.name,_that.requirements,_that.released,_that.color,_that.icon);case _:
   return orElse();
 
 }
@@ -2446,10 +2451,10 @@ return $default(_that.id,_that.name,_that.requirements,_that.released);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  Requirements? requirements,  String? released)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name,  Requirements? requirements,  String? released, @StringToColorConverter()  Color? color,  String? icon)  $default,) {final _that = this;
 switch (_that) {
 case _Platform():
-return $default(_that.id,_that.name,_that.requirements,_that.released);case _:
+return $default(_that.id,_that.name,_that.requirements,_that.released,_that.color,_that.icon);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -2466,10 +2471,10 @@ return $default(_that.id,_that.name,_that.requirements,_that.released);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  Requirements? requirements,  String? released)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name,  Requirements? requirements,  String? released, @StringToColorConverter()  Color? color,  String? icon)?  $default,) {final _that = this;
 switch (_that) {
 case _Platform() when $default != null:
-return $default(_that.id,_that.name,_that.requirements,_that.released);case _:
+return $default(_that.id,_that.name,_that.requirements,_that.released,_that.color,_that.icon);case _:
   return null;
 
 }
@@ -2481,13 +2486,15 @@ return $default(_that.id,_that.name,_that.requirements,_that.released);case _:
 @JsonSerializable()
 
 class _Platform implements Platform {
-  const _Platform({required this.id, this.name, this.requirements, this.released});
+  const _Platform({required this.id, this.name, this.requirements, this.released, @StringToColorConverter() this.color, this.icon});
   factory _Platform.fromJson(Map<String, dynamic> json) => _$PlatformFromJson(json);
 
 @override final  int id;
 @override final  String? name;
 @override final  Requirements? requirements;
 @override final  String? released;
+@override@StringToColorConverter() final  Color? color;
+@override final  String? icon;
 
 /// Create a copy of Platform
 /// with the given fields replaced by the non-null parameter values.
@@ -2502,16 +2509,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Platform&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.requirements, requirements) || other.requirements == requirements)&&(identical(other.released, released) || other.released == released));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Platform&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.requirements, requirements) || other.requirements == requirements)&&(identical(other.released, released) || other.released == released)&&(identical(other.color, color) || other.color == color)&&(identical(other.icon, icon) || other.icon == icon));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,requirements,released);
+int get hashCode => Object.hash(runtimeType,id,name,requirements,released,color,icon);
 
 @override
 String toString() {
-  return 'Platform(id: $id, name: $name, requirements: $requirements, released: $released)';
+  return 'Platform(id: $id, name: $name, requirements: $requirements, released: $released, color: $color, icon: $icon)';
 }
 
 
@@ -2522,7 +2529,7 @@ abstract mixin class _$PlatformCopyWith<$Res> implements $PlatformCopyWith<$Res>
   factory _$PlatformCopyWith(_Platform value, $Res Function(_Platform) _then) = __$PlatformCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String? name, Requirements? requirements, String? released
+ int id, String? name, Requirements? requirements, String? released,@StringToColorConverter() Color? color, String? icon
 });
 
 
@@ -2539,12 +2546,14 @@ class __$PlatformCopyWithImpl<$Res>
 
 /// Create a copy of Platform
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? requirements = freezed,Object? released = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? requirements = freezed,Object? released = freezed,Object? color = freezed,Object? icon = freezed,}) {
   return _then(_Platform(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,requirements: freezed == requirements ? _self.requirements : requirements // ignore: cast_nullable_to_non_nullable
 as Requirements?,released: freezed == released ? _self.released : released // ignore: cast_nullable_to_non_nullable
+as String?,color: freezed == color ? _self.color : color // ignore: cast_nullable_to_non_nullable
+as Color?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

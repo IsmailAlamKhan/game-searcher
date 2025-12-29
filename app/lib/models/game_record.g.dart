@@ -81,6 +81,7 @@ _Store _$StoreFromJson(Map<String, dynamic> json) => _Store(
   name: json['name'] as String?,
   url: json['url'] as String?,
   image: json['image'] as String?,
+  color: const StringToColorConverter().fromJson(json['color'] as String?),
 );
 
 Map<String, dynamic> _$StoreToJson(_Store instance) => <String, dynamic>{
@@ -88,6 +89,7 @@ Map<String, dynamic> _$StoreToJson(_Store instance) => <String, dynamic>{
   'name': instance.name,
   'url': instance.url,
   'image': instance.image,
+  'color': const StringToColorConverter().toJson(instance.color),
 };
 
 _Trailer _$TrailerFromJson(Map<String, dynamic> json) => _Trailer(
@@ -184,6 +186,8 @@ _Platform _$PlatformFromJson(Map<String, dynamic> json) => _Platform(
       ? null
       : Requirements.fromJson(json['requirements'] as Map<String, dynamic>),
   released: json['released'] as String?,
+  color: const StringToColorConverter().fromJson(json['color'] as String?),
+  icon: json['icon'] as String?,
 );
 
 Map<String, dynamic> _$PlatformToJson(_Platform instance) => <String, dynamic>{
@@ -191,6 +195,8 @@ Map<String, dynamic> _$PlatformToJson(_Platform instance) => <String, dynamic>{
   'name': instance.name,
   'requirements': instance.requirements,
   'released': instance.released,
+  'color': const StringToColorConverter().toJson(instance.color),
+  'icon': instance.icon,
 };
 
 _Requirements _$RequirementsFromJson(Map<String, dynamic> json) =>
