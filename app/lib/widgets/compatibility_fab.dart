@@ -18,7 +18,8 @@ class CompatibilityFab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final game = ref.watch(gameDetailsProvider(gameId));
-    final haveRequirementsForPC = game.value?.platforms.any((p) => p.requirements != null) ?? false;
+    final haveRequirementsForPC =
+        game.value?.platforms.any((p) => p.name?.toLowerCase() == 'pc' && p.requirements != null) ?? false;
     if (!haveRequirementsForPC) {
       return SizedBox.shrink();
     }
