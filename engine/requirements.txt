@@ -9,3 +9,6 @@ questionary
 google-generativeai
 openai
 ollama
+psutil
+py-cpuinfo
+

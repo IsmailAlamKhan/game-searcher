@@ -138,7 +138,12 @@ class RawgClient(GameApiClient):
             data = response.json()
             if response.status_code == 200:
                 results = data.get("results", [])
-                mapped = [mapper_func(item) for item in results]
+                mapped = []
+
+                if (record):
+                    mapped = [mapper_func(item, record) for item in results]
+                else:
+                    mapped = [mapper_func(item) for item in results]
                 next_page = None
                 next = data.get("next")
                 if next:
@@ -192,7 +197,6 @@ class RawgClient(GameApiClient):
 
     def _map_store(self, item: dict, record: GameRecord) -> Store:
         stores = record.stores
-        logger.info(f"Stores: {stores}")
         id = item.get("store_id")
         store = [s for s in stores if s.id == id][0]
         color = storeColors.get(id)

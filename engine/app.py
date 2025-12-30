@@ -7,6 +7,8 @@ from core.models import GameRecord, SearchQuery, SearchPreset, Tag
 from core.preset_manager import PresetManager
 
 from core.logger import setup_logging
+from core.compatibility import check_compatibility
+from core.system_info import get_system_specs
 setup_logging()
 
 logger = logging.getLogger()
@@ -125,3 +127,51 @@ def run_preset(preset_id: str):
         
     results = engine.search(preset.query)
     return results
+
+@app.post("/game/{game_id}/can-run-it")
+def check_game_compatibility(game_id: str, specs: Optional[dict] = None, source: str = Query("rawg")):
+    """
+    Check if the game can run on the given specs. 
+    If no specs are provided, use the current system specs.
+    """
+    try:
+        # 1. Get Game Details (includes requirements)
+        game = engine.get_game_details(game_id, source)
+        if not game:
+            raise HTTPException(status_code=404, detail="Game not found")
+        
+        # RAWG requirements are under platforms -> PC
+        pc_platform = next((p for p in game.platforms if p.name.lower() == "pc"), None)
+        if not pc_platform or not pc_platform.requirements:
+            raise HTTPException(status_code=404, detail="PC requirements not found for this game")
+        
+        requirements = {
+            "minimum": pc_platform.requirements.minimum,
+            "recommended": pc_platform.requirements.recommended
+        }
+
+        # 2. Get User Specs (provided or local)
+        local_specs = get_system_specs()
+        provided_specs = specs if specs else {}
+        
+        # Handle common "user_specs" wrapper in request body
+        if "user_specs" in provided_specs:
+            provided_specs = provided_specs["user_specs"]
+            
+        # Merge: Provided specs override local specs
+        user_specs = {**local_specs, **provided_specs}
+        
+        # 3. Check Compatibility
+        report = check_compatibility(user_specs, requirements)
+        
+        return {
+            "game_title": game.title,
+            "user_specs": user_specs,
+            "report": report
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error checking compatibility for {game_id}: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=str(e))
