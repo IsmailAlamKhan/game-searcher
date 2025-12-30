@@ -1,6 +1,13 @@
+import 'dart:ui'; // Needed for AppExitResponse on recent versions? No, it's typically in services or ui.
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'screens/startup_screen.dart';
+import 'services/process_service.dart';
+// Actually AppExitResponse is in services.dart since Flutter 3.13. No separate import needed usually if material is imported, but let's check.
+// It is in dart:ui. But wait, `didRequestAppExit` is WidgetsBindingObserver.
+// `AppExitResponse` is in `dart:ui`.
 import 'utils/logger.dart';
 import 'utils/router.dart';
 
@@ -29,10 +36,14 @@ final class _ProviderObserver extends ProviderObserver {
 }
 
 void main() {
+  runApp(const StartupScreen());
+}
+
+void launchApp() {
   runApp(
     ProviderScope(
       observers: [_ProviderObserver()],
-      child: GameSearchApp(),
+      child: const GameSearchApp(),
       retry: (retryCount, error) {
         return null;
       },
@@ -40,11 +51,35 @@ void main() {
   );
 }
 
-class GameSearchApp extends ConsumerWidget {
+class GameSearchApp extends ConsumerStatefulWidget {
   const GameSearchApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<GameSearchApp> createState() => _GameSearchAppState();
+}
+
+class _GameSearchAppState extends ConsumerState<GameSearchApp> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    processService.stopEngine();
+    super.dispose();
+  }
+
+  @override
+  Future<AppExitResponse> didRequestAppExit() async {
+    await processService.stopEngine();
+    return AppExitResponse.exit;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(appRouterProvider);
     return MaterialApp.router(
       title: 'GameSearch Studio',
@@ -52,7 +87,6 @@ class GameSearchApp extends ConsumerWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF5865F2), brightness: Brightness.dark),
         useMaterial3: true,
       ),
-      // home: const HomeScreen(),
       routerConfig: router,
     );
   }

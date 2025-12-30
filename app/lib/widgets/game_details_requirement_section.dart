@@ -100,6 +100,10 @@ class GameDetailsRequirementSection extends StatelessWidget {
     final keyMap = {
       "OS": "OS",
       "Processor": "Processor",
+      "CPU": "Processor",
+      "RAM": "Memory",
+      "GPU": "Graphics",
+      "Available Storage": "Storage",
       "Memory": "Memory",
       "Graphics": "Graphics",
       "Video Card": "Graphics",

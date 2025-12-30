@@ -1,14 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../models/game_record.dart';
 
-class GameDetailsMediaSection extends StatelessWidget {
+class GameDetailsMediaSection extends HookConsumerWidget {
   const GameDetailsMediaSection({super.key, required this.game});
   final GameRecord game;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     if (game.screenshots.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

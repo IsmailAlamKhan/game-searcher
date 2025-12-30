@@ -9,4 +9,17 @@ class Settings(BaseSettings):
     class Config:
         env_file = ".env"
 
-settings = Settings()
+    @classmethod
+    def load(cls):
+        # specific logic to load from secrets_generated if present
+        try:
+            from core.secrets_generated import Secrets
+            return cls(
+                RAWG_API_KEY=getattr(Secrets, "RAWG_API_KEY", None),
+                IGDB_CLIENT_ID=getattr(Secrets, "IGDB_CLIENT_ID", None),
+                IGDB_CLIENT_SECRET=getattr(Secrets, "IGDB_CLIENT_SECRET", None),
+            )
+        except ImportError:
+            return cls()
+
+settings = Settings.load()
