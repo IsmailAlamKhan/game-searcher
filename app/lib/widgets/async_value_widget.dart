@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AsyncValueWidget<T> extends StatelessWidget {
+class AsyncValueWidget<T> extends HookWidget {
   final AsyncValue<T> value;
   final Widget Function(T data) data;
-  final VoidCallback? onRetry;
+  final Future<void> Function()? onRetry;
   final bool skipLoadingOnReload;
 
   const AsyncValueWidget({
@@ -17,8 +20,12 @@ class AsyncValueWidget<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isRetrying = useState(false);
+    final _isRetrying = isRetrying.value;
+    // isRetrying.value;
     return value.when(
       data: data,
+
       loading: () {
         if (skipLoadingOnReload && value.hasValue) {
           return data(value.value as T);
@@ -40,10 +47,34 @@ class AsyncValueWidget<T> extends StatelessWidget {
               ),
               if (onRetry != null) ...[
                 const SizedBox(height: 16),
-                FilledButton.icon(
-                  onPressed: onRetry,
-                  icon: const Icon(Icons.refresh),
-                  label: const Text('Retry'),
+                FilledButton(
+                  onPressed: _isRetrying
+                      ? null
+                      : () {
+                          isRetrying.value = true;
+                          final onRetry = this.onRetry;
+                          if (onRetry != null) {
+                            onRetry()
+                                .then((_) => isRetrying.value = false)
+                                .catchError((_, _) => isRetrying.value = false);
+                          }
+                        },
+                  style: FilledButton.styleFrom(
+                    shape: _isRetrying ? const CircleBorder() : null,
+                  ),
+                  child: _isRetrying
+                      ? SizedBox.square(
+                          dimension: 20,
+                          child: const CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.refresh),
+                            const SizedBox(width: 4),
+                            const Text('Retry'),
+                          ],
+                        ),
                 ),
               ],
             ],

@@ -85,30 +85,56 @@ def check_compatibility(user_specs: Dict[str, Any], requirements: Dict[str, Opti
     u_ram = user_specs.get("ram", 0)
     
     ram_status = "Passed"
+    ram_msg = "Your RAM meets the requirements."
     if u_ram < min_ram:
         ram_status = "Failed"
+        ram_msg = f"Insufficient RAM. Game requires {min_ram} GB, you have {u_ram} GB."
         results["overall"] = "Failed"
-    elif rec_ram > 0 and u_ram < rec_ram:
-        ram_status = "Minimum Met"
-    results["details"]["ram"] = {"user": f"{u_ram} GB", "required_min": f"{min_ram} GB", "status": ram_status}
+    elif rec_ram > 0:
+        if u_ram >= rec_ram * 1.5:
+            ram_msg = "You have plenty of RAM for this game and heavy multi-tasking!"
+        elif u_ram >= rec_ram:
+            ram_status = "Passed"
+            ram_msg = "Your RAM meets the recommended specifications for a smooth experience."
+        elif u_ram >= min_ram:
+            ram_status = "Minimum Met"
+            ram_msg = "Meets minimum specs, but more RAM is recommended for better performance."
+    elif u_ram >= min_ram:
+        ram_status = "Passed"
+        ram_msg = "Your RAM is more than enough for this game."
+
+    results["details"]["ram"] = {
+        "user": f"{u_ram} GB", 
+        "requirement": f"{min_ram} GB", 
+        "status": ram_status,
+        "message": ram_msg
+    }
 
     # --- Disk ---
     disk_pat = r'(\d+(?:\.\d+)?)\s*(GB|MB)\s*(?:available|free|storage|space|hard drive)'
     min_disk = parse_requirement_value(min_p.get("Storage", "") or min_req_str, disk_pat)
-    u_disk = user_specs.get("disk_free", 0)
     
     disk_status = "Passed"
-    if min_disk > 0 and u_disk < min_disk:
-        disk_status = "Insufficient Space"
-        results["warnings"].append(f"Storage low: {min_disk}GB req, {u_disk}GB free")
-    results["details"]["disk"] = {"user": f"{u_disk} GB free", "required": f"{min_disk} GB", "status": disk_status}
+    disk_msg = "Please ensure you have enough space on your preferred installation drive."
+        
+    results["details"]["disk"] = {
+        "user": "Space Needed",
+        "requirement": f"{min_disk} GB", 
+        "status": disk_status,
+        "message": disk_msg
+    }
 
     # --- CPU & GPU Scoring Logic ---
     def get_comp_status(u_score, m_score, r_score, comp_type="GPU"):
         if u_score == 0 or m_score == 0:
             return "Check Manually", "Hardware not recognized for automatic scoring."
             
-        # If user score is significantly higher than min (>1.1x)
+        # If user score is powerhouse (>1.5x of recommended or 2x of min)
+        target = r_score if r_score > 0 else m_score * 1.5
+        if u_score >= target * 1.5:
+            return "Passed", f"Your {comp_type} is a powerhouse! It's more than enough for this game."
+
+        # If user score is clearly higher than min (>1.1x)
         if u_score >= m_score * 1.1:
             if r_score > 0 and u_score < r_score * 0.9:
                 return "Minimum Met", "Meets minimum requirements, but below recommended performance."

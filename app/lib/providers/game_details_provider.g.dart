@@ -50,7 +50,7 @@ final class GameDetailsProvider
   }
 }
 
-String _$gameDetailsHash() => r'07c280d7dbfd71de94ea42e80ed41835bae813d3';
+String _$gameDetailsHash() => r'a6906f90cfb272ae00df29f96b66eb2fe3f011c3';
 
 final class GameDetailsFamily extends $Family
     with

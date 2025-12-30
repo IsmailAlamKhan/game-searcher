@@ -13,7 +13,6 @@ class HomeScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final appState = ref.watch(appControllerProvider);
     final selectedIndex = appState.selectedIndex;
-    final currentRoute = GoRouter.of(context).state.uri;
 
     return Scaffold(
       body: Row(
@@ -21,11 +20,6 @@ class HomeScreen extends HookConsumerWidget {
           NavigationRail(
             selectedIndex: selectedIndex,
             onDestinationSelected: (int index) {
-              // if (index == 0) {
-              //   context.go('/');
-              // } else if (index == 1) {
-              //   context.go('/tags');
-              // }
               context.go(AppState.routes[index]);
             },
             labelType: NavigationRailLabelType.all,
@@ -41,17 +35,4 @@ class HomeScreen extends HookConsumerWidget {
       ),
     );
   }
-
-  // Widget _buildScreen(int index) {
-  //   switch (index) {
-  //     case 0:
-  //       return const SearchScreen();
-  //     case 1:
-  //       return const TagsScreen();
-  //     case 2:
-  //       return const Center(child: Text("Presets (Coming Soon)"));
-  //     default:
-  //       return const Center(child: Text("Unknown"));
-  //   }
-  // }
 }

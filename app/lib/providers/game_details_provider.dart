@@ -2,20 +2,26 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../models/game_record.dart';
 import '../services/api_service.dart';
+import '../utils/logger.dart';
 
 part 'game_details_provider.g.dart';
-
-// @riverpod
-// Future<GameRecord> gameDetails(Ref ref, String id) async {
-//   final api = ref.read(apiServiceProvider);
-//   return api.getGameDetails(id);
-// }
 
 @riverpod
 class GameDetails extends _$GameDetails {
   @override
   Future<GameRecord> build(String id) async {
-    final api = ref.read(apiServiceProvider);
-    return api.getGameDetails(id);
+    appLogger.d('------ Building game details for $id');
+    final api = ref.watch(apiServiceProvider);
+    appLogger.d('------ Fetching game details for $id');
+    return api
+        .getGameDetails(id)
+        .then((value) {
+          appLogger.d('------ Fetched game details for $id');
+          return value;
+        })
+        .catchError((e, s) {
+          appLogger.e('------ Failed to fetch game details for $id', error: e, stackTrace: s);
+          throw e;
+        });
   }
 }

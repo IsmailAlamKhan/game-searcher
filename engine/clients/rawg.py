@@ -76,7 +76,7 @@ class RawgClient(GameApiClient):
             # We use the 'id' or 'slug' from the data for sub-resources
             pk = str(data.get('id'))
 
-            record.stores = self._fetch_sub_list(pk, "stores", self._map_store, record)
+            record.stores = self._fetch_stores(pk, record)
           
             return record
             
@@ -162,6 +162,30 @@ class RawgClient(GameApiClient):
                 "message": f"Failed to fetch {endpoint} for {game_id}: {e}",
                 "detail": str(e)
             })
+
+
+    def _fetch_stores(self, game_id: str, record: GameRecord = None) -> List[Any]:
+        try:
+            url = f"{self.BASE_URL}/games/{game_id}/stores"
+            response = requests.get(url, params={"key": self.api_key})
+
+            data = response.json()
+            if response.status_code == 200:
+                results = data.get("results", [])
+                
+                mapped = [self._map_store(item, record) for item in results]
+                                
+                return mapped
+                
+            else:
+                raise HTTPException(status_code=response.status_code, detail=data)
+                
+        except Exception as e:
+            raise HTTPException(status_code=400, detail={
+                "message": f"Failed to fetch stores for {game_id}: {e}",
+                "detail": str(e)
+            })
+
 
 
     def _map_trailer(self, item: dict) -> dict:

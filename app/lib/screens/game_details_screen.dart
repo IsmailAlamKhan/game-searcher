@@ -6,14 +6,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../models/game_record.dart';
 import '../providers/game_details_provider.dart';
 import '../widgets/async_value_widget.dart';
+import '../widgets/compatibility_fab.dart';
 import '../widgets/game_description.dart';
-import '../widgets/game_details_.dart';
 import '../widgets/game_details_header.dart';
 import '../widgets/game_details_horizontal_list_section.dart';
 import '../widgets/game_details_media_section.dart';
 import '../widgets/game_details_platform_section.dart';
 import '../widgets/game_details_reddit_section.dart';
 import '../widgets/game_details_requirement_section.dart';
+import '../widgets/game_details_store_section.dart';
 import '../widgets/game_details_trailer_section.dart';
 
 class GameDetailsScreen extends ConsumerWidget {
@@ -30,6 +31,15 @@ class GameDetailsScreen extends ConsumerWidget {
         body: AsyncValueWidget<GameRecord>(
           value: gameAsync,
           data: (game) => _GameDetailsContent(game: game),
+          onRetry: () async {
+            ref.invalidate(gameDetailsProvider(gameId));
+            await ref.watch(gameDetailsProvider(gameId).future);
+          },
+        ),
+        floatingActionButton: gameAsync.when(
+          data: (game) => CompatibilityFab(gameId: gameId, gameTitle: game.title),
+          error: (_, _) => null,
+          loading: () => null,
         ),
       ),
     );

@@ -21,7 +21,7 @@ final class ApiServiceProvider
         argument: null,
         retry: null,
         name: r'apiServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -48,4 +48,4 @@ final class ApiServiceProvider
   }
 }
 
-String _$apiServiceHash() => r'c210548883b549241d1e4682ba58eb364e024ef4';
+String _$apiServiceHash() => r'9b64f3a8edc53e2c521fefcdeb291c80526863d1';
