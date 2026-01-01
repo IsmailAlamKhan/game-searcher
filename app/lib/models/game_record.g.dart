@@ -8,7 +8,6 @@ part of 'game_record.dart';
 
 _GameRecord _$GameRecordFromJson(Map<String, dynamic> json) => _GameRecord(
   id: json['id'] as String,
-  source: json['source'] as String,
   title: json['title'] as String,
   platforms:
       (json['platforms'] as List<dynamic>?)
@@ -53,13 +52,15 @@ _GameRecord _$GameRecordFromJson(Map<String, dynamic> json) => _GameRecord(
           .toList() ??
       const [],
   extra: json['extra'] as Map<String, dynamic>? ?? const {},
+  esrbRating: json['esrb_rating'] == null
+      ? null
+      : EsrbRating.fromJson(json['esrb_rating'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$GameRecordToJson(
   _GameRecord instance,
 ) => <String, dynamic>{
   'id': instance.id,
-  'source': instance.source,
   'title': instance.title,
   'platforms': instance.platforms,
   'release_date': const StringToDateConverter().toJson(instance.releaseDate),
@@ -74,6 +75,7 @@ Map<String, dynamic> _$GameRecordToJson(
   'same_series': instance.sameSeries,
   'reddit_posts': instance.redditPosts,
   'extra': instance.extra,
+  'esrb_rating': instance.esrbRating,
 };
 
 _Store _$StoreFromJson(Map<String, dynamic> json) => _Store(
@@ -209,4 +211,39 @@ Map<String, dynamic> _$RequirementsToJson(_Requirements instance) =>
     <String, dynamic>{
       'minimum': instance.minimum,
       'recommended': instance.recommended,
+    };
+
+_GameScreenshot _$GameScreenshotFromJson(Map<String, dynamic> json) =>
+    _GameScreenshot(
+      id: (json['id'] as num).toInt(),
+      image: json['image'] as String?,
+      width: (json['width'] as num?)?.toInt(),
+      height: (json['height'] as num?)?.toInt(),
+      isDeleted: json['is_deleted'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$GameScreenshotToJson(_GameScreenshot instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'image': instance.image,
+      'width': instance.width,
+      'height': instance.height,
+      'is_deleted': instance.isDeleted,
+    };
+
+_EsrbRating _$EsrbRatingFromJson(Map<String, dynamic> json) => _EsrbRating(
+  id: (json['id'] as num).toInt(),
+  name: json['name'] as String?,
+  slug: const EsrbRatingSlugConverter().fromJson(json['slug'] as String?),
+  nameEn: json['nameEn'] as String?,
+  nameRu: json['nameRu'] as String?,
+);
+
+Map<String, dynamic> _$EsrbRatingToJson(_EsrbRating instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'slug': const EsrbRatingSlugConverter().toJson(instance.slug),
+      'nameEn': instance.nameEn,
+      'nameRu': instance.nameRu,
     };

@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../models/game_record.dart';
+import '../providers/app_provider.dart';
 import '../providers/game_details_provider.dart';
 import '../widgets/async_value_widget.dart';
 import '../widgets/compatibility_fab.dart';
@@ -17,7 +19,7 @@ import '../widgets/game_details_requirement_section.dart';
 import '../widgets/game_details_store_section.dart';
 import '../widgets/game_details_trailer_section.dart';
 
-class GameDetailsScreen extends ConsumerWidget {
+class GameDetailsScreen extends HookConsumerWidget {
   final String gameId;
 
   const GameDetailsScreen({super.key, required this.gameId});
@@ -26,6 +28,17 @@ class GameDetailsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final gameAsync = ref.watch(gameDetailsProvider(gameId));
 
+    final colors = ref.watch(gameDetailsProvider(gameId).select((value) => value.value?.colors));
+    final appController = ref.watch(appControllerProvider.notifier);
+
+    useEffect(() {
+      if (colors != null && colors.isNotEmpty) {
+        appController.setDefaultColor(colors.first);
+      }
+      return () {
+        appController.setDefaultColor();
+      };
+    }, [colors]);
     return SelectionArea(
       child: Scaffold(
         body: AsyncValueWidget<GameRecord>(
@@ -53,9 +66,10 @@ class _GameDetailsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = game.colors;
     return CustomScrollView(
       slivers: [
-        _buildAppBar(context),
+        _buildAppBar(context, colors), // Pass colors to app bar
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
@@ -76,7 +90,7 @@ class _GameDetailsContent extends StatelessWidget {
                 ],
                 GameDetailsMediaSection(game: game),
                 const SizedBox(height: 32),
-                if (game.trailers.isNotEmpty) ...[const SizedBox(height: 32), GameDetailsTrailerSection(game: game)],
+                GameDetailsTrailerSection(game: game),
                 if (game.dlcs.isNotEmpty) ...[
                   const SizedBox(height: 32),
                   GameDetailsHorizontalListSection(
@@ -92,7 +106,10 @@ class _GameDetailsContent extends StatelessWidget {
                     onItemTap: (id) => context.push('/details/$id'),
                   ),
                 ],
-                if (game.redditPosts.isNotEmpty) ...[const SizedBox(height: 32), GameDetailsRedditSection(game: game)],
+                if (game.redditPosts.isNotEmpty) ...[
+                  const SizedBox(height: 32),
+                  GameDetailsRedditSection(game: game),
+                ],
               ],
             ),
           ),
@@ -101,8 +118,14 @@ class _GameDetailsContent extends StatelessWidget {
     );
   }
 
-  Widget _buildAppBar(BuildContext context) {
+  Widget _buildAppBar(BuildContext context, List<Color>? extractedColors) {
     final backgroundColor = Theme.of(context).colorScheme.surface;
+
+    // Create a gradient from extracted colors or fall back to a simple fade
+    List<Color> gradientColors;
+
+    gradientColors = [Colors.transparent, backgroundColor.withValues(alpha: 0.2), backgroundColor];
+
     return SliverAppBar(
       expandedHeight: 350,
       pinned: true,
@@ -127,8 +150,10 @@ class _GameDetailsContent extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Colors.transparent, backgroundColor.withValues(alpha: 0.3), backgroundColor],
-                  stops: const [0.5, 0.8, 1.0],
+                  colors: gradientColors,
+                  stops: extractedColors != null && extractedColors.isNotEmpty
+                      ? null // Let the gradient distribute evenly
+                      : const [0.5, 0.8, 1.0],
                 ),
               ),
             ),

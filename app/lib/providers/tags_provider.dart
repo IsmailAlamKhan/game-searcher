@@ -35,7 +35,15 @@ class TagsController {
     refresh();
   }
 
+  int? _next = 0;
+  int? get next => _next;
+
+  int _count = 0;
+  int get count => _count;
+
   void refresh() {
+    _next = 1;
+    _count = 0;
     _pagingController.refresh();
   }
 
@@ -63,6 +71,8 @@ class TagsController {
 
   void search(String query) {
     if (_searchQuery == query) return;
+    _next = 1;
+    _count = 0;
     _searchQuery = query;
     _pagingController.refresh();
   }
@@ -70,6 +80,8 @@ class TagsController {
   Future<List<Tag>> _fetchPage(int pageKey) async {
     final api = ref.read(apiServiceProvider);
     final newTags = await api.getTags(query: _searchQuery, page: pageKey, pageSize: _pageSize);
-    return newTags;
+    _next = newTags.next;
+    _count = newTags.count;
+    return newTags.results ?? [];
   }
 }

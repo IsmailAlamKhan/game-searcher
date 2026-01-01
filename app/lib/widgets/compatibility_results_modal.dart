@@ -12,7 +12,9 @@ class CompatibilityResultsModal extends StatelessWidget {
     required this.gameTitle,
   });
 
-  Color _getStatusColor(String status) {
+  Color _getStatusColor(String status, BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     switch (status.toLowerCase()) {
       case 'passed':
         return Colors.green;
@@ -23,7 +25,7 @@ class CompatibilityResultsModal extends StatelessWidget {
         return Colors.orange;
       case 'failed':
       case 'insufficient space':
-        return Colors.red;
+        return colors.error;
       default:
         return Colors.grey;
     }
@@ -49,7 +51,7 @@ class CompatibilityResultsModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final overallColor = _getStatusColor(report.overall);
+    final overallColor = _getStatusColor(report.overall, context);
 
     return Container(
       decoration: BoxDecoration(
@@ -120,7 +122,7 @@ class CompatibilityResultsModal extends StatelessWidget {
           ...report.details.entries.map((entry) {
             final key = entry.key;
             final val = entry.value;
-            final color = _getStatusColor(val.status);
+            final color = _getStatusColor(val.status, context);
 
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),

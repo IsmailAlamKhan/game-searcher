@@ -5,43 +5,32 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
+import '../models/search.dart';
 import '../models/tag.dart';
 import '../providers/search_provider.dart';
 import '../providers/tags_provider.dart';
+import '../utils/debouncer.dart';
+import '../widgets/paged_child_builder.dart';
 
 class TagsScreen extends HookConsumerWidget {
   const TagsScreen({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final controller = ref.watch(tagsControllerProvider);
-    final searchTextController = useTextEditingController();
     final searchController = ref.watch(searchControllerProvider);
+    final SearchQueryParams(:tags) = searchController.searchQueryParams;
+    final selectedTags = useState(tags);
+
+    useEffect(() {
+      selectedTags.value = tags;
+      return null;
+    }, [tags]);
 
     return Scaffold(
       appBar: AppBar(title: const Text("Discovery Tags")),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: searchTextController,
-                    decoration: const InputDecoration(labelText: 'Search Tags', border: OutlineInputBorder()),
-                    onSubmitted: (value) {
-                      controller.search(value);
-                    },
-                  ),
-                ),
-                const SizedBox(width: 8),
-                IconButton(
-                  onPressed: () => controller.search(searchTextController.text),
-                  icon: const Icon(Icons.search),
-                ),
-              ],
-            ),
-          ),
+          _Search(controller: controller),
           Expanded(
             child: PagingListener(
               controller: controller.pagingController,
@@ -56,28 +45,22 @@ class TagsScreen extends HookConsumerWidget {
                     crossAxisSpacing: 8,
                     mainAxisSpacing: 8,
                   ),
-                  builderDelegate: PagedChildBuilderDelegate<Tag>(
-                    itemBuilder: (context, item, index) => TagCard(item: item),
-                    firstPageErrorIndicatorBuilder: (context) => Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text('Something went wrong.'),
-                          const SizedBox(height: 16),
-                          FilledButton(onPressed: () => controller.refresh(), child: const Text('Retry')),
-                        ],
-                      ),
+                  builderDelegate: AppPagedChildBuilderDelegate<int, Tag>(
+                    pagingController: controller.pagingController,
+                    itemBuilder: (context, item, index) => TagCard(
+                      item: item,
+                      isSelected: selectedTags.value.contains(item),
+                      onTap: () {
+                        final _selectedTags = selectedTags.value.toList();
+                        if (_selectedTags.contains(item)) {
+                          _selectedTags.remove(item);
+                        } else {
+                          _selectedTags.add(item);
+                        }
+                        selectedTags.value = _selectedTags;
+                      },
                     ),
-                    newPageErrorIndicatorBuilder: (context) => Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: IconButton(
-                          onPressed: () => controller.retryLastFailedRequest(),
-                          icon: const Icon(Icons.refresh),
-                        ),
-                      ),
-                    ),
-                    noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('No tags found.')),
+                    emptyTitle: "No tags found",
                   ),
                 );
               },
@@ -85,59 +68,92 @@ class TagsScreen extends HookConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: searchController.selectedTags.isNotEmpty
+      floatingActionButton: selectedTags.value.isNotEmpty
           ? FloatingActionButton.extended(
               onPressed: () {
-                // ref.read(appControllerProvider.notifier).setSelectedIndex(0);
+                searchController.searchQueryParams = searchController.searchQueryParams.copyWith(
+                  tags: selectedTags.value,
+                );
                 context.go('/');
               },
               icon: const Icon(Icons.search),
-              label: Text("Search (${searchController.selectedTags.length})"),
+              label: Text("Search (${selectedTags.value.length})"),
             )
           : null,
     );
   }
 }
 
-class TagCard extends ConsumerWidget {
-  const TagCard({super.key, required this.item});
+class _Search extends HookConsumerWidget {
+  const _Search({required this.controller});
 
-  final Tag item;
+  final TagsController controller;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final searchController = ref.watch(searchControllerProvider);
-    final isSelected = searchController.selectedTags.contains(item);
+    final searchTextController = useTextEditingController();
+    useListenable(searchTextController);
+    final debouncer = useDebouncer(const Duration(seconds: 1));
 
-    Widget Function(Widget child) childBuilder;
+    useEffect(() {
+      debouncer(() => controller.search(searchTextController.text));
+      return null;
+    }, [searchTextController.text]);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: TextField(
+        controller: searchTextController,
+        decoration: InputDecoration(
+          labelText: 'Search Tags',
+          prefixIcon: const Icon(Icons.search),
+        ),
+        onSubmitted: (value) {
+          debouncer.cancel();
+          controller.search(value);
+        },
+      ),
+    );
+  }
+}
+
+class TagCard extends ConsumerWidget {
+  const TagCard({super.key, required this.item, required this.isSelected, required this.onTap});
+
+  final Tag item;
+  final bool isSelected;
+  final VoidCallback onTap;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Widget Function(Widget child) childBuilder;
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     if (item.imageBackground != null) {
       childBuilder = (child) => Ink.image(
         image: CachedNetworkImageProvider(item.imageBackground!),
         fit: BoxFit.cover,
         colorFilter: ColorFilter.mode(
-          isSelected ? Colors.green.withValues(alpha: .6) : Colors.black45,
+          colors.surface.withValues(alpha: .6),
           BlendMode.darken,
         ),
         child: child,
       );
     } else {
-      childBuilder = (child) => Container(color: isSelected ? Colors.green : Colors.grey[800], child: child);
+      childBuilder = (child) => Container(
+        color: colors.surface.withValues(alpha: .6),
+        child: child,
+      );
     }
     return Card(
       clipBehavior: Clip.antiAlias,
       shape: isSelected
           ? RoundedRectangleBorder(
-              side: const BorderSide(color: Colors.greenAccent, width: 3),
+              side: BorderSide(color: colors.primary.withValues(alpha: .6), width: 3),
               borderRadius: BorderRadius.circular(12),
             )
           : null,
       child: childBuilder(
         InkWell(
-          onTap: () {
-            // appController.setSelectedIndex(0); // Optional: stay on tags screen to select more?
-            // Let's stay on tags screen to allow multi-select.
-            searchController.toggleTag(item);
-          },
+          onTap: onTap,
           child: Stack(
             children: [
               Center(
@@ -145,13 +161,12 @@ class TagCard extends ConsumerWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     item.name,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+                    style: TextStyle(color: colors.onSurface, fontWeight: FontWeight.bold, fontSize: 16),
                     textAlign: TextAlign.center,
                   ),
                 ),
               ),
-              if (isSelected)
-                const Positioned(top: 8, right: 8, child: Icon(Icons.check_circle, color: Colors.greenAccent)),
+              if (isSelected) Positioned(top: 8, right: 8, child: Icon(Icons.check_circle, color: colors.primary)),
             ],
           ),
         ),

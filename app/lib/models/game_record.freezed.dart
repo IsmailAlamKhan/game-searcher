@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$GameRecord {
 
- String get id; String get source; String get title; List<Platform> get platforms;@JsonKey(name: 'release_date')@StringToDateConverter() DateTime? get releaseDate; String? get description;@JsonKey(name: 'image_url') String? get imageUrl; double? get score; List<Store> get stores; String? get website; List<String> get screenshots; List<Trailer> get trailers; List<DLC> get dlcs;@JsonKey(name: 'same_series') List<SameSeries> get sameSeries;@JsonKey(name: 'reddit_posts') List<RedditPost> get redditPosts; Map<String, dynamic> get extra;
+ String get id; String get title; List<Platform> get platforms;@JsonKey(name: 'release_date')@StringToDateConverter() DateTime? get releaseDate; String? get description;@JsonKey(name: 'image_url') String? get imageUrl; double? get score; List<Store> get stores; String? get website; List<String> get screenshots; List<Trailer> get trailers; List<DLC> get dlcs;@JsonKey(name: 'same_series') List<SameSeries> get sameSeries;@JsonKey(name: 'reddit_posts') List<RedditPost> get redditPosts; Map<String, dynamic> get extra;@JsonKey(name: 'esrb_rating') EsrbRating? get esrbRating;@JsonKey(includeFromJson: false, includeToJson: false) List<Color>? get colors;
 /// Create a copy of GameRecord
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $GameRecordCopyWith<GameRecord> get copyWith => _$GameRecordCopyWithImpl<GameRec
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.source, source) || other.source == source)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.platforms, platforms)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.score, score) || other.score == score)&&const DeepCollectionEquality().equals(other.stores, stores)&&(identical(other.website, website) || other.website == website)&&const DeepCollectionEquality().equals(other.screenshots, screenshots)&&const DeepCollectionEquality().equals(other.trailers, trailers)&&const DeepCollectionEquality().equals(other.dlcs, dlcs)&&const DeepCollectionEquality().equals(other.sameSeries, sameSeries)&&const DeepCollectionEquality().equals(other.redditPosts, redditPosts)&&const DeepCollectionEquality().equals(other.extra, extra));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.platforms, platforms)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.score, score) || other.score == score)&&const DeepCollectionEquality().equals(other.stores, stores)&&(identical(other.website, website) || other.website == website)&&const DeepCollectionEquality().equals(other.screenshots, screenshots)&&const DeepCollectionEquality().equals(other.trailers, trailers)&&const DeepCollectionEquality().equals(other.dlcs, dlcs)&&const DeepCollectionEquality().equals(other.sameSeries, sameSeries)&&const DeepCollectionEquality().equals(other.redditPosts, redditPosts)&&const DeepCollectionEquality().equals(other.extra, extra)&&(identical(other.esrbRating, esrbRating) || other.esrbRating == esrbRating)&&const DeepCollectionEquality().equals(other.colors, colors));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,source,title,const DeepCollectionEquality().hash(platforms),releaseDate,description,imageUrl,score,const DeepCollectionEquality().hash(stores),website,const DeepCollectionEquality().hash(screenshots),const DeepCollectionEquality().hash(trailers),const DeepCollectionEquality().hash(dlcs),const DeepCollectionEquality().hash(sameSeries),const DeepCollectionEquality().hash(redditPosts),const DeepCollectionEquality().hash(extra));
+int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(platforms),releaseDate,description,imageUrl,score,const DeepCollectionEquality().hash(stores),website,const DeepCollectionEquality().hash(screenshots),const DeepCollectionEquality().hash(trailers),const DeepCollectionEquality().hash(dlcs),const DeepCollectionEquality().hash(sameSeries),const DeepCollectionEquality().hash(redditPosts),const DeepCollectionEquality().hash(extra),esrbRating,const DeepCollectionEquality().hash(colors));
 
 @override
 String toString() {
-  return 'GameRecord(id: $id, source: $source, title: $title, platforms: $platforms, releaseDate: $releaseDate, description: $description, imageUrl: $imageUrl, score: $score, stores: $stores, website: $website, screenshots: $screenshots, trailers: $trailers, dlcs: $dlcs, sameSeries: $sameSeries, redditPosts: $redditPosts, extra: $extra)';
+  return 'GameRecord(id: $id, title: $title, platforms: $platforms, releaseDate: $releaseDate, description: $description, imageUrl: $imageUrl, score: $score, stores: $stores, website: $website, screenshots: $screenshots, trailers: $trailers, dlcs: $dlcs, sameSeries: $sameSeries, redditPosts: $redditPosts, extra: $extra, esrbRating: $esrbRating, colors: $colors)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $GameRecordCopyWith<$Res>  {
   factory $GameRecordCopyWith(GameRecord value, $Res Function(GameRecord) _then) = _$GameRecordCopyWithImpl;
 @useResult
 $Res call({
- String id, String source, String title, List<Platform> platforms,@JsonKey(name: 'release_date')@StringToDateConverter() DateTime? releaseDate, String? description,@JsonKey(name: 'image_url') String? imageUrl, double? score, List<Store> stores, String? website, List<String> screenshots, List<Trailer> trailers, List<DLC> dlcs,@JsonKey(name: 'same_series') List<SameSeries> sameSeries,@JsonKey(name: 'reddit_posts') List<RedditPost> redditPosts, Map<String, dynamic> extra
+ String id, String title, List<Platform> platforms,@JsonKey(name: 'release_date')@StringToDateConverter() DateTime? releaseDate, String? description,@JsonKey(name: 'image_url') String? imageUrl, double? score, List<Store> stores, String? website, List<String> screenshots, List<Trailer> trailers, List<DLC> dlcs,@JsonKey(name: 'same_series') List<SameSeries> sameSeries,@JsonKey(name: 'reddit_posts') List<RedditPost> redditPosts, Map<String, dynamic> extra,@JsonKey(name: 'esrb_rating') EsrbRating? esrbRating,@JsonKey(includeFromJson: false, includeToJson: false) List<Color>? colors
 });
 
 
-
+$EsrbRatingCopyWith<$Res>? get esrbRating;
 
 }
 /// @nodoc
@@ -65,10 +65,9 @@ class _$GameRecordCopyWithImpl<$Res>
 
 /// Create a copy of GameRecord
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? source = null,Object? title = null,Object? platforms = null,Object? releaseDate = freezed,Object? description = freezed,Object? imageUrl = freezed,Object? score = freezed,Object? stores = null,Object? website = freezed,Object? screenshots = null,Object? trailers = null,Object? dlcs = null,Object? sameSeries = null,Object? redditPosts = null,Object? extra = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? platforms = null,Object? releaseDate = freezed,Object? description = freezed,Object? imageUrl = freezed,Object? score = freezed,Object? stores = null,Object? website = freezed,Object? screenshots = null,Object? trailers = null,Object? dlcs = null,Object? sameSeries = null,Object? redditPosts = null,Object? extra = null,Object? esrbRating = freezed,Object? colors = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,platforms: null == platforms ? _self.platforms : platforms // ignore: cast_nullable_to_non_nullable
 as List<Platform>,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
@@ -83,10 +82,24 @@ as List<Trailer>,dlcs: null == dlcs ? _self.dlcs : dlcs // ignore: cast_nullable
 as List<DLC>,sameSeries: null == sameSeries ? _self.sameSeries : sameSeries // ignore: cast_nullable_to_non_nullable
 as List<SameSeries>,redditPosts: null == redditPosts ? _self.redditPosts : redditPosts // ignore: cast_nullable_to_non_nullable
 as List<RedditPost>,extra: null == extra ? _self.extra : extra // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>,
+as Map<String, dynamic>,esrbRating: freezed == esrbRating ? _self.esrbRating : esrbRating // ignore: cast_nullable_to_non_nullable
+as EsrbRating?,colors: freezed == colors ? _self.colors : colors // ignore: cast_nullable_to_non_nullable
+as List<Color>?,
   ));
 }
+/// Create a copy of GameRecord
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EsrbRatingCopyWith<$Res>? get esrbRating {
+    if (_self.esrbRating == null) {
+    return null;
+  }
 
+  return $EsrbRatingCopyWith<$Res>(_self.esrbRating!, (value) {
+    return _then(_self.copyWith(esrbRating: value));
+  });
+}
 }
 
 
@@ -168,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String source,  String title,  List<Platform> platforms, @JsonKey(name: 'release_date')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'image_url')  String? imageUrl,  double? score,  List<Store> stores,  String? website,  List<String> screenshots,  List<Trailer> trailers,  List<DLC> dlcs, @JsonKey(name: 'same_series')  List<SameSeries> sameSeries, @JsonKey(name: 'reddit_posts')  List<RedditPost> redditPosts,  Map<String, dynamic> extra)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  List<Platform> platforms, @JsonKey(name: 'release_date')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'image_url')  String? imageUrl,  double? score,  List<Store> stores,  String? website,  List<String> screenshots,  List<Trailer> trailers,  List<DLC> dlcs, @JsonKey(name: 'same_series')  List<SameSeries> sameSeries, @JsonKey(name: 'reddit_posts')  List<RedditPost> redditPosts,  Map<String, dynamic> extra, @JsonKey(name: 'esrb_rating')  EsrbRating? esrbRating, @JsonKey(includeFromJson: false, includeToJson: false)  List<Color>? colors)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GameRecord() when $default != null:
-return $default(_that.id,_that.source,_that.title,_that.platforms,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.stores,_that.website,_that.screenshots,_that.trailers,_that.dlcs,_that.sameSeries,_that.redditPosts,_that.extra);case _:
+return $default(_that.id,_that.title,_that.platforms,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.stores,_that.website,_that.screenshots,_that.trailers,_that.dlcs,_that.sameSeries,_that.redditPosts,_that.extra,_that.esrbRating,_that.colors);case _:
   return orElse();
 
 }
@@ -189,10 +202,10 @@ return $default(_that.id,_that.source,_that.title,_that.platforms,_that.releaseD
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String source,  String title,  List<Platform> platforms, @JsonKey(name: 'release_date')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'image_url')  String? imageUrl,  double? score,  List<Store> stores,  String? website,  List<String> screenshots,  List<Trailer> trailers,  List<DLC> dlcs, @JsonKey(name: 'same_series')  List<SameSeries> sameSeries, @JsonKey(name: 'reddit_posts')  List<RedditPost> redditPosts,  Map<String, dynamic> extra)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  List<Platform> platforms, @JsonKey(name: 'release_date')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'image_url')  String? imageUrl,  double? score,  List<Store> stores,  String? website,  List<String> screenshots,  List<Trailer> trailers,  List<DLC> dlcs, @JsonKey(name: 'same_series')  List<SameSeries> sameSeries, @JsonKey(name: 'reddit_posts')  List<RedditPost> redditPosts,  Map<String, dynamic> extra, @JsonKey(name: 'esrb_rating')  EsrbRating? esrbRating, @JsonKey(includeFromJson: false, includeToJson: false)  List<Color>? colors)  $default,) {final _that = this;
 switch (_that) {
 case _GameRecord():
-return $default(_that.id,_that.source,_that.title,_that.platforms,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.stores,_that.website,_that.screenshots,_that.trailers,_that.dlcs,_that.sameSeries,_that.redditPosts,_that.extra);case _:
+return $default(_that.id,_that.title,_that.platforms,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.stores,_that.website,_that.screenshots,_that.trailers,_that.dlcs,_that.sameSeries,_that.redditPosts,_that.extra,_that.esrbRating,_that.colors);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -209,10 +222,10 @@ return $default(_that.id,_that.source,_that.title,_that.platforms,_that.releaseD
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String source,  String title,  List<Platform> platforms, @JsonKey(name: 'release_date')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'image_url')  String? imageUrl,  double? score,  List<Store> stores,  String? website,  List<String> screenshots,  List<Trailer> trailers,  List<DLC> dlcs, @JsonKey(name: 'same_series')  List<SameSeries> sameSeries, @JsonKey(name: 'reddit_posts')  List<RedditPost> redditPosts,  Map<String, dynamic> extra)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  List<Platform> platforms, @JsonKey(name: 'release_date')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'image_url')  String? imageUrl,  double? score,  List<Store> stores,  String? website,  List<String> screenshots,  List<Trailer> trailers,  List<DLC> dlcs, @JsonKey(name: 'same_series')  List<SameSeries> sameSeries, @JsonKey(name: 'reddit_posts')  List<RedditPost> redditPosts,  Map<String, dynamic> extra, @JsonKey(name: 'esrb_rating')  EsrbRating? esrbRating, @JsonKey(includeFromJson: false, includeToJson: false)  List<Color>? colors)?  $default,) {final _that = this;
 switch (_that) {
 case _GameRecord() when $default != null:
-return $default(_that.id,_that.source,_that.title,_that.platforms,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.stores,_that.website,_that.screenshots,_that.trailers,_that.dlcs,_that.sameSeries,_that.redditPosts,_that.extra);case _:
+return $default(_that.id,_that.title,_that.platforms,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.stores,_that.website,_that.screenshots,_that.trailers,_that.dlcs,_that.sameSeries,_that.redditPosts,_that.extra,_that.esrbRating,_that.colors);case _:
   return null;
 
 }
@@ -224,11 +237,10 @@ return $default(_that.id,_that.source,_that.title,_that.platforms,_that.releaseD
 @JsonSerializable()
 
 class _GameRecord implements GameRecord {
-  const _GameRecord({required this.id, required this.source, required this.title, final  List<Platform> platforms = const [], @JsonKey(name: 'release_date')@StringToDateConverter() this.releaseDate, this.description, @JsonKey(name: 'image_url') this.imageUrl, this.score, final  List<Store> stores = const [], this.website, final  List<String> screenshots = const [], final  List<Trailer> trailers = const [], final  List<DLC> dlcs = const [], @JsonKey(name: 'same_series') final  List<SameSeries> sameSeries = const [], @JsonKey(name: 'reddit_posts') final  List<RedditPost> redditPosts = const [], final  Map<String, dynamic> extra = const {}}): _platforms = platforms,_stores = stores,_screenshots = screenshots,_trailers = trailers,_dlcs = dlcs,_sameSeries = sameSeries,_redditPosts = redditPosts,_extra = extra;
+  const _GameRecord({required this.id, required this.title, final  List<Platform> platforms = const [], @JsonKey(name: 'release_date')@StringToDateConverter() this.releaseDate, this.description, @JsonKey(name: 'image_url') this.imageUrl, this.score, final  List<Store> stores = const [], this.website, final  List<String> screenshots = const [], final  List<Trailer> trailers = const [], final  List<DLC> dlcs = const [], @JsonKey(name: 'same_series') final  List<SameSeries> sameSeries = const [], @JsonKey(name: 'reddit_posts') final  List<RedditPost> redditPosts = const [], final  Map<String, dynamic> extra = const {}, @JsonKey(name: 'esrb_rating') this.esrbRating, @JsonKey(includeFromJson: false, includeToJson: false) final  List<Color>? colors}): _platforms = platforms,_stores = stores,_screenshots = screenshots,_trailers = trailers,_dlcs = dlcs,_sameSeries = sameSeries,_redditPosts = redditPosts,_extra = extra,_colors = colors;
   factory _GameRecord.fromJson(Map<String, dynamic> json) => _$GameRecordFromJson(json);
 
 @override final  String id;
-@override final  String source;
 @override final  String title;
  final  List<Platform> _platforms;
 @override@JsonKey() List<Platform> get platforms {
@@ -291,6 +303,16 @@ class _GameRecord implements GameRecord {
   return EqualUnmodifiableMapView(_extra);
 }
 
+@override@JsonKey(name: 'esrb_rating') final  EsrbRating? esrbRating;
+ final  List<Color>? _colors;
+@override@JsonKey(includeFromJson: false, includeToJson: false) List<Color>? get colors {
+  final value = _colors;
+  if (value == null) return null;
+  if (_colors is EqualUnmodifiableListView) return _colors;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of GameRecord
 /// with the given fields replaced by the non-null parameter values.
@@ -305,16 +327,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.source, source) || other.source == source)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._platforms, _platforms)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.score, score) || other.score == score)&&const DeepCollectionEquality().equals(other._stores, _stores)&&(identical(other.website, website) || other.website == website)&&const DeepCollectionEquality().equals(other._screenshots, _screenshots)&&const DeepCollectionEquality().equals(other._trailers, _trailers)&&const DeepCollectionEquality().equals(other._dlcs, _dlcs)&&const DeepCollectionEquality().equals(other._sameSeries, _sameSeries)&&const DeepCollectionEquality().equals(other._redditPosts, _redditPosts)&&const DeepCollectionEquality().equals(other._extra, _extra));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameRecord&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._platforms, _platforms)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.score, score) || other.score == score)&&const DeepCollectionEquality().equals(other._stores, _stores)&&(identical(other.website, website) || other.website == website)&&const DeepCollectionEquality().equals(other._screenshots, _screenshots)&&const DeepCollectionEquality().equals(other._trailers, _trailers)&&const DeepCollectionEquality().equals(other._dlcs, _dlcs)&&const DeepCollectionEquality().equals(other._sameSeries, _sameSeries)&&const DeepCollectionEquality().equals(other._redditPosts, _redditPosts)&&const DeepCollectionEquality().equals(other._extra, _extra)&&(identical(other.esrbRating, esrbRating) || other.esrbRating == esrbRating)&&const DeepCollectionEquality().equals(other._colors, _colors));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,source,title,const DeepCollectionEquality().hash(_platforms),releaseDate,description,imageUrl,score,const DeepCollectionEquality().hash(_stores),website,const DeepCollectionEquality().hash(_screenshots),const DeepCollectionEquality().hash(_trailers),const DeepCollectionEquality().hash(_dlcs),const DeepCollectionEquality().hash(_sameSeries),const DeepCollectionEquality().hash(_redditPosts),const DeepCollectionEquality().hash(_extra));
+int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(_platforms),releaseDate,description,imageUrl,score,const DeepCollectionEquality().hash(_stores),website,const DeepCollectionEquality().hash(_screenshots),const DeepCollectionEquality().hash(_trailers),const DeepCollectionEquality().hash(_dlcs),const DeepCollectionEquality().hash(_sameSeries),const DeepCollectionEquality().hash(_redditPosts),const DeepCollectionEquality().hash(_extra),esrbRating,const DeepCollectionEquality().hash(_colors));
 
 @override
 String toString() {
-  return 'GameRecord(id: $id, source: $source, title: $title, platforms: $platforms, releaseDate: $releaseDate, description: $description, imageUrl: $imageUrl, score: $score, stores: $stores, website: $website, screenshots: $screenshots, trailers: $trailers, dlcs: $dlcs, sameSeries: $sameSeries, redditPosts: $redditPosts, extra: $extra)';
+  return 'GameRecord(id: $id, title: $title, platforms: $platforms, releaseDate: $releaseDate, description: $description, imageUrl: $imageUrl, score: $score, stores: $stores, website: $website, screenshots: $screenshots, trailers: $trailers, dlcs: $dlcs, sameSeries: $sameSeries, redditPosts: $redditPosts, extra: $extra, esrbRating: $esrbRating, colors: $colors)';
 }
 
 
@@ -325,11 +347,11 @@ abstract mixin class _$GameRecordCopyWith<$Res> implements $GameRecordCopyWith<$
   factory _$GameRecordCopyWith(_GameRecord value, $Res Function(_GameRecord) _then) = __$GameRecordCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String source, String title, List<Platform> platforms,@JsonKey(name: 'release_date')@StringToDateConverter() DateTime? releaseDate, String? description,@JsonKey(name: 'image_url') String? imageUrl, double? score, List<Store> stores, String? website, List<String> screenshots, List<Trailer> trailers, List<DLC> dlcs,@JsonKey(name: 'same_series') List<SameSeries> sameSeries,@JsonKey(name: 'reddit_posts') List<RedditPost> redditPosts, Map<String, dynamic> extra
+ String id, String title, List<Platform> platforms,@JsonKey(name: 'release_date')@StringToDateConverter() DateTime? releaseDate, String? description,@JsonKey(name: 'image_url') String? imageUrl, double? score, List<Store> stores, String? website, List<String> screenshots, List<Trailer> trailers, List<DLC> dlcs,@JsonKey(name: 'same_series') List<SameSeries> sameSeries,@JsonKey(name: 'reddit_posts') List<RedditPost> redditPosts, Map<String, dynamic> extra,@JsonKey(name: 'esrb_rating') EsrbRating? esrbRating,@JsonKey(includeFromJson: false, includeToJson: false) List<Color>? colors
 });
 
 
-
+@override $EsrbRatingCopyWith<$Res>? get esrbRating;
 
 }
 /// @nodoc
@@ -342,10 +364,9 @@ class __$GameRecordCopyWithImpl<$Res>
 
 /// Create a copy of GameRecord
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? source = null,Object? title = null,Object? platforms = null,Object? releaseDate = freezed,Object? description = freezed,Object? imageUrl = freezed,Object? score = freezed,Object? stores = null,Object? website = freezed,Object? screenshots = null,Object? trailers = null,Object? dlcs = null,Object? sameSeries = null,Object? redditPosts = null,Object? extra = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? platforms = null,Object? releaseDate = freezed,Object? description = freezed,Object? imageUrl = freezed,Object? score = freezed,Object? stores = null,Object? website = freezed,Object? screenshots = null,Object? trailers = null,Object? dlcs = null,Object? sameSeries = null,Object? redditPosts = null,Object? extra = null,Object? esrbRating = freezed,Object? colors = freezed,}) {
   return _then(_GameRecord(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,source: null == source ? _self.source : source // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,platforms: null == platforms ? _self._platforms : platforms // ignore: cast_nullable_to_non_nullable
 as List<Platform>,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
@@ -360,11 +381,25 @@ as List<Trailer>,dlcs: null == dlcs ? _self._dlcs : dlcs // ignore: cast_nullabl
 as List<DLC>,sameSeries: null == sameSeries ? _self._sameSeries : sameSeries // ignore: cast_nullable_to_non_nullable
 as List<SameSeries>,redditPosts: null == redditPosts ? _self._redditPosts : redditPosts // ignore: cast_nullable_to_non_nullable
 as List<RedditPost>,extra: null == extra ? _self._extra : extra // ignore: cast_nullable_to_non_nullable
-as Map<String, dynamic>,
+as Map<String, dynamic>,esrbRating: freezed == esrbRating ? _self.esrbRating : esrbRating // ignore: cast_nullable_to_non_nullable
+as EsrbRating?,colors: freezed == colors ? _self._colors : colors // ignore: cast_nullable_to_non_nullable
+as List<Color>?,
   ));
 }
 
+/// Create a copy of GameRecord
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EsrbRatingCopyWith<$Res>? get esrbRating {
+    if (_self.esrbRating == null) {
+    return null;
+  }
 
+  return $EsrbRatingCopyWith<$Res>(_self.esrbRating!, (value) {
+    return _then(_self.copyWith(esrbRating: value));
+  });
+}
 }
 
 
@@ -2485,8 +2520,8 @@ return $default(_that.id,_that.name,_that.requirements,_that.released,_that.colo
 /// @nodoc
 @JsonSerializable()
 
-class _Platform implements Platform {
-  const _Platform({required this.id, this.name, this.requirements, this.released, @StringToColorConverter() this.color, this.icon});
+class _Platform extends Platform {
+  const _Platform({required this.id, this.name, this.requirements, this.released, @StringToColorConverter() this.color, this.icon}): super._();
   factory _Platform.fromJson(Map<String, dynamic> json) => _$PlatformFromJson(json);
 
 @override final  int id;
@@ -2832,6 +2867,556 @@ class __$RequirementsCopyWithImpl<$Res>
   return _then(_Requirements(
 minimum: freezed == minimum ? _self.minimum : minimum // ignore: cast_nullable_to_non_nullable
 as String?,recommended: freezed == recommended ? _self.recommended : recommended // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$GameScreenshot {
+
+ int get id; String? get image; int? get width; int? get height;@JsonKey(name: "is_deleted", defaultValue: false) bool get isDeleted;
+/// Create a copy of GameScreenshot
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$GameScreenshotCopyWith<GameScreenshot> get copyWith => _$GameScreenshotCopyWithImpl<GameScreenshot>(this as GameScreenshot, _$identity);
+
+  /// Serializes this GameScreenshot to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameScreenshot&&(identical(other.id, id) || other.id == id)&&(identical(other.image, image) || other.image == image)&&(identical(other.width, width) || other.width == width)&&(identical(other.height, height) || other.height == height)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,image,width,height,isDeleted);
+
+@override
+String toString() {
+  return 'GameScreenshot(id: $id, image: $image, width: $width, height: $height, isDeleted: $isDeleted)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $GameScreenshotCopyWith<$Res>  {
+  factory $GameScreenshotCopyWith(GameScreenshot value, $Res Function(GameScreenshot) _then) = _$GameScreenshotCopyWithImpl;
+@useResult
+$Res call({
+ int id, String? image, int? width, int? height,@JsonKey(name: "is_deleted", defaultValue: false) bool isDeleted
+});
+
+
+
+
+}
+/// @nodoc
+class _$GameScreenshotCopyWithImpl<$Res>
+    implements $GameScreenshotCopyWith<$Res> {
+  _$GameScreenshotCopyWithImpl(this._self, this._then);
+
+  final GameScreenshot _self;
+  final $Res Function(GameScreenshot) _then;
+
+/// Create a copy of GameScreenshot
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? image = freezed,Object? width = freezed,Object? height = freezed,Object? isDeleted = null,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,image: freezed == image ? _self.image : image // ignore: cast_nullable_to_non_nullable
+as String?,width: freezed == width ? _self.width : width // ignore: cast_nullable_to_non_nullable
+as int?,height: freezed == height ? _self.height : height // ignore: cast_nullable_to_non_nullable
+as int?,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [GameScreenshot].
+extension GameScreenshotPatterns on GameScreenshot {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GameScreenshot value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _GameScreenshot() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GameScreenshot value)  $default,){
+final _that = this;
+switch (_that) {
+case _GameScreenshot():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GameScreenshot value)?  $default,){
+final _that = this;
+switch (_that) {
+case _GameScreenshot() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? image,  int? width,  int? height, @JsonKey(name: "is_deleted", defaultValue: false)  bool isDeleted)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _GameScreenshot() when $default != null:
+return $default(_that.id,_that.image,_that.width,_that.height,_that.isDeleted);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? image,  int? width,  int? height, @JsonKey(name: "is_deleted", defaultValue: false)  bool isDeleted)  $default,) {final _that = this;
+switch (_that) {
+case _GameScreenshot():
+return $default(_that.id,_that.image,_that.width,_that.height,_that.isDeleted);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? image,  int? width,  int? height, @JsonKey(name: "is_deleted", defaultValue: false)  bool isDeleted)?  $default,) {final _that = this;
+switch (_that) {
+case _GameScreenshot() when $default != null:
+return $default(_that.id,_that.image,_that.width,_that.height,_that.isDeleted);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _GameScreenshot implements GameScreenshot {
+  const _GameScreenshot({required this.id, this.image, this.width, this.height, @JsonKey(name: "is_deleted", defaultValue: false) this.isDeleted = false});
+  factory _GameScreenshot.fromJson(Map<String, dynamic> json) => _$GameScreenshotFromJson(json);
+
+@override final  int id;
+@override final  String? image;
+@override final  int? width;
+@override final  int? height;
+@override@JsonKey(name: "is_deleted", defaultValue: false) final  bool isDeleted;
+
+/// Create a copy of GameScreenshot
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$GameScreenshotCopyWith<_GameScreenshot> get copyWith => __$GameScreenshotCopyWithImpl<_GameScreenshot>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$GameScreenshotToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameScreenshot&&(identical(other.id, id) || other.id == id)&&(identical(other.image, image) || other.image == image)&&(identical(other.width, width) || other.width == width)&&(identical(other.height, height) || other.height == height)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,image,width,height,isDeleted);
+
+@override
+String toString() {
+  return 'GameScreenshot(id: $id, image: $image, width: $width, height: $height, isDeleted: $isDeleted)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$GameScreenshotCopyWith<$Res> implements $GameScreenshotCopyWith<$Res> {
+  factory _$GameScreenshotCopyWith(_GameScreenshot value, $Res Function(_GameScreenshot) _then) = __$GameScreenshotCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, String? image, int? width, int? height,@JsonKey(name: "is_deleted", defaultValue: false) bool isDeleted
+});
+
+
+
+
+}
+/// @nodoc
+class __$GameScreenshotCopyWithImpl<$Res>
+    implements _$GameScreenshotCopyWith<$Res> {
+  __$GameScreenshotCopyWithImpl(this._self, this._then);
+
+  final _GameScreenshot _self;
+  final $Res Function(_GameScreenshot) _then;
+
+/// Create a copy of GameScreenshot
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? image = freezed,Object? width = freezed,Object? height = freezed,Object? isDeleted = null,}) {
+  return _then(_GameScreenshot(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,image: freezed == image ? _self.image : image // ignore: cast_nullable_to_non_nullable
+as String?,width: freezed == width ? _self.width : width // ignore: cast_nullable_to_non_nullable
+as int?,height: freezed == height ? _self.height : height // ignore: cast_nullable_to_non_nullable
+as int?,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$EsrbRating {
+
+ int get id; String? get name;@JsonKey(name: "slug")@EsrbRatingSlugConverter() EsrbRatingSlug? get slug; String? get nameEn; String? get nameRu;
+/// Create a copy of EsrbRating
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EsrbRatingCopyWith<EsrbRating> get copyWith => _$EsrbRatingCopyWithImpl<EsrbRating>(this as EsrbRating, _$identity);
+
+  /// Serializes this EsrbRating to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EsrbRating&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn)&&(identical(other.nameRu, nameRu) || other.nameRu == nameRu));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,slug,nameEn,nameRu);
+
+@override
+String toString() {
+  return 'EsrbRating(id: $id, name: $name, slug: $slug, nameEn: $nameEn, nameRu: $nameRu)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EsrbRatingCopyWith<$Res>  {
+  factory $EsrbRatingCopyWith(EsrbRating value, $Res Function(EsrbRating) _then) = _$EsrbRatingCopyWithImpl;
+@useResult
+$Res call({
+ int id, String? name,@JsonKey(name: "slug")@EsrbRatingSlugConverter() EsrbRatingSlug? slug, String? nameEn, String? nameRu
+});
+
+
+
+
+}
+/// @nodoc
+class _$EsrbRatingCopyWithImpl<$Res>
+    implements $EsrbRatingCopyWith<$Res> {
+  _$EsrbRatingCopyWithImpl(this._self, this._then);
+
+  final EsrbRating _self;
+  final $Res Function(EsrbRating) _then;
+
+/// Create a copy of EsrbRating
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = freezed,Object? slug = freezed,Object? nameEn = freezed,Object? nameRu = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,slug: freezed == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
+as EsrbRatingSlug?,nameEn: freezed == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
+as String?,nameRu: freezed == nameRu ? _self.nameRu : nameRu // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [EsrbRating].
+extension EsrbRatingPatterns on EsrbRating {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EsrbRating value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _EsrbRating() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EsrbRating value)  $default,){
+final _that = this;
+switch (_that) {
+case _EsrbRating():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EsrbRating value)?  $default,){
+final _that = this;
+switch (_that) {
+case _EsrbRating() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String? name, @JsonKey(name: "slug")@EsrbRatingSlugConverter()  EsrbRatingSlug? slug,  String? nameEn,  String? nameRu)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _EsrbRating() when $default != null:
+return $default(_that.id,_that.name,_that.slug,_that.nameEn,_that.nameRu);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String? name, @JsonKey(name: "slug")@EsrbRatingSlugConverter()  EsrbRatingSlug? slug,  String? nameEn,  String? nameRu)  $default,) {final _that = this;
+switch (_that) {
+case _EsrbRating():
+return $default(_that.id,_that.name,_that.slug,_that.nameEn,_that.nameRu);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String? name, @JsonKey(name: "slug")@EsrbRatingSlugConverter()  EsrbRatingSlug? slug,  String? nameEn,  String? nameRu)?  $default,) {final _that = this;
+switch (_that) {
+case _EsrbRating() when $default != null:
+return $default(_that.id,_that.name,_that.slug,_that.nameEn,_that.nameRu);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _EsrbRating extends EsrbRating {
+  const _EsrbRating({required this.id, this.name, @JsonKey(name: "slug")@EsrbRatingSlugConverter() this.slug, this.nameEn, this.nameRu}): super._();
+  factory _EsrbRating.fromJson(Map<String, dynamic> json) => _$EsrbRatingFromJson(json);
+
+@override final  int id;
+@override final  String? name;
+@override@JsonKey(name: "slug")@EsrbRatingSlugConverter() final  EsrbRatingSlug? slug;
+@override final  String? nameEn;
+@override final  String? nameRu;
+
+/// Create a copy of EsrbRating
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$EsrbRatingCopyWith<_EsrbRating> get copyWith => __$EsrbRatingCopyWithImpl<_EsrbRating>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$EsrbRatingToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EsrbRating&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.nameEn, nameEn) || other.nameEn == nameEn)&&(identical(other.nameRu, nameRu) || other.nameRu == nameRu));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,slug,nameEn,nameRu);
+
+@override
+String toString() {
+  return 'EsrbRating(id: $id, name: $name, slug: $slug, nameEn: $nameEn, nameRu: $nameRu)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$EsrbRatingCopyWith<$Res> implements $EsrbRatingCopyWith<$Res> {
+  factory _$EsrbRatingCopyWith(_EsrbRating value, $Res Function(_EsrbRating) _then) = __$EsrbRatingCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, String? name,@JsonKey(name: "slug")@EsrbRatingSlugConverter() EsrbRatingSlug? slug, String? nameEn, String? nameRu
+});
+
+
+
+
+}
+/// @nodoc
+class __$EsrbRatingCopyWithImpl<$Res>
+    implements _$EsrbRatingCopyWith<$Res> {
+  __$EsrbRatingCopyWithImpl(this._self, this._then);
+
+  final _EsrbRating _self;
+  final $Res Function(_EsrbRating) _then;
+
+/// Create a copy of EsrbRating
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = freezed,Object? slug = freezed,Object? nameEn = freezed,Object? nameRu = freezed,}) {
+  return _then(_EsrbRating(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,slug: freezed == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
+as EsrbRatingSlug?,nameEn: freezed == nameEn ? _self.nameEn : nameEn // ignore: cast_nullable_to_non_nullable
+as String?,nameRu: freezed == nameRu ? _self.nameRu : nameRu // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

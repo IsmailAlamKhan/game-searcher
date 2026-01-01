@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../main.dart';
 import '../services/process_service.dart';
+import '../utils/theme.dart';
 
 class StartupScreen extends StatefulWidget {
   const StartupScreen({super.key});
@@ -88,54 +89,46 @@ class _StartupScreenState extends State<StartupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final themeData = getAppThemeData();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF1A1A1A),
-        textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme),
-      ),
+      theme: themeData,
       home: Scaffold(
         body: Center(
-          child: Container(
+          child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 400),
-            padding: const EdgeInsets.all(32),
-            decoration: BoxDecoration(
-              color: const Color(0xFF2C2C2C),
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.3),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
+            child: Padding(
+              padding: const EdgeInsets.all(32),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
                 ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(Icons.gamepad, size: 64, color: Colors.blueAccent),
-                const SizedBox(height: 24),
-                Text(
-                  'GameSearcher',
-                  style: GoogleFonts.outfit(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.gamepad, size: 64, color: themeData.primaryColor),
+                    const SizedBox(height: 24),
+                    Text(
+                      'GameSearcher',
+                      style: GoogleFonts.outfit(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                    LinearProgressIndicator(
+                      value: _progress,
+                      backgroundColor: Colors.white10,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      _status,
+                      style: const TextStyle(color: Colors.white70),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 32),
-                LinearProgressIndicator(
-                  value: _progress,
-                  backgroundColor: Colors.white10,
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.blueAccent),
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  _status,
-                  style: const TextStyle(color: Colors.white70),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
             ),
           ),
         ),

@@ -18,6 +18,8 @@ class SpecSelectionDialog extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     final showManual = useState(false);
     final cpuController = useTextEditingController();
     final gpuController = useTextEditingController();
@@ -86,7 +88,7 @@ class SpecSelectionDialog extends HookConsumerWidget {
               ),
               if (error.value != null) ...[
                 const SizedBox(height: 12),
-                Text(error.value!, style: const TextStyle(color: Colors.red)),
+                Text(error.value!, style: TextStyle(color: colors.error)),
               ],
               const SizedBox(height: 12),
               TextButton(

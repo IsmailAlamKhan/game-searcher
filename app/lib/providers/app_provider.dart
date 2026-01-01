@@ -25,4 +25,17 @@ class AppController extends _$AppController {
       state = state.copyWith(selectedIndex: index);
     });
   }
+
+  void setBlurAdultContent(bool blurAdultContent) {
+    if (blurAdultContent == state.blurAdultContent) return;
+
+    state = state.copyWith(blurAdultContent: blurAdultContent);
+  }
+
+  void setDefaultColor([Color? color]) {
+    if (color == state.defaultColor) return;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      state = state.copyWith(defaultColor: color);
+    });
+  }
 }

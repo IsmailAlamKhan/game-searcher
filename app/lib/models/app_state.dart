@@ -1,10 +1,13 @@
+import 'dart:ui';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_state.freezed.dart';
 
 @freezed
 abstract class AppState with _$AppState {
-  const factory AppState({@Default(0) int selectedIndex}) = _AppState;
+  const factory AppState({@Default(0) int selectedIndex, @Default(true) bool blurAdultContent, Color? defaultColor}) =
+      _AppState;
 
   static const routes = ["/", "/tags"];
 }

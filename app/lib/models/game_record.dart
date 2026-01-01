@@ -5,11 +5,41 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'game_record.freezed.dart';
 part 'game_record.g.dart';
 
+enum GamePlatform {
+  pc(1, 'PC'),
+  playStation(2, 'PlayStation'),
+  xbox(3, 'Xbox'),
+  iOS(4, 'iOS'),
+  android(8, 'Android'),
+  macOS(5, 'macOS'),
+  linux(6, 'Linux'),
+  nintendoSwitch(7, 'Nintendo Switch')
+  ;
+
+  final int id;
+  final String name;
+
+  const GamePlatform(this.id, this.name);
+}
+
+enum GameOrdering {
+  // name, released, added, created, updated, rating, metacritic
+  name,
+  released,
+  added,
+  created,
+  updated,
+  rating,
+  metacritic
+  ;
+
+  String ordering(bool isReverse) => isReverse ? '-${this.name}' : this.name;
+}
+
 @freezed
 abstract class GameRecord with _$GameRecord {
   const factory GameRecord({
     required String id,
-    required String source,
     required String title,
     @Default([]) List<Platform> platforms,
     @JsonKey(name: 'release_date') @StringToDateConverter() DateTime? releaseDate,
@@ -24,6 +54,8 @@ abstract class GameRecord with _$GameRecord {
     @JsonKey(name: 'same_series') @Default([]) List<SameSeries> sameSeries,
     @JsonKey(name: 'reddit_posts') @Default([]) List<RedditPost> redditPosts,
     @Default({}) Map<String, dynamic> extra,
+    @JsonKey(name: 'esrb_rating') EsrbRating? esrbRating,
+    @JsonKey(includeFromJson: false, includeToJson: false) List<Color>? colors,
   }) = _GameRecord;
 
   factory GameRecord.fromJson(Map<String, dynamic> json) => _$GameRecordFromJson(json);
@@ -92,6 +124,7 @@ abstract class HorizontalList with _$HorizontalList {
 
 @freezed
 abstract class Platform with _$Platform {
+  const Platform._();
   const factory Platform({
     required int id,
     String? name,
@@ -102,6 +135,8 @@ abstract class Platform with _$Platform {
   }) = _Platform;
 
   factory Platform.fromJson(Map<String, dynamic> json) => _$PlatformFromJson(json);
+
+  GamePlatform get platform => GamePlatform.values.firstWhere((p) => p.id == id);
 }
 
 @freezed
@@ -129,4 +164,86 @@ class StringToColorConverter implements JsonConverter<Color?, String?> {
 
   @override
   String? toJson(Color? object) => null;
+}
+
+@freezed
+abstract class GameScreenshot with _$GameScreenshot {
+  const factory GameScreenshot({
+    required int id,
+    String? image,
+    int? width,
+    int? height,
+    @Default(false) @JsonKey(name: "is_deleted", defaultValue: false) bool isDeleted,
+  }) = _GameScreenshot;
+
+  factory GameScreenshot.fromJson(Map<String, dynamic> json) => _$GameScreenshotFromJson(json);
+}
+
+enum EsrbRatingSlug {
+  adultsOnly,
+  everyone,
+  everyone10Plus,
+  mature,
+  teenagers,
+  ratingPending,
+}
+
+@freezed
+abstract class EsrbRating with _$EsrbRating {
+  const EsrbRating._();
+  const factory EsrbRating({
+    required int id,
+    String? name,
+    @JsonKey(name: "slug") @EsrbRatingSlugConverter() EsrbRatingSlug? slug,
+    String? nameEn,
+    String? nameRu,
+  }) = _EsrbRating;
+
+  factory EsrbRating.fromJson(Map<String, dynamic> json) => _$EsrbRatingFromJson(json);
+
+  bool get isAdultOnly => slug == EsrbRatingSlug.adultsOnly;
+}
+
+class EsrbRatingSlugConverter implements JsonConverter<EsrbRatingSlug?, String?> {
+  const EsrbRatingSlugConverter();
+
+  @override
+  EsrbRatingSlug? fromJson(String? json) {
+    if (json == null) return null;
+    switch (json) {
+      case 'adults-only':
+        return EsrbRatingSlug.adultsOnly;
+      case 'everyone':
+        return EsrbRatingSlug.everyone;
+      case 'everyone-10-plus':
+        return EsrbRatingSlug.everyone10Plus;
+      case 'mature':
+        return EsrbRatingSlug.mature;
+      case 'teen':
+        return EsrbRatingSlug.teenagers;
+      case 'rating-pending':
+        return EsrbRatingSlug.ratingPending;
+      default:
+        return null;
+    }
+  }
+
+  @override
+  String? toJson(EsrbRatingSlug? object) {
+    if (object == null) return null;
+    switch (object) {
+      case EsrbRatingSlug.adultsOnly:
+        return 'adults-only';
+      case EsrbRatingSlug.everyone:
+        return 'everyone';
+      case EsrbRatingSlug.everyone10Plus:
+        return 'everyone-10-plus';
+      case EsrbRatingSlug.mature:
+        return 'mature';
+      case EsrbRatingSlug.teenagers:
+        return 'teen';
+      case EsrbRatingSlug.ratingPending:
+        return 'rating-pending';
+    }
+  }
 }

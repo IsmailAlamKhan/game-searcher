@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
 
 import '../utils/logger.dart';
@@ -15,41 +14,22 @@ class ProcessService {
     if (_process != null) return;
 
     try {
-      String exePath;
       String workingDirectory;
       List<String> args = [];
       String executable;
 
-      if (kDebugMode) {
-        // In Debug mode, assume we are in app/ and engine/ is a sibling
-        executable = 'python';
-        // Correct path resolution for project root from app/lib/services
-        // Directory.current in flutter run is usually the project root (e.g. app/)
-        // needed to go up one level to get to the monorepo root
-        final appDir = Directory.current.path;
-        final projectRoot = p.dirname(appDir);
-        final enginePath = p.join(projectRoot, 'engine');
-
-        workingDirectory = enginePath;
-        exePath = p.join(enginePath, 'main.py');
-        args = [exePath];
-        appLogger.i('Starting engine in DEBUG mode: $executable $args in $workingDirectory');
-      } else {
-        // In Release mode, the engine is bundled relative to the executable
-        final executableDir = p.dirname(Platform.resolvedExecutable);
-        final engineDir = p.join(executableDir, 'data', 'engine');
-        workingDirectory = engineDir;
-        executable = p.join(engineDir, 'game_search_engine.exe');
-        exePath = executable;
-        args = []; // Arguments are baked in or passed if needed
-        appLogger.i('Starting engine in RELEASE mode: $executable in $workingDirectory');
-      }
+      // In Release mode, the engine is bundled relative to the executable
+      final executableDir = p.dirname(Platform.resolvedExecutable);
+      final engineDir = p.join(executableDir, 'data', 'engine');
+      workingDirectory = engineDir;
+      executable = p.join(engineDir, 'game_search_engine.exe');
+      args = []; // Arguments are baked in or passed if needed
+      appLogger.i('Starting engine in: $executable in $workingDirectory');
 
       _process = await Process.start(
         executable,
         args,
         workingDirectory: workingDirectory,
-        runInShell: false,
       );
 
       _process!.stdout.listen((event) {

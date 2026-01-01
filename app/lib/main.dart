@@ -1,8 +1,10 @@
 import 'dart:ui'; // Needed for AppExitResponse on recent versions? No, it's typically in services or ui.
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'providers/app_provider.dart';
 import 'screens/startup_screen.dart';
 import 'services/process_service.dart';
 // Actually AppExitResponse is in services.dart since Flutter 3.13. No separate import needed usually if material is imported, but let's check.
@@ -10,6 +12,7 @@ import 'services/process_service.dart';
 // `AppExitResponse` is in `dart:ui`.
 import 'utils/logger.dart';
 import 'utils/router.dart';
+import 'utils/theme.dart';
 
 final class _ProviderObserver extends ProviderObserver {
   @override
@@ -36,7 +39,12 @@ final class _ProviderObserver extends ProviderObserver {
 }
 
 void main() {
-  runApp(const StartupScreen());
+  WidgetsFlutterBinding.ensureInitialized();
+  if (kReleaseMode) {
+    runApp(const StartupScreen());
+  } else {
+    launchApp();
+  }
 }
 
 void launchApp() {
@@ -81,12 +89,11 @@ class _GameSearchAppState extends ConsumerState<GameSearchApp> with WidgetsBindi
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(appRouterProvider);
+    final appState = ref.watch(appControllerProvider);
+    appLogger.d('======= Default color: ${appState.defaultColor}');
     return MaterialApp.router(
       title: 'GameSearch Studio',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF5865F2), brightness: Brightness.dark),
-        useMaterial3: true,
-      ),
+      theme: getAppThemeData(appState.defaultColor),
       routerConfig: router,
     );
   }
