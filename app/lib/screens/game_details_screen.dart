@@ -144,6 +144,24 @@ class _GameDetailsContent extends StatelessWidget {
           children: [
             if (game.imageUrl != null)
               CachedNetworkImage(imageUrl: game.imageUrl!, fit: BoxFit.cover, placeholder: (_, _) => Container()),
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 250,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: gradientColors,
+                    stops: extractedColors != null && extractedColors.isNotEmpty
+                        ? null // Let the gradient distribute evenly
+                        : const [0.5, 0.8, 1.0],
+                  ),
+                ),
+              ),
+            ),
             // Gradient Overlay
             DecoratedBox(
               decoration: BoxDecoration(
