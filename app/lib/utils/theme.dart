@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+Color defaultSeedColor = const Color(0xFF202e63);
 ThemeData getAppThemeData([Color? seedColor]) {
-  seedColor ??= const Color(0xFF5865F2);
-  return ThemeData(
+  seedColor ??= defaultSeedColor;
+
+  ThemeData theme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: seedColor,
       brightness: Brightness.dark,
@@ -43,4 +46,8 @@ ThemeData getAppThemeData([Color? seedColor]) {
       filled: true,
     ),
   );
+  final textTheme = GoogleFonts.electrolizeTextTheme(theme.textTheme);
+  theme = theme.copyWith(textTheme: textTheme);
+
+  return theme;
 }

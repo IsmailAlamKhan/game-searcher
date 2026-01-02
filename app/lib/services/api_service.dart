@@ -116,6 +116,34 @@ class ApiService {
       );
     });
   }
+
+  Future<PagainatedApiResponse<RedditPost>> getRedditPosts(String gameId, {int pageSize = 20, int page = 1}) async {
+    return catchException(() async {
+      final response = await _dio.get(
+        '/game/$gameId/reddit',
+        queryParameters: {'page_size': pageSize, 'page': page},
+      );
+
+      return PagainatedApiResponse<RedditPost>.fromJSON(
+        response.data as Map<String, dynamic>,
+        RedditPost.fromJson,
+      );
+    });
+  }
+
+  Future<PagainatedApiResponse<DLC>> getDLCs(String gameId, {int pageSize = 20, int page = 1}) async {
+    return catchException(() async {
+      final response = await _dio.get(
+        '/game/$gameId/dlc',
+        queryParameters: {'page_size': pageSize, 'page': page},
+      );
+
+      return PagainatedApiResponse<DLC>.fromJSON(
+        response.data as Map<String, dynamic>,
+        DLC.fromJson,
+      );
+    });
+  }
 }
 
 Future<T> catchException<T>(Future<T> Function() func) async {

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'logger.dart';
 
 final DateFormat appDateFormat = DateFormat('dd MMM, yyyy');
+const appName = 'GameHunter';
 
 Future<void> launchUrlWithLogging(String urlString) async {
   final Uri url = Uri.parse(urlString);

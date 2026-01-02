@@ -106,10 +106,9 @@ class _GameDetailsContent extends StatelessWidget {
                     onItemTap: (id) => context.push('/details/$id'),
                   ),
                 ],
-                if (game.redditPosts.isNotEmpty) ...[
-                  const SizedBox(height: 32),
-                  GameDetailsRedditSection(game: game),
-                ],
+
+                const SizedBox(height: 32),
+                GameDetailsRedditSection(game: game),
               ],
             ),
           ),

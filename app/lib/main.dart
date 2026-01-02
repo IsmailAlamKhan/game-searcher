@@ -1,15 +1,14 @@
-import 'dart:ui'; // Needed for AppExitResponse on recent versions? No, it's typically in services or ui.
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:window_manager/window_manager.dart';
 
 import 'providers/app_provider.dart';
 import 'screens/startup_screen.dart';
-import 'services/process_service.dart';
 // Actually AppExitResponse is in services.dart since Flutter 3.13. No separate import needed usually if material is imported, but let's check.
 // It is in dart:ui. But wait, `didRequestAppExit` is WidgetsBindingObserver.
 // `AppExitResponse` is in `dart:ui`.
+import 'utils/constants.dart';
 import 'utils/logger.dart';
 import 'utils/router.dart';
 import 'utils/theme.dart';
@@ -38,8 +37,22 @@ final class _ProviderObserver extends ProviderObserver {
   }
 }
 
-void main() {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // Must add this line.
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = WindowOptions(
+    center: true,
+    backgroundColor: defaultSeedColor,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+    title: appName,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
   if (kReleaseMode) {
     runApp(const StartupScreen());
   } else {
@@ -66,35 +79,20 @@ class GameSearchApp extends ConsumerStatefulWidget {
   ConsumerState<GameSearchApp> createState() => _GameSearchAppState();
 }
 
-class _GameSearchAppState extends ConsumerState<GameSearchApp> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    processService.stopEngine();
-    super.dispose();
-  }
-
-  @override
-  Future<AppExitResponse> didRequestAppExit() async {
-    await processService.stopEngine();
-    return AppExitResponse.exit;
-  }
-
+class _GameSearchAppState extends ConsumerState<GameSearchApp> {
   @override
   Widget build(BuildContext context) {
     final router = ref.watch(appRouterProvider);
     final appState = ref.watch(appControllerProvider);
-    appLogger.d('======= Default color: ${appState.defaultColor}');
+    final virtualWindowFrameBuilder = VirtualWindowFrameInit();
     return MaterialApp.router(
-      title: 'GameSearch Studio',
+      title: appName,
       theme: getAppThemeData(appState.defaultColor),
       routerConfig: router,
+      builder: (context, child) {
+        child = virtualWindowFrameBuilder(context, child!);
+        return child;
+      },
     );
   }
 }

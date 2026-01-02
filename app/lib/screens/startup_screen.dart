@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../main.dart';
 import '../services/process_service.dart';
+import '../utils/constants.dart';
 import '../utils/theme.dart';
 
 class StartupScreen extends StatefulWidget {
@@ -109,11 +109,8 @@ class _StartupScreenState extends State<StartupScreen> {
                     Icon(Icons.gamepad, size: 64, color: themeData.primaryColor),
                     const SizedBox(height: 24),
                     Text(
-                      'GameSearcher',
-                      style: GoogleFonts.outfit(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      appName,
+                      style: themeData.textTheme.titleLarge,
                     ),
                     const SizedBox(height: 32),
                     LinearProgressIndicator(
@@ -123,7 +120,7 @@ class _StartupScreenState extends State<StartupScreen> {
                     const SizedBox(height: 16),
                     Text(
                       _status,
-                      style: const TextStyle(color: Colors.white70),
+                      style: themeData.textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
                   ],

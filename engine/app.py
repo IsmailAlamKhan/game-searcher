@@ -14,7 +14,7 @@ setup_logging()
 logger = logging.getLogger()
 
 
-app = FastAPI(title="GameSearch Engine")
+app = FastAPI(title="GameHunter Engine")
 
 
 # Initialize Engine and Manager

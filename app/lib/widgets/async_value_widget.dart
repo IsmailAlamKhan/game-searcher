@@ -42,10 +42,11 @@ class AppErrorWidget extends HookWidget {
     super.key,
     this.onRetry,
     required this.message,
-    this.isError = true,
+
     String? title,
     this.isCompact = false,
-  }) : title = title ?? "Something went wrong";
+  }) : title = title ?? "Something went wrong",
+       isError = true;
 
   const AppErrorWidget.empty({super.key, this.onRetry, String? title, this.isCompact = false})
     : message = null,

@@ -17,16 +17,13 @@ class GameScore extends HookWidget {
     if (scoreInPercent < 60) scoreColor = Colors.orange;
     if (scoreInPercent < 40) scoreColor = Colors.red;
     // final textWidth = getTextSize(score.toString(), TextStyle(fontSize: size.toDouble())).width;
-    final textWidth = useState(0.0);
-    useEffect(() {
-      textWidth.value = getTextSize(score.toString(), TextStyle(fontSize: size.toDouble())).width;
-      return () {};
-    }, [score, size]);
+    final textWidth = getTextSize(score.toString(), TextStyle(fontSize: size.toDouble()), context).width;
+
     final verticalSpacing = size * 0.3;
     final horizontalSpacing = size * 0.6;
     final iconSize = size * 1.2;
     // +7 for some buffer incase of overflow
-    final wholeBoxSize = textWidth.value + iconSize + horizontalSpacing + horizontalSpacing + horizontalSpacing + 7;
+    final wholeBoxSize = textWidth + iconSize + horizontalSpacing + horizontalSpacing + horizontalSpacing + 7;
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: horizontalSpacing, vertical: verticalSpacing),
