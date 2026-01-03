@@ -61,7 +61,7 @@ class _StartupScreenState extends State<StartupScreen> {
         await Future.delayed(const Duration(milliseconds: 500));
 
         if (mounted) {
-          launchApp();
+          await launchApp();
         }
       } else {
         if (attempts > 60) {

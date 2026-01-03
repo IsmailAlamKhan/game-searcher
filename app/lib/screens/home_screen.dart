@@ -5,6 +5,7 @@ import 'package:window_manager/window_manager.dart';
 
 import '../models/app_state.dart';
 import '../providers/app_provider.dart';
+import '../services/package_service.dart';
 import '../services/process_service.dart';
 import '../utils/constants.dart';
 
@@ -86,6 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WindowListener {
     final appState = ref.watch(appControllerProvider);
     final selectedIndex = appState.selectedIndex;
     final theme = Theme.of(context);
+    final packageInfo = ref.watch(packageInfoProvider);
 
     return Scaffold(
       appBar: PreferredSize(
@@ -99,6 +101,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WindowListener {
       body: Row(
         children: [
           NavigationRail(
+            trailingAtBottom: true,
+            trailing: Text("v${packageInfo.version}"),
             selectedIndex: selectedIndex,
             onDestinationSelected: (int index) {
               context.go(AppState.routes[index]);
@@ -107,7 +111,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WindowListener {
             destinations: const <NavigationRailDestination>[
               NavigationRailDestination(icon: Icon(Icons.search), label: Text('Search')),
               NavigationRailDestination(icon: Icon(Icons.tag), label: Text('Tags')),
-              // NavigationRailDestination(icon: Icon(Icons.save), label: Text('Presets')),
             ],
           ),
           const VerticalDivider(thickness: 1, width: 1),

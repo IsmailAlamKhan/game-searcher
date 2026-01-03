@@ -8,6 +8,7 @@ import 'screens/startup_screen.dart';
 // Actually AppExitResponse is in services.dart since Flutter 3.13. No separate import needed usually if material is imported, but let's check.
 // It is in dart:ui. But wait, `didRequestAppExit` is WidgetsBindingObserver.
 // `AppExitResponse` is in `dart:ui`.
+import 'services/package_service.dart';
 import 'utils/constants.dart';
 import 'utils/logger.dart';
 import 'utils/router.dart';
@@ -56,20 +57,18 @@ Future<void> main() async {
   if (kReleaseMode) {
     runApp(const StartupScreen());
   } else {
-    launchApp();
+    await launchApp();
   }
 }
 
-void launchApp() {
-  runApp(
-    ProviderScope(
-      observers: [_ProviderObserver()],
-      child: const GameSearchApp(),
-      retry: (retryCount, error) {
-        return null;
-      },
-    ),
+Future<void> launchApp() async {
+  final providerContainer = ProviderContainer(
+    observers: [_ProviderObserver()],
+    retry: (retryCount, error) => null,
   );
+  await providerContainer.read(packageServiceProvider).init();
+
+  runApp(UncontrolledProviderScope(container: providerContainer, child: const GameSearchApp()));
 }
 
 class GameSearchApp extends ConsumerStatefulWidget {
