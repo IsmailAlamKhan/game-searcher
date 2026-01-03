@@ -27,7 +27,6 @@ class GameDetailsRedditSection extends HookConsumerWidget {
         final error = state.error;
         final firstPageError = state.status == PagingStatus.firstPageError;
 
-        print("total: ${state.status}");
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
