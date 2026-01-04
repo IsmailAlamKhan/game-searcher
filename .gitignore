@@ -11,4 +11,4 @@ custom_scrapers/
 debug_*.html
 debug_*.py
 version.json
-
+installers/*
