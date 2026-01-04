@@ -6,6 +6,7 @@ import '../providers/app_provider.dart';
 import '../screens/game_details_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/search_screen.dart';
+import '../screens/settings_screen.dart';
 import '../screens/tags_screen.dart';
 
 part 'router.g.dart';
@@ -37,6 +38,13 @@ GoRouter appRouter(Ref ref) {
             path: '/tags',
             builder: (BuildContext context, GoRouterState state) {
               return const TagsScreen();
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
+            path: '/settings',
+            builder: (BuildContext context, GoRouterState state) {
+              return const SettingsScreen();
             },
           ),
           GoRoute(

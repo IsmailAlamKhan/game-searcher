@@ -20,7 +20,7 @@ final class AppControllerProvider
         argument: null,
         retry: null,
         name: r'appControllerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -41,7 +41,7 @@ final class AppControllerProvider
   }
 }
 
-String _$appControllerHash() => r'4e0755e5a75d2ba3be5107dec97709e606b164e7';
+String _$appControllerHash() => r'1fe32f1bc691c2a1d73fcfbbe1ad76433734e2a5';
 
 abstract class _$AppController extends $Notifier<AppState> {
   AppState build();

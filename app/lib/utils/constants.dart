@@ -8,6 +8,11 @@ import 'logger.dart';
 final DateFormat appDateFormat = DateFormat('dd MMM, yyyy');
 const appName = 'GameHunter';
 
+// RAWG API Attribution
+const rawgApiName = 'RAWG';
+const rawgApiUrl = 'https://rawg.io/';
+const rawgApiAttribution = 'Powered by RAWG API';
+
 Future<void> launchUrlWithLogging(String urlString) async {
   final Uri url = Uri.parse(urlString);
   if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {

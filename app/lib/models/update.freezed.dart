@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Update {
 
- String get version; String get changelog;
+ String get version; String get changelog; String get downloadUrl; int get fileSize; String? get checksum; DateTime? get releaseDate;
 /// Create a copy of Update
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $UpdateCopyWith<Update> get copyWith => _$UpdateCopyWithImpl<Update>(this as Upd
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Update&&(identical(other.version, version) || other.version == version)&&(identical(other.changelog, changelog) || other.changelog == changelog));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Update&&(identical(other.version, version) || other.version == version)&&(identical(other.changelog, changelog) || other.changelog == changelog)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.checksum, checksum) || other.checksum == checksum)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,version,changelog);
+int get hashCode => Object.hash(runtimeType,version,changelog,downloadUrl,fileSize,checksum,releaseDate);
 
 @override
 String toString() {
-  return 'Update(version: $version, changelog: $changelog)';
+  return 'Update(version: $version, changelog: $changelog, downloadUrl: $downloadUrl, fileSize: $fileSize, checksum: $checksum, releaseDate: $releaseDate)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $UpdateCopyWith<$Res>  {
   factory $UpdateCopyWith(Update value, $Res Function(Update) _then) = _$UpdateCopyWithImpl;
 @useResult
 $Res call({
- String version, String changelog
+ String version, String changelog, String downloadUrl, int fileSize, String? checksum, DateTime? releaseDate
 });
 
 
@@ -62,11 +62,15 @@ class _$UpdateCopyWithImpl<$Res>
 
 /// Create a copy of Update
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? changelog = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? version = null,Object? changelog = null,Object? downloadUrl = null,Object? fileSize = null,Object? checksum = freezed,Object? releaseDate = freezed,}) {
   return _then(_self.copyWith(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,changelog: null == changelog ? _self.changelog : changelog // ignore: cast_nullable_to_non_nullable
-as String,
+as String,downloadUrl: null == downloadUrl ? _self.downloadUrl : downloadUrl // ignore: cast_nullable_to_non_nullable
+as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
+as int,checksum: freezed == checksum ? _self.checksum : checksum // ignore: cast_nullable_to_non_nullable
+as String?,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -151,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version,  String changelog)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String version,  String changelog,  String downloadUrl,  int fileSize,  String? checksum,  DateTime? releaseDate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Update() when $default != null:
-return $default(_that.version,_that.changelog);case _:
+return $default(_that.version,_that.changelog,_that.downloadUrl,_that.fileSize,_that.checksum,_that.releaseDate);case _:
   return orElse();
 
 }
@@ -172,10 +176,10 @@ return $default(_that.version,_that.changelog);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version,  String changelog)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String version,  String changelog,  String downloadUrl,  int fileSize,  String? checksum,  DateTime? releaseDate)  $default,) {final _that = this;
 switch (_that) {
 case _Update():
-return $default(_that.version,_that.changelog);case _:
+return $default(_that.version,_that.changelog,_that.downloadUrl,_that.fileSize,_that.checksum,_that.releaseDate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +196,10 @@ return $default(_that.version,_that.changelog);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version,  String changelog)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String version,  String changelog,  String downloadUrl,  int fileSize,  String? checksum,  DateTime? releaseDate)?  $default,) {final _that = this;
 switch (_that) {
 case _Update() when $default != null:
-return $default(_that.version,_that.changelog);case _:
+return $default(_that.version,_that.changelog,_that.downloadUrl,_that.fileSize,_that.checksum,_that.releaseDate);case _:
   return null;
 
 }
@@ -207,11 +211,15 @@ return $default(_that.version,_that.changelog);case _:
 
 
 class _Update implements Update {
-  const _Update({required this.version, required this.changelog});
+  const _Update({required this.version, required this.changelog, required this.downloadUrl, required this.fileSize, this.checksum, this.releaseDate});
   
 
 @override final  String version;
 @override final  String changelog;
+@override final  String downloadUrl;
+@override final  int fileSize;
+@override final  String? checksum;
+@override final  DateTime? releaseDate;
 
 /// Create a copy of Update
 /// with the given fields replaced by the non-null parameter values.
@@ -223,16 +231,16 @@ _$UpdateCopyWith<_Update> get copyWith => __$UpdateCopyWithImpl<_Update>(this, _
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Update&&(identical(other.version, version) || other.version == version)&&(identical(other.changelog, changelog) || other.changelog == changelog));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Update&&(identical(other.version, version) || other.version == version)&&(identical(other.changelog, changelog) || other.changelog == changelog)&&(identical(other.downloadUrl, downloadUrl) || other.downloadUrl == downloadUrl)&&(identical(other.fileSize, fileSize) || other.fileSize == fileSize)&&(identical(other.checksum, checksum) || other.checksum == checksum)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,version,changelog);
+int get hashCode => Object.hash(runtimeType,version,changelog,downloadUrl,fileSize,checksum,releaseDate);
 
 @override
 String toString() {
-  return 'Update(version: $version, changelog: $changelog)';
+  return 'Update(version: $version, changelog: $changelog, downloadUrl: $downloadUrl, fileSize: $fileSize, checksum: $checksum, releaseDate: $releaseDate)';
 }
 
 
@@ -243,7 +251,7 @@ abstract mixin class _$UpdateCopyWith<$Res> implements $UpdateCopyWith<$Res> {
   factory _$UpdateCopyWith(_Update value, $Res Function(_Update) _then) = __$UpdateCopyWithImpl;
 @override @useResult
 $Res call({
- String version, String changelog
+ String version, String changelog, String downloadUrl, int fileSize, String? checksum, DateTime? releaseDate
 });
 
 
@@ -260,11 +268,15 @@ class __$UpdateCopyWithImpl<$Res>
 
 /// Create a copy of Update
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? changelog = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? version = null,Object? changelog = null,Object? downloadUrl = null,Object? fileSize = null,Object? checksum = freezed,Object? releaseDate = freezed,}) {
   return _then(_Update(
 version: null == version ? _self.version : version // ignore: cast_nullable_to_non_nullable
 as String,changelog: null == changelog ? _self.changelog : changelog // ignore: cast_nullable_to_non_nullable
-as String,
+as String,downloadUrl: null == downloadUrl ? _self.downloadUrl : downloadUrl // ignore: cast_nullable_to_non_nullable
+as String,fileSize: null == fileSize ? _self.fileSize : fileSize // ignore: cast_nullable_to_non_nullable
+as int,checksum: freezed == checksum ? _self.checksum : checksum // ignore: cast_nullable_to_non_nullable
+as String?,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

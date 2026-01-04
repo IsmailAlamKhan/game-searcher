@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppState {
 
- int get selectedIndex; bool get blurAdultContent; Color? get defaultColor;
+ int get selectedIndex; bool get blurAdultContent; Color? get themeSeedColor; ThemeMode get themeMode; bool get autoUpdateEnabled; Duration get autoUpdateInterval;
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $AppStateCopyWith<AppState> get copyWith => _$AppStateCopyWithImpl<AppState>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppState&&(identical(other.selectedIndex, selectedIndex) || other.selectedIndex == selectedIndex)&&(identical(other.blurAdultContent, blurAdultContent) || other.blurAdultContent == blurAdultContent)&&(identical(other.defaultColor, defaultColor) || other.defaultColor == defaultColor));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppState&&(identical(other.selectedIndex, selectedIndex) || other.selectedIndex == selectedIndex)&&(identical(other.blurAdultContent, blurAdultContent) || other.blurAdultContent == blurAdultContent)&&(identical(other.themeSeedColor, themeSeedColor) || other.themeSeedColor == themeSeedColor)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.autoUpdateEnabled, autoUpdateEnabled) || other.autoUpdateEnabled == autoUpdateEnabled)&&(identical(other.autoUpdateInterval, autoUpdateInterval) || other.autoUpdateInterval == autoUpdateInterval));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,selectedIndex,blurAdultContent,defaultColor);
+int get hashCode => Object.hash(runtimeType,selectedIndex,blurAdultContent,themeSeedColor,themeMode,autoUpdateEnabled,autoUpdateInterval);
 
 @override
 String toString() {
-  return 'AppState(selectedIndex: $selectedIndex, blurAdultContent: $blurAdultContent, defaultColor: $defaultColor)';
+  return 'AppState(selectedIndex: $selectedIndex, blurAdultContent: $blurAdultContent, themeSeedColor: $themeSeedColor, themeMode: $themeMode, autoUpdateEnabled: $autoUpdateEnabled, autoUpdateInterval: $autoUpdateInterval)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $AppStateCopyWith<$Res>  {
   factory $AppStateCopyWith(AppState value, $Res Function(AppState) _then) = _$AppStateCopyWithImpl;
 @useResult
 $Res call({
- int selectedIndex, bool blurAdultContent, Color? defaultColor
+ int selectedIndex, bool blurAdultContent, Color? themeSeedColor, ThemeMode themeMode, bool autoUpdateEnabled, Duration autoUpdateInterval
 });
 
 
@@ -62,12 +62,15 @@ class _$AppStateCopyWithImpl<$Res>
 
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? selectedIndex = null,Object? blurAdultContent = null,Object? defaultColor = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? selectedIndex = null,Object? blurAdultContent = null,Object? themeSeedColor = freezed,Object? themeMode = null,Object? autoUpdateEnabled = null,Object? autoUpdateInterval = null,}) {
   return _then(_self.copyWith(
 selectedIndex: null == selectedIndex ? _self.selectedIndex : selectedIndex // ignore: cast_nullable_to_non_nullable
 as int,blurAdultContent: null == blurAdultContent ? _self.blurAdultContent : blurAdultContent // ignore: cast_nullable_to_non_nullable
-as bool,defaultColor: freezed == defaultColor ? _self.defaultColor : defaultColor // ignore: cast_nullable_to_non_nullable
-as Color?,
+as bool,themeSeedColor: freezed == themeSeedColor ? _self.themeSeedColor : themeSeedColor // ignore: cast_nullable_to_non_nullable
+as Color?,themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
+as ThemeMode,autoUpdateEnabled: null == autoUpdateEnabled ? _self.autoUpdateEnabled : autoUpdateEnabled // ignore: cast_nullable_to_non_nullable
+as bool,autoUpdateInterval: null == autoUpdateInterval ? _self.autoUpdateInterval : autoUpdateInterval // ignore: cast_nullable_to_non_nullable
+as Duration,
   ));
 }
 
@@ -152,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int selectedIndex,  bool blurAdultContent,  Color? defaultColor)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int selectedIndex,  bool blurAdultContent,  Color? themeSeedColor,  ThemeMode themeMode,  bool autoUpdateEnabled,  Duration autoUpdateInterval)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppState() when $default != null:
-return $default(_that.selectedIndex,_that.blurAdultContent,_that.defaultColor);case _:
+return $default(_that.selectedIndex,_that.blurAdultContent,_that.themeSeedColor,_that.themeMode,_that.autoUpdateEnabled,_that.autoUpdateInterval);case _:
   return orElse();
 
 }
@@ -173,10 +176,10 @@ return $default(_that.selectedIndex,_that.blurAdultContent,_that.defaultColor);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int selectedIndex,  bool blurAdultContent,  Color? defaultColor)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int selectedIndex,  bool blurAdultContent,  Color? themeSeedColor,  ThemeMode themeMode,  bool autoUpdateEnabled,  Duration autoUpdateInterval)  $default,) {final _that = this;
 switch (_that) {
 case _AppState():
-return $default(_that.selectedIndex,_that.blurAdultContent,_that.defaultColor);case _:
+return $default(_that.selectedIndex,_that.blurAdultContent,_that.themeSeedColor,_that.themeMode,_that.autoUpdateEnabled,_that.autoUpdateInterval);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +196,10 @@ return $default(_that.selectedIndex,_that.blurAdultContent,_that.defaultColor);c
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int selectedIndex,  bool blurAdultContent,  Color? defaultColor)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int selectedIndex,  bool blurAdultContent,  Color? themeSeedColor,  ThemeMode themeMode,  bool autoUpdateEnabled,  Duration autoUpdateInterval)?  $default,) {final _that = this;
 switch (_that) {
 case _AppState() when $default != null:
-return $default(_that.selectedIndex,_that.blurAdultContent,_that.defaultColor);case _:
+return $default(_that.selectedIndex,_that.blurAdultContent,_that.themeSeedColor,_that.themeMode,_that.autoUpdateEnabled,_that.autoUpdateInterval);case _:
   return null;
 
 }
@@ -208,12 +211,15 @@ return $default(_that.selectedIndex,_that.blurAdultContent,_that.defaultColor);c
 
 
 class _AppState implements AppState {
-  const _AppState({this.selectedIndex = 0, this.blurAdultContent = true, this.defaultColor});
+  const _AppState({this.selectedIndex = 0, this.blurAdultContent = true, this.themeSeedColor, this.themeMode = ThemeMode.system, this.autoUpdateEnabled = true, this.autoUpdateInterval = const Duration(hours: 1)});
   
 
 @override@JsonKey() final  int selectedIndex;
 @override@JsonKey() final  bool blurAdultContent;
-@override final  Color? defaultColor;
+@override final  Color? themeSeedColor;
+@override@JsonKey() final  ThemeMode themeMode;
+@override@JsonKey() final  bool autoUpdateEnabled;
+@override@JsonKey() final  Duration autoUpdateInterval;
 
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +231,16 @@ _$AppStateCopyWith<_AppState> get copyWith => __$AppStateCopyWithImpl<_AppState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppState&&(identical(other.selectedIndex, selectedIndex) || other.selectedIndex == selectedIndex)&&(identical(other.blurAdultContent, blurAdultContent) || other.blurAdultContent == blurAdultContent)&&(identical(other.defaultColor, defaultColor) || other.defaultColor == defaultColor));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppState&&(identical(other.selectedIndex, selectedIndex) || other.selectedIndex == selectedIndex)&&(identical(other.blurAdultContent, blurAdultContent) || other.blurAdultContent == blurAdultContent)&&(identical(other.themeSeedColor, themeSeedColor) || other.themeSeedColor == themeSeedColor)&&(identical(other.themeMode, themeMode) || other.themeMode == themeMode)&&(identical(other.autoUpdateEnabled, autoUpdateEnabled) || other.autoUpdateEnabled == autoUpdateEnabled)&&(identical(other.autoUpdateInterval, autoUpdateInterval) || other.autoUpdateInterval == autoUpdateInterval));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,selectedIndex,blurAdultContent,defaultColor);
+int get hashCode => Object.hash(runtimeType,selectedIndex,blurAdultContent,themeSeedColor,themeMode,autoUpdateEnabled,autoUpdateInterval);
 
 @override
 String toString() {
-  return 'AppState(selectedIndex: $selectedIndex, blurAdultContent: $blurAdultContent, defaultColor: $defaultColor)';
+  return 'AppState(selectedIndex: $selectedIndex, blurAdultContent: $blurAdultContent, themeSeedColor: $themeSeedColor, themeMode: $themeMode, autoUpdateEnabled: $autoUpdateEnabled, autoUpdateInterval: $autoUpdateInterval)';
 }
 
 
@@ -245,7 +251,7 @@ abstract mixin class _$AppStateCopyWith<$Res> implements $AppStateCopyWith<$Res>
   factory _$AppStateCopyWith(_AppState value, $Res Function(_AppState) _then) = __$AppStateCopyWithImpl;
 @override @useResult
 $Res call({
- int selectedIndex, bool blurAdultContent, Color? defaultColor
+ int selectedIndex, bool blurAdultContent, Color? themeSeedColor, ThemeMode themeMode, bool autoUpdateEnabled, Duration autoUpdateInterval
 });
 
 
@@ -262,12 +268,15 @@ class __$AppStateCopyWithImpl<$Res>
 
 /// Create a copy of AppState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? selectedIndex = null,Object? blurAdultContent = null,Object? defaultColor = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? selectedIndex = null,Object? blurAdultContent = null,Object? themeSeedColor = freezed,Object? themeMode = null,Object? autoUpdateEnabled = null,Object? autoUpdateInterval = null,}) {
   return _then(_AppState(
 selectedIndex: null == selectedIndex ? _self.selectedIndex : selectedIndex // ignore: cast_nullable_to_non_nullable
 as int,blurAdultContent: null == blurAdultContent ? _self.blurAdultContent : blurAdultContent // ignore: cast_nullable_to_non_nullable
-as bool,defaultColor: freezed == defaultColor ? _self.defaultColor : defaultColor // ignore: cast_nullable_to_non_nullable
-as Color?,
+as bool,themeSeedColor: freezed == themeSeedColor ? _self.themeSeedColor : themeSeedColor // ignore: cast_nullable_to_non_nullable
+as Color?,themeMode: null == themeMode ? _self.themeMode : themeMode // ignore: cast_nullable_to_non_nullable
+as ThemeMode,autoUpdateEnabled: null == autoUpdateEnabled ? _self.autoUpdateEnabled : autoUpdateEnabled // ignore: cast_nullable_to_non_nullable
+as bool,autoUpdateInterval: null == autoUpdateInterval ? _self.autoUpdateInterval : autoUpdateInterval // ignore: cast_nullable_to_non_nullable
+as Duration,
   ));
 }
 

@@ -7,6 +7,7 @@ import '../models/game_record.dart';
 import '../services/api_service.dart';
 import '../utils/get_colors_from_image.dart';
 import '../utils/logger.dart';
+import 'app_provider.dart';
 
 part 'game_details_provider.g.dart';
 
@@ -14,19 +15,19 @@ part 'game_details_provider.g.dart';
 class GameDetails extends _$GameDetails {
   @override
   Future<GameRecord> build(String id) async {
-    appLogger.d('------ Building game details for $id');
     final api = ref.watch(apiServiceProvider);
-    appLogger.d('------ Fetching game details for $id');
+
     return api
         .getGameDetails(id)
         .then((value) async {
-          appLogger.d('------ Fetched game details for $id');
           List<Color> colors;
-          appLogger.d('------ Fetching colors for $id');
           if (value.imageUrl != null) {
             try {
               final imageProvider = CachedNetworkImageProvider(value.imageUrl!);
               colors = await getColorsFromImage(imageProvider);
+              ref
+                  .read(appControllerProvider.notifier)
+                  .setThemeSeedColor(color: colors.first, shouldUpdateStorage: false);
             } catch (e) {
               colors = [];
             }

@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../models/game_record.dart';
 import '../providers/app_provider.dart';
 import '../providers/game_details_provider.dart';
+import '../utils/theme.dart';
 import '../widgets/async_value_widget.dart';
 import '../widgets/compatibility_fab.dart';
 import '../widgets/game_description.dart';
@@ -28,17 +29,14 @@ class GameDetailsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final gameAsync = ref.watch(gameDetailsProvider(gameId));
 
-    final colors = ref.watch(gameDetailsProvider(gameId).select((value) => value.value?.colors));
     final appController = ref.watch(appControllerProvider.notifier);
 
     useEffect(() {
-      if (colors != null && colors.isNotEmpty) {
-        appController.setDefaultColor(colors.first);
-      }
       return () {
-        appController.setDefaultColor();
+        appController.setThemeSeedColor(color: defaultSeedColor, shouldUpdateStorage: false);
       };
-    }, [colors]);
+    }, []);
+
     return SelectionArea(
       child: Scaffold(
         body: AsyncValueWidget<GameRecord>(

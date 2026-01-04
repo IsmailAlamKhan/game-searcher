@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Color defaultSeedColor = const Color(0xFF202e63);
-ThemeData getAppThemeData([Color? seedColor]) {
+const Color defaultSeedColor = Color(0xFF202e63);
+
+ThemeData getAppThemeData([Color? seedColor, Brightness brightness = Brightness.dark]) {
   seedColor ??= defaultSeedColor;
 
   ThemeData theme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
       seedColor: seedColor,
-      brightness: Brightness.dark,
+      brightness: brightness,
       dynamicSchemeVariant: DynamicSchemeVariant.content,
     ),
     useMaterial3: true,

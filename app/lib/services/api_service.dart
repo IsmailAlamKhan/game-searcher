@@ -7,21 +7,20 @@ import '../models/game_record.dart';
 import '../models/response.dart';
 import '../models/search.dart';
 import '../models/tag.dart';
+import '../utils/dio.dart';
 import '../utils/logger.dart';
 
 part 'api_service.g.dart';
 
 @Riverpod(keepAlive: true)
 ApiService apiService(Ref ref) {
-  final dio = Dio(BaseOptions(baseUrl: 'http://127.0.0.1:5678'));
-  dio.interceptors.add(PrettyDioLogger());
-  return ApiService(dio);
+  return ApiService(ref);
 }
 
 class ApiService {
   final Dio _dio;
 
-  ApiService(this._dio);
+  ApiService(Ref ref) : _dio = ref.read(engineDioProvider);
 
   Future<PagainatedApiResponse<GameRecord>> search({
     int pageSize = 20,
