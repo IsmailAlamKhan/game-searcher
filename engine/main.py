@@ -1,12 +1,14 @@
 import argparse
+import logging
 
 import uvicorn
 from core.logger import setup_logging
 
 
 def main():
-    setup_logging()
-    parser = argparse.ArgumentParser(description="Game List Scraper Engine")
+    # Setup custom logging first
+    log_file = setup_logging()
+
     parser = argparse.ArgumentParser(description="Game Search Engine")
     parser.add_argument(
         "--port",
@@ -23,9 +25,23 @@ def main():
 
     args = parser.parse_args()
 
-    print(f"Starting server on {args.host}:{args.port}")
+    # Get logger after setup_logging() has configured it
+    logger = logging.getLogger(__name__)
+    logger.info(f"Starting server on {args.host}:{args.port}")
+    logger.info(f"Logs are being written to: {log_file}")
 
-    uvicorn.run("app:app", host=args.host, port=args.port, reload=True)
+    try:
+        # Disable uvicorn's default logging configuration to use ours
+        uvicorn.run(
+            "app:app",
+            host=args.host,
+            port=args.port,
+            reload=True,
+            log_config=None,  # This prevents uvicorn from overriding our logging
+            access_log=True,  # Still log access requests
+        )
+    except Exception as e:
+        logger.error(f"Failed to start server: {e}", exc_info=True)
 
 
 if __name__ == "__main__":

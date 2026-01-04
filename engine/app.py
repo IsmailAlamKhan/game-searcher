@@ -3,15 +3,12 @@ from typing import List, Optional
 
 from clients.rawg import RawgClient
 from core.compatibility import check_compatibility
-from core.logger import setup_logging
 from core.models import GameRecord, SearchQuery
 from core.system_info import get_system_specs
 from fastapi import FastAPI, HTTPException, Query
 
-setup_logging()
-
-
-logger = logging.getLogger()
+# Logger will be configured by main.py's setup_logging()
+logger = logging.getLogger(__name__)
 
 
 app = FastAPI(title="GameHunter Engine")

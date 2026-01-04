@@ -67,7 +67,8 @@ python -m nuitka `
     --include-package=uvicorn `
     --include-package=fastapi `
     --output-dir="$TEMP_BUILD_DIR" `
-    --output-filename="game_search_engine.exe" `
+    --output-filename="game_hunter_engine.exe" `
+    --include-module=app `
     --quiet `
     --assume-yes-for-downloads `
     main.py

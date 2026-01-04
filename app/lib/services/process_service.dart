@@ -22,7 +22,7 @@ class ProcessService {
       final executableDir = p.dirname(Platform.resolvedExecutable);
       final engineDir = p.join(executableDir, 'data', 'engine');
       workingDirectory = engineDir;
-      executable = p.join(engineDir, 'game_search_engine.exe');
+      executable = p.join(engineDir, 'game_hunter_engine.exe');
       args = []; // Arguments are baked in or passed if needed
       appLogger.i('Starting engine in: $executable in $workingDirectory');
 
@@ -67,7 +67,7 @@ class ProcessService {
     _isShuttingDown = true;
     if (_process != null) {
       appLogger.i('Stopping engine...');
-      _process!.kill();
+      _process!.kill(ProcessSignal.sigkill);
       _process = null;
     }
   }

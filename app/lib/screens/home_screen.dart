@@ -76,7 +76,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> with WindowListener {
           );
         },
       );
-      await Future.delayed(const Duration(seconds: 3));
+      await Future.delayed(const Duration(seconds: 1));
       await processService.stopEngine();
       windowManager.destroy();
     }

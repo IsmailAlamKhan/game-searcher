@@ -7,7 +7,7 @@
 #define MyAppExeName "game_hunter.exe"
 
 ; Acquire version from argument or file if complex, for now hardcoded or passed via CLI
-#define MyAppVersion "0.0.2"
+#define MyAppVersion "0.0.3"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
