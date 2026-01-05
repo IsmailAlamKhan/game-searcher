@@ -138,10 +138,7 @@ class TagCard extends ConsumerWidget {
         child: child,
       );
     } else {
-      childBuilder = (child) => Container(
-        color: colors.surface.withValues(alpha: .6),
-        child: child,
-      );
+      childBuilder = (child) => child;
     }
     return Card(
       clipBehavior: Clip.antiAlias,

@@ -44,6 +44,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           _buildAppearanceSettings(),
           const SizedBox(height: 32),
 
+          // Content Filtering Section
+          _buildSectionHeader('Content Filtering', Icons.blur_on, theme),
+          const SizedBox(height: 16),
+          _buildContentFilteringSettings(),
+          const SizedBox(height: 32),
+
           // About Section
           _buildSectionHeader('About', Icons.info_outline, theme),
           const SizedBox(height: 16),
@@ -69,7 +75,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _buildAutoUpdateSettings() {
-    final controller = ref.watch(appControllerProvider.notifier);
     final state = ref.watch(appControllerProvider);
     final autoUpdateEnabled = state.autoUpdateEnabled;
     final interval = state.autoUpdateInterval;
@@ -97,6 +102,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             trailing: const Icon(Icons.chevron_right),
             onTap: autoUpdateEnabled ? () => _showIntervalDialog(interval) : null,
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContentFilteringSettings() {
+    final state = ref.watch(appControllerProvider);
+    final controller = ref.watch(appControllerProvider.notifier);
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          SwitchListTile(
+            title: const Text('Blur adult content'),
+            subtitle: const Text('Blur out adult content in search results and tag'),
+            value: state.blurAdultContent,
+            onChanged: (value) {
+              controller.setBlurAdultContent(value);
+            },
+          ),
+
+          // const Divider(height: 1),
+          // ListTile(
+          //   title: const Text('Content filtering level'),
+          //   subtitle: Text('Currently: ${_formatContentFilteringLevel(contentFilteringLevel)}'),
+          //   // enabled: contentFilteringEnabled,
+          //   enabled: false,
+          //   trailing: const Icon(Icons.chevron_right),
+          //   onTap: contentFilteringEnabled ? () => _showContentFilteringLevelDialog(contentFilteringLevel) : null,
+          // ),
         ],
       ),
     );

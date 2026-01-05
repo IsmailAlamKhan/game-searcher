@@ -185,7 +185,25 @@ enum EsrbRatingSlug {
   everyone10Plus,
   mature,
   teenagers,
-  ratingPending,
+  ratingPending
+  ;
+
+  String get name {
+    switch (this) {
+      case EsrbRatingSlug.adultsOnly:
+        return 'Adults Only';
+      case EsrbRatingSlug.everyone:
+        return 'Everyone';
+      case EsrbRatingSlug.everyone10Plus:
+        return 'Everyone 10+';
+      case EsrbRatingSlug.mature:
+        return 'Mature';
+      case EsrbRatingSlug.teenagers:
+        return 'Teenagers';
+      case EsrbRatingSlug.ratingPending:
+        return 'Rating Pending';
+    }
+  }
 }
 
 @freezed

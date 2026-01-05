@@ -35,7 +35,7 @@ class TagsController {
     refresh();
   }
 
-  int? _next = 0;
+  int? _next = 1;
   int? get next => _next;
 
   int _count = 0;
@@ -55,10 +55,7 @@ class TagsController {
     _pagingController = PagingController<int, Tag>(
       fetchPage: _fetchPage,
       getNextPageKey: (state) {
-        return state.lastPageIsEmpty
-            ///|| (lastPage?.length ?? 0) < _pageSize
-            ? null
-            : state.nextIntPageKey;
+        return _next;
       },
     );
   }
