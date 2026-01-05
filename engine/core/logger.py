@@ -1,3 +1,15 @@
+"""GameHunter Engine - Logging Configuration.
+
+This module provides centralized logging configuration for the GameHunter Engine.
+Logs are written to both console (stderr) and daily rotating log files organized
+by date in the application data directory.
+
+Log Structure:
+    Windows: %APPDATA%/GameSearch Studio/logs/YYYY/MM/DD/service.log
+    macOS: ~/Library/Application Support/GameSearch Studio/logs/YYYY/MM/DD/service.log
+    Linux: ~/.local/share/GameSearch Studio/logs/YYYY/MM/DD/service.log
+"""
+
 import logging
 import os
 import platform
@@ -7,8 +19,20 @@ from pathlib import Path
 
 
 def get_app_data_dir(app_name: str) -> Path:
-    """
-    Get the application data directory for the current platform.
+    r"""Get the platform-specific application data directory.
+
+    Returns the appropriate application data directory for the current operating system.
+
+    Args:
+        app_name: Name of the application (used as subdirectory name).
+
+    Returns:
+        Path: Platform-specific application data directory path.
+
+    Examples:
+        Windows: C:\Users\Username\AppData\Roaming\GameSearch Studio
+        macOS: /Users/Username/Library/Application Support/GameSearch Studio
+        Linux: /home/username/.local/share/GameSearch Studio
     """
     system = platform.system()
 
@@ -32,9 +56,26 @@ def get_app_data_dir(app_name: str) -> Path:
 
 
 def setup_logging(app_name: str = "GameSearch Studio"):
-    """
-    Configure logging to file and console.
-    Structure: AppData/AppName/logs/YYYY/MM/DD/service.log
+    """Configure application-wide logging to file and console.
+
+    Sets up dual logging handlers: one for file output with detailed formatting,
+    and one for console output with simplified formatting. Log files are organized
+    in a daily folder structure for easy navigation and cleanup.
+
+    Args:
+        app_name: Application name for the log directory (default: "GameSearch Studio").
+
+    Returns:
+        Path: Path to the created log file.
+
+    Note:
+        This function is idempotent - calling it multiple times will reset handlers
+        and reconfigure logging without creating duplicates.
+
+    Example:
+        >>> log_file = setup_logging()
+        >>> import logging
+        >>> logging.info("Server started")
     """
     now = datetime.now()
     app_data_dir = get_app_data_dir(app_name)

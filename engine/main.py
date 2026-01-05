@@ -1,3 +1,13 @@
+"""GameHunter Engine - Entry Point.
+
+This module serves as the entry point for the GameHunter Engine server.
+It configures logging, parses command-line arguments, and starts the Uvicorn
+ASGI server to run the FastAPI application.
+
+Usage:
+    python main.py [--host HOST] [--port PORT]
+"""
+
 import argparse
 import logging
 
@@ -6,6 +16,18 @@ from core.logger import setup_logging
 
 
 def main():
+    """Initialize and start the GameHunter Engine server.
+
+    Configures logging, parses command-line arguments for host and port settings,
+    and starts the Uvicorn ASGI server with the FastAPI application.
+
+    The server runs in reload mode for development, automatically restarting
+    when code changes are detected.
+
+    Command-line Args:
+        --host: The host address to bind to (default: 127.0.0.1)
+        --port: The port number to listen on (default: 5678)
+    """
     # Setup custom logging first
     log_file = setup_logging()
 

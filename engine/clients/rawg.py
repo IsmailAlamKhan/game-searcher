@@ -1,3 +1,15 @@
+"""GameHunter Engine - RAWG API Client.
+
+This module provides a client for interacting with the RAWG.io Video Games Database API.
+It handles game search, detailed game information retrieval, and fetching related content
+like screenshots, trailers, achievements, and community data.
+
+The client automatically maps RAWG's API responses to our standardized GameRecord models
+and handles pagination, error handling, and color/icon assignment for stores and platforms.
+
+See: https://api.rawg.io/docs/
+"""
+
 import logging
 from typing import Any, List, Optional
 from urllib.parse import parse_qs, urlparse
@@ -18,14 +30,42 @@ logger = logging.getLogger()
 
 
 class RawgClient:
+    """Client for the RAWG.io Video Games Database API.
+
+    Provides methods for searching games, retrieving detailed game information,
+    and fetching related content like media, DLCs, achievements, and community posts.
+
+    Attributes:
+        BASE_URL: RAWG API base URL.
+        api_key: API key for authentication.
+    """
+
     BASE_URL = "https://api.rawg.io/api"
 
     def __init__(self, api_key: str = None):
+        """Initialize the RAWG API client.
+
+        Args:
+            api_key: Optional API key. If not provided, uses RAWG_API_KEY from settings.
+        """
         self.api_key = api_key or settings.RAWG_API_KEY
         if not self.api_key:
             logger.warning("RAWG_API_KEY is not set. API calls will fail.")
 
     def search_games(self, query: SearchQuery) -> dict:
+        """Search for games with filters and pagination.
+
+        Queries the RAWG API with search parameters and returns paginated results.
+
+        Args:
+            query: SearchQuery object with search parameters.
+
+        Returns:
+            dict: Search results with 'count', 'next' page number, and 'results' list.
+
+        Raises:
+            HTTPException: If API key is missing or search fails.
+        """
         if not self.api_key:
             raise HTTPException(status_code=400, detail="RAWG_API_KEY is not set")
 
@@ -81,6 +121,20 @@ class RawgClient:
             )
 
     def get_game_details(self, game_id: str) -> Optional[GameRecord]:
+        """Get detailed information about a specific game.
+
+        Fetches comprehensive game data including platforms, requirements, stores,
+        and metadata.
+
+        Args:
+            game_id: RAWG game ID or slug.
+
+        Returns:
+            GameRecord: Complete game information, or None if API key is missing.
+
+        Raises:
+            HTTPException: If retrieval fails.
+        """
         if not self.api_key:
             return None
 
@@ -114,6 +168,19 @@ class RawgClient:
     def get_game_screenshots(
         self, game_id: str, page: int = 1, page_size: int = 30
     ) -> dict:
+        """Get paginated screenshots for a game.
+
+        Args:
+            game_id: RAWG game ID.
+            page: Page number for pagination.
+            page_size: Number of screenshots per page.
+
+        Returns:
+            dict: Screenshot data with pagination info.
+
+        Raises:
+            HTTPException: If fetch fails.
+        """
         try:
             url = f"{self.BASE_URL}/games/{game_id}/screenshots"
             response = requests.get(
@@ -152,6 +219,16 @@ class RawgClient:
     def get_game_trailers(
         self, game_id: str, page: int = 1, page_size: int = 30
     ) -> dict:
+        """Get paginated video trailers for a game.
+
+        Args:
+            game_id: RAWG game ID.
+            page: Page number for pagination.
+            page_size: Number of trailers per page.
+
+        Returns:
+            dict: Trailer data with pagination info.
+        """
         return self._fetch_sub_list(
             game_id, "movies", self._map_trailer, page_size=page_size, page=page
         )
@@ -159,6 +236,16 @@ class RawgClient:
     def get_game_achievements(
         self, game_id: str, page: int = 1, page_size: int = 30
     ) -> dict:
+        """Get paginated achievements for a game.
+
+        Args:
+            game_id: RAWG game ID.
+            page: Page number for pagination.
+            page_size: Number of achievements per page.
+
+        Returns:
+            dict: Achievement data with pagination info.
+        """
         return self._fetch_sub_list(
             game_id,
             "achievements",
@@ -168,11 +255,31 @@ class RawgClient:
         )
 
     def get_game_reddit(self, game_id: str, page: int = 1, page_size: int = 30) -> dict:
+        """Get paginated Reddit posts about a game.
+
+        Args:
+            game_id: RAWG game ID.
+            page: Page number for pagination.
+            page_size: Number of posts per page.
+
+        Returns:
+            dict: Reddit post data with pagination info.
+        """
         return self._fetch_sub_list(
             game_id, "reddit", self._map_reddit, page_size=page_size, page=page
         )
 
     def get_game_dlcs(self, game_id: str, page: int = 1, page_size: int = 30) -> dict:
+        """Get paginated DLCs and editions for a game.
+
+        Args:
+            game_id: RAWG game ID.
+            page: Page number for pagination.
+            page_size: Number of DLCs per page.
+
+        Returns:
+            dict: DLC data with pagination info.
+        """
         return self._fetch_sub_list(
             game_id, "dlcs", self._map_simple_game, page_size=page_size, page=page
         )
@@ -180,6 +287,16 @@ class RawgClient:
     def get_game_same_series(
         self, game_id: str, page: int = 1, page_size: int = 30
     ) -> dict:
+        """Get paginated games in the same series.
+
+        Args:
+            game_id: RAWG game ID.
+            page: Page number for pagination.
+            page_size: Number of games per page.
+
+        Returns:
+            dict: Game data for series entries with pagination info.
+        """
         return self._fetch_sub_list(
             game_id,
             "same-series",
@@ -197,6 +314,22 @@ class RawgClient:
         page_size: int = 30,
         page: int = 1,
     ) -> List[Any]:
+        """Internal helper for fetching paginated sub-resources.
+
+        Args:
+            game_id: RAWG game ID.
+            endpoint: API endpoint name (e.g., 'movies', 'achievements').
+            mapper_func: Function to map each result item.
+            record: Optional GameRecord for context.
+            page_size: Number of results per page.
+            page: Page number.
+
+        Returns:
+            dict: Mapped results with pagination info.
+
+        Raises:
+            HTTPException: If fetch fails.
+        """
         try:
             url = f"{self.BASE_URL}/games/{game_id}/{endpoint}"
             response = requests.get(
@@ -235,6 +368,18 @@ class RawgClient:
             )
 
     def _fetch_stores(self, game_id: str, record: GameRecord = None) -> List[Any]:
+        """Fetch store information for a game.
+
+        Args:
+            game_id: RAWG game ID.
+            record: GameRecord for store icon/color mapping.
+
+        Returns:
+            list: List of Store objects with URLs and branding.
+
+        Raises:
+            HTTPException: If fetch fails.
+        """
         try:
             url = f"{self.BASE_URL}/games/{game_id}/stores"
             response = requests.get(url, params={"key": self.api_key})
@@ -260,6 +405,14 @@ class RawgClient:
             )
 
     def _map_trailer(self, item: dict) -> dict:
+        """Map RAWG trailer data to standard format.
+
+        Args:
+            item: Raw trailer data from RAWG.
+
+        Returns:
+            dict: Mapped trailer with name, preview, and video URL.
+        """
         return {
             "name": item.get("name"),
             "preview": item.get("preview"),
@@ -267,6 +420,14 @@ class RawgClient:
         }
 
     def _map_simple_game(self, item: dict) -> dict:
+        """Map RAWG game data to simplified format.
+
+        Args:
+            item: Raw game data from RAWG.
+
+        Returns:
+            dict: Simplified game data with id, title, image, and release date.
+        """
         return {
             "id": item.get("id"),
             "title": item.get("name"),
@@ -275,6 +436,14 @@ class RawgClient:
         }
 
     def _map_achievement(self, item: dict) -> dict:
+        """Map RAWG achievement data to standard format.
+
+        Args:
+            item: Raw achievement data from RAWG.
+
+        Returns:
+            dict: Mapped achievement with id, name, description, and image.
+        """
         return {
             "id": item.get("id"),
             "name": item.get("name"),
@@ -283,6 +452,14 @@ class RawgClient:
         }
 
     def _map_reddit(self, item: dict) -> dict:
+        """Map RAWG Reddit post data to standard format.
+
+        Args:
+            item: Raw Reddit post data from RAWG.
+
+        Returns:
+            dict: Mapped Reddit post with id, name, URL, and image.
+        """
         return {
             "id": item.get("id"),
             "name": item.get("name"),
@@ -291,6 +468,15 @@ class RawgClient:
         }
 
     def _map_store(self, item: dict, record: GameRecord) -> Store:
+        """Map RAWG store data to Store model with branding colors.
+
+        Args:
+            item: Raw store data from RAWG.
+            record: GameRecord to extract store name.
+
+        Returns:
+            Store: Store object with URL and brand color.
+        """
         stores = record.stores
         id = item.get("store_id")
         store = [s for s in stores if s.id == id][0]
@@ -298,8 +484,20 @@ class RawgClient:
         return Store(id=id, name=store.name, url=item.get("url"), color=color)
 
     def get_tags(self, query: str = None, page: int = 1, page_size: int = 20) -> dict:
-        """
-        Fetch tags from RAWG. Returns list of dicts (mapped to Tag model later).
+        """Search and retrieve game tags.
+
+        Fetches available tags used to categorize games on RAWG.
+
+        Args:
+            query: Optional search query to filter tags.
+            page: Page number for pagination.
+            page_size: Number of tags per page.
+
+        Returns:
+            dict: Tags with 'count', 'next' page, and 'results' list.
+
+        Raises:
+            HTTPException: If API key is missing or fetch fails.
         """
         if not self.api_key:
             raise HTTPException(status_code=401, detail="API key not provided")
@@ -328,6 +526,18 @@ class RawgClient:
             )
 
     def _map_to_record(self, data: dict) -> GameRecord:
+        """Convert RAWG API response to GameRecord model.
+
+        Maps raw RAWG game data to our standardized GameRecord format,
+        including platforms with requirements, stores with branding,
+        and additional metadata.
+
+        Args:
+            data: Raw game data from RAWG API.
+
+        Returns:
+            GameRecord: Standardized game record.
+        """
         raw_platforms = data.get("platforms") or []
         platforms = []
         if raw_platforms:
