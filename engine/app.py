@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from clients.rawg import RawgClient
 from core.compatibility import check_compatibility
+from core.config import settings
 from core.models import GameRecord, SearchQuery
 from core.system_info import get_system_specs
 from fastapi import FastAPI, HTTPException, Query
@@ -13,7 +14,6 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="GameHunter Engine")
 
-
 # Initialize Engine and Manager
 client = RawgClient()
 
@@ -22,7 +22,7 @@ client = RawgClient()
 def health_check():
     logger.info("Health check endpoint called")
 
-    return {"status": "ok", "engine": "ready"}
+    return {"status": "ok", "engine": "ready", "settings": settings.to_dict()}
 
 
 # --- Search Endpoints ---

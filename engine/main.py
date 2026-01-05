@@ -37,7 +37,7 @@ def main():
             host=args.host,
             port=args.port,
             reload=True,
-            log_config=None,  # This prevents uvicorn from overriding our logging
+            # log_config=None,  # This prevents uvicorn from overriding our logging
             access_log=True,  # Still log access requests
         )
     except Exception as e:
