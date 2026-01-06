@@ -1,14 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'models/app_state.dart';
 import 'providers/app_provider.dart';
-import 'screens/startup_screen.dart';
-// Actually AppExitResponse is in services.dart since Flutter 3.13. No separate import needed usually if material is imported, but let's check.
-// It is in dart:ui. But wait, `didRequestAppExit` is WidgetsBindingObserver.
-// `AppExitResponse` is in `dart:ui`.
 import 'services/package_service.dart';
 import 'services/preferences_service.dart';
 import 'utils/constants.dart';
@@ -56,11 +51,8 @@ Future<void> main() async {
     await windowManager.show();
     await windowManager.focus();
   });
-  if (kReleaseMode) {
-    runApp(const StartupScreen());
-  } else {
-    await launchApp();
-  }
+
+  await launchApp();
 }
 
 Future<void> launchApp() async {
@@ -89,8 +81,6 @@ class _GameSearchAppState extends ConsumerState<GameSearchApp> {
     final appState = ref.watch(appControllerProvider);
     final virtualWindowFrameBuilder = VirtualWindowFrameInit();
     final AppState(:themeSeedColor, :themeMode) = appState;
-
-    print("Theme seed color: $themeSeedColor");
 
     return MaterialApp.router(
       title: appName,

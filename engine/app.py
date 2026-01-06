@@ -38,6 +38,16 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="GameHunter Engine")
 
+
+# @app.middleware("http")
+# async def auth_middleware(request: Request, call_next):
+#     app_secret = request.headers.get("APP_SECRET")
+#     if settings.APP_SECRET:
+#         if not app_secret or app_secret != settings.APP_SECRET:
+#             return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
+#     return await call_next(request)
+
+
 # Initialize Engine and Manager
 client = RawgClient()
 

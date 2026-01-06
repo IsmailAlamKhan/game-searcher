@@ -23,7 +23,7 @@ class ApiService {
   ApiService(Ref ref) : _dio = ref.read(engineDioProvider);
 
   Future<PagainatedApiResponse<GameRecord>> search({
-    int pageSize = 20,
+    int pageSize = 100,
     int page = 1,
     required SearchQueryParams parms,
   }) async {
@@ -58,7 +58,7 @@ class ApiService {
     });
   }
 
-  Future<PagainatedApiResponse<Tag>> getTags({String? query, int page = 1, int pageSize = 20}) async {
+  Future<PagainatedApiResponse<Tag>> getTags({String? query, int page = 1, int pageSize = 100}) async {
     return catchException(() async {
       final response = await _dio.get(
         '/tags',

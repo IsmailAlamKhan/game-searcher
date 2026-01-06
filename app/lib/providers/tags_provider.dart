@@ -28,7 +28,7 @@ class TagsController {
 
   PagingController<int, Tag> get pagingController => _pagingController;
 
-  int _pageSize = 50;
+  int _pageSize = 100;
   int get pageSize => _pageSize;
   set pageSize(int value) {
     _pageSize = value;

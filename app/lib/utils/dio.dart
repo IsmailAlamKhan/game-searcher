@@ -14,7 +14,15 @@ Dio dio(Ref ref, {String baseUrl = ''}) {
 
 @Riverpod(keepAlive: true)
 Dio engineDio(Ref ref) {
-  return dio(ref, baseUrl: 'http://127.0.0.1:5678');
+  String baseUrl = 'api-game-hunter.vercel.app';
+  String protocol = 'https://';
+
+  // if (kDebugMode) {
+  //   baseUrl = '127.0.0.1:5678';
+  //   protocol = 'http://';
+  // }
+
+  return dio(ref, baseUrl: '$protocol$baseUrl');
 }
 
 @Riverpod(keepAlive: true)

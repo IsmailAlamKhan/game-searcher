@@ -10,7 +10,7 @@ abstract class GameDetailsControllerBase<T> {
   late PagingController<int, T> _pagingController;
   PagingController<int, T> get pagingController => _pagingController;
 
-  int _pageSize = 50;
+  int _pageSize = 20;
   int get pageSize => _pageSize;
   set pageSize(int value) {
     _pageSize = value;
