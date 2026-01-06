@@ -4,10 +4,7 @@ $ErrorActionPreference = "Stop"
 
 $SCRIPT_DIR = $PSScriptRoot
 $PROJECT_ROOT = Split-Path $SCRIPT_DIR -Parent
-$ENGINE_DIR = Join-Path $PROJECT_ROOT "engine"
 $APP_DIR = Join-Path $PROJECT_ROOT "app"
-$BUILD_DIR = Join-Path $APP_DIR "build/windows/x64/runner/Release/data/engine"
-$TEMP_BUILD_DIR = Join-Path $APP_DIR "build/temp"
 $SETUP_SCRIPT = Join-Path $SCRIPT_DIR "setup_script.iss"
 
 function Log-Step {
@@ -20,9 +17,7 @@ function Log-Step {
 
 Log-Step "Starting Compilation Process..."
 Log-Step "Project Root: $PROJECT_ROOT"
-Log-Step "Engine Dir: $ENGINE_DIR"
 Log-Step "App Dir: $APP_DIR"
-Log-Step "Output Dir for Engine: $BUILD_DIR"
 
 Log-Step "Compiling App..."
 Push-Location $APP_DIR
@@ -33,52 +28,7 @@ if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
 
-Log-Step "Compiling Engine..."
-# Ensure output directory exists (and clean it if you want a fresh build)
-if (Test-Path $TEMP_BUILD_DIR) {
-    Log-Step "Cleaning temp build dir..."
-    Remove-Item -Path $TEMP_BUILD_DIR -Recurse -Force
-}
-
-New-Item -ItemType Directory -Force -Path $TEMP_BUILD_DIR | Out-Null
-
-if (Test-Path $BUILD_DIR) {
-    Log-Step "Cleaning engine build dir..."
-    Remove-Item -Path $BUILD_DIR -Recurse -Force
-}
-
-New-Item -ItemType Directory -Force -Path $BUILD_DIR | Out-Null
-
-Push-Location $ENGINE_DIR
-
-Log-Step "Generating secrets..."
-python "$PROJECT_ROOT/scripts/generate_secrets.py"
-
-Log-Step "Installing/Updating Nuitka..."
-pip install nuitka
-if ($LASTEXITCODE -ne 0) {
-    Write-Error "Failed to install Nuitka."
-}
-
-Log-Step "Running Nuitka..."
-python -m nuitka `
-    --standalone `
-    --include-data-dir=ai=ai `
-    --include-package=uvicorn `
-    --include-package=fastapi `
-    --output-dir="$TEMP_BUILD_DIR" `
-    --output-filename="game_hunter_engine.exe" `
-    --include-module=app `
-    --quiet `
-    --assume-yes-for-downloads `
-    main.py
-
-Pop-Location
-
-Log-Step "Copying engine files to build directory..."
-Copy-Item -Path "$TEMP_BUILD_DIR/main.dist/*" -Destination "$BUILD_DIR" -Recurse
-
-Log-Step "App and Engine Compilation Complete!"
+Log-Step "App Compilation Complete!"
 
 Log-Step "Compiling Installer..."
 if (Test-Path $SETUP_SCRIPT) {
