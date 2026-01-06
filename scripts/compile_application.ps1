@@ -1,5 +1,3 @@
-# Script to compile the Python engine using Nuitka
-
 $ErrorActionPreference = "Stop"
 
 $SCRIPT_DIR = $PSScriptRoot

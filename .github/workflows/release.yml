@@ -1,0 +1,67 @@
+name: Release Build and Deploy
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build_and_release:
+    name: Build Windows App & Deploy Server
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Inno Setup
+        run: |
+          choco install innosetup --no-progress
+
+      - name: Update Version and Push to Master
+        run: |
+          $Version = "${{ github.ref_name }}"
+          if ($Version.StartsWith("v")) { $Version = $Version.Substring(1) }
+          Write-Host "Updating Application to Version: $Version"
+          
+          git fetch origin master
+          git checkout master
+          git pull origin master
+          
+          python scripts/update_version.py $Version
+          
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add version.json app/pubspec.yaml scripts/setup_script.iss
+          git commit -m "Bump version to $Version [skip ci]"
+          
+          git push origin master
+
+      - name: Compile Application
+        run: |
+          ./scripts/compile_application.ps1
+
+      - name: Deploy Server (Vercel)
+        if: success()
+        run: |
+          $Url = "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+          if ($Url) {
+            Write-Host "Triggering Vercel Deployment..."
+            Invoke-RestMethod -Uri $Url -Method Post
+          } else {
+            Write-Warning "VERCEL_DEPLOY_HOOK secret is not set. Skipping server deployment."
+          }
+
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v1
+        if: success()
+        with:
+          files: installers/*.exe

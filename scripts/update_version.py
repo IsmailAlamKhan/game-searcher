@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import sys
 
 
 class Version:
@@ -117,11 +118,23 @@ def validate_version(version_number: str):
 
 
 if __name__ == "__main__":
-    version_number = input("Enter version number(press enter to auto bump): ")
-    if version_number:
+    if len(sys.argv) > 1:
+        version_number = sys.argv[1]
+        print(f"Using version from arguments: {version_number}")
         while not validate_version(version_number):
-            print("Invalid version number format. Example: 0.0.1")
-            version_number = input("Enter version number(press enter to auto bump): ")
+            print(
+                f"Invalid version number format provided in arguments: {version_number}"
+            )
+            sys.exit(1)
         update_version(manual_version_number=version_number)
     else:
-        update_version()
+        version_number = input("Enter version number(press enter to auto bump): ")
+        if version_number:
+            while not validate_version(version_number):
+                print("Invalid version number format. Example: 0.0.1")
+                version_number = input(
+                    "Enter version number(press enter to auto bump): "
+                )
+            update_version(manual_version_number=version_number)
+        else:
+            update_version()
