@@ -38,7 +38,6 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="GameHunter Engine")
 
-
 # @app.middleware("http")
 # async def auth_middleware(request: Request, call_next):
 #     app_secret = request.headers.get("APP_SECRET")
@@ -306,6 +305,32 @@ def get_tags(
         PaginatedResponse: Paginated tags with IDs, names, slugs, and game counts.
     """
     results = client.get_tags(query=q, page=page, page_size=page_size)
+    return results
+
+
+@app.get("/tags/all", response_model=list[dict])
+def get_tags_until_end(
+    q: Optional[str] = Query(
+        None,
+        description="Search query to filter tags",
+    ),
+):
+    """Search and retrieve game tags.
+
+    Returns available tags that can be used to filter games. Search query is must otherwise
+    returning all tags will cause high load on server.
+
+    Args:
+        q (str): search query to filter tags by name.
+
+    Returns:
+        list[dict]: List of tags with IDs, names, slugs, and game counts.
+    """
+    if not q:
+        raise HTTPException(
+            status_code=400, detail="Search query (q) is required otherwise use /tags"
+        )
+    results = client.get_tags_until_end(query=q)
     return results
 
 

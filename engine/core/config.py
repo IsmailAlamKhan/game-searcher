@@ -27,10 +27,12 @@ class Settings(BaseSettings):
     Attributes:
         RAWG_API_KEY: API key for accessing RAWG.io game database.
         APP_SECRET: API secret for accessing GameHunter Engine.
+        GROQ_API_KEY: API key for accessing Groq AI.
     """
 
     RAWG_API_KEY: Optional[str] = None
     APP_SECRET: Optional[str] = None
+    GROQ_API_KEY: Optional[str] = None
 
     @classmethod
     def load(cls):
@@ -41,11 +43,10 @@ class Settings(BaseSettings):
         Returns:
             Settings: Configured Settings instance with loaded values.
         """
-        RAWG_API_KEY = os.getenv("RAWG_API_KEY")
-        APP_SECRET = os.getenv("APP_SECRET")
         return cls(
-            RAWG_API_KEY=RAWG_API_KEY,
-            APP_SECRET=APP_SECRET,
+            RAWG_API_KEY=os.getenv("RAWG_API_KEY"),
+            APP_SECRET=os.getenv("APP_SECRET"),
+            GROQ_API_KEY=os.getenv("GROQ_API_KEY"),
         )
 
     def to_dict(self):

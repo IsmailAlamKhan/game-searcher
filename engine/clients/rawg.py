@@ -11,6 +11,7 @@ See: https://api.rawg.io/docs/
 """
 
 import logging
+import time
 from typing import Any, List, Optional
 from urllib.parse import parse_qs, urlparse
 
@@ -589,3 +590,59 @@ class RawgClient:
                 "description_raw": data.get("description_raw"),  # Useful for details
             },
         )
+
+    def get_tags_until_end(self, query: str = None) -> list[dict]:
+        """Fetch all tags by paginating until there are no more pages.
+
+        Args:
+            query: Optional search query to filter tags.
+
+        Returns:
+            dict: All tags with 'count' and 'results' list.
+
+        Raises:
+            HTTPException: If API key is missing or fetch fails.
+        """
+        if not self.api_key:
+            raise HTTPException(status_code=401, detail="API key not provided")
+
+        all_tags = []
+        page = 1
+        params = {"key": self.api_key, "page_size": 40}
+        if query:
+            params["search"] = query
+
+        try:
+            while True:
+                params["page"] = page
+                response = requests.get(f"{self.BASE_URL}/tags", params=params)
+                response.raise_for_status()
+                data = response.json()
+
+                results = data.get("results", [])
+                # Filter to only include required fields
+                filtered_results = [
+                    {
+                        "name": tag.get("name"),
+                        "slug": tag.get("slug"),
+                        "games_count": tag.get("games_count"),
+                        "score": tag.get("score"),
+                    }
+                    for tag in results
+                ]
+                all_tags.extend(filtered_results)
+
+                # Check if there's a next page
+                if data.get("next") is None:
+                    break
+
+                page += 1
+                time.sleep(1)  # Small delay to avoid rate limiting
+
+            return all_tags
+        except Exception as e:
+            logger.error(f"Failed to fetch tags: {e}")
+            raise HTTPException(
+                status_code=400,
+                detail={"message": "Failed to fetch tags", "detail": str(e)},
+            )
