@@ -1,0 +1,8 @@
+FROM docker.io/n8nio/n8n:next
+
+# Set timezone
+ENV GENERIC_TIMEZONE=Asia/Dhaka
+ENV TZ=Asia/Dhaka
+
+# Expose n8n port
+EXPOSE 5678

@@ -12,3 +12,5 @@ debug_*.html
 debug_*.py
 version.json
 installers/*
+.vercel
+.env*.local

@@ -17,6 +17,7 @@ from urllib.parse import parse_qs, urlparse
 
 import requests
 from core.config import settings
+from core.logger import setup_logging
 from core.models import (
     GameRecord,
     Screenshot,
@@ -27,7 +28,8 @@ from core.models import (
 )
 from fastapi import HTTPException
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
+setup_logging()
 
 
 class RawgClient:
@@ -605,7 +607,7 @@ class RawgClient:
         """
         if not self.api_key:
             raise HTTPException(status_code=401, detail="API key not provided")
-
+        page_limit = 4
         all_tags = []
         page = 1
         params = {"key": self.api_key, "page_size": 40}
@@ -613,13 +615,19 @@ class RawgClient:
             params["search"] = query
 
         try:
+            logger.info(f"Starting tag fetch with query: '{query or 'all'}'")
+
             while True:
                 params["page"] = page
+                logger.debug(f"Fetching tags page {page}...")
+
                 response = requests.get(f"{self.BASE_URL}/tags", params=params)
                 response.raise_for_status()
                 data = response.json()
 
                 results = data.get("results", [])
+                logger.info(f"Page {page}: Retrieved {len(results)} tags")
+
                 # Filter to only include required fields
                 filtered_results = [
                     {
@@ -631,14 +639,21 @@ class RawgClient:
                     for tag in results
                 ]
                 all_tags.extend(filtered_results)
-
                 # Check if there's a next page
-                if data.get("next") is None:
+                if data.get("next") is None or page >= page_limit:
+                    if page > page_limit:
+                        logger.warning(
+                            f"Stopping tag fetch: page limit ({page_limit}) reached"
+                        )
+                    else:
+                        logger.info("Stopping tag fetch: no more pages available")
                     break
 
                 page += 1
+                logger.debug("Waiting 1 second before next request...")
                 time.sleep(1)  # Small delay to avoid rate limiting
 
+            logger.info(f"Tag fetch complete. Total tags retrieved: {len(all_tags)}")
             return all_tags
         except Exception as e:
             logger.error(f"Failed to fetch tags: {e}")
