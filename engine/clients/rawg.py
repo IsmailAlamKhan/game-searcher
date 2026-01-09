@@ -17,7 +17,6 @@ from urllib.parse import parse_qs, urlparse
 
 import requests
 from core.config import settings
-from core.logger import setup_logging
 from core.models import (
     GameRecord,
     Screenshot,
@@ -28,8 +27,7 @@ from core.models import (
 )
 from fastapi import HTTPException
 
-logger = logging.getLogger(__name__)
-setup_logging()
+logger = logging.getLogger("RAWG")
 
 
 class RawgClient:
@@ -96,11 +94,11 @@ class RawgClient:
         if query.search_exact:
             params["search_exact"] = query.search_exact
 
-        print(f"QUERY: {query}")
+        logger.info(f"QUERY: {query}")
 
         try:
             url = f"{self.BASE_URL}/games"
-            print(f"Searching RAWG with params: {params} url: {url}")
+            logger.info(f"Searching RAWG with params: {params} url: {url}")
 
             response = requests.get(url, params=params)
             response.raise_for_status()

@@ -32,8 +32,7 @@ from core.models import (
 from core.system_info import get_system_specs
 from fastapi import FastAPI, HTTPException, Query
 
-# Logger will be configured by main.py's setup_logging()
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("GameHunter Engine | App")
 
 
 app = FastAPI(title="GameHunter Engine")

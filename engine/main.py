@@ -12,7 +12,8 @@ import argparse
 import logging
 
 import uvicorn
-from core.logger import setup_logging
+
+logger = logging.getLogger("GameHunter Engine")
 
 
 def main():
@@ -28,8 +29,6 @@ def main():
         --host: The host address to bind to (default: 127.0.0.1)
         --port: The port number to listen on (default: 5678)
     """
-    # Setup custom logging first
-    log_file = setup_logging()
 
     parser = argparse.ArgumentParser(description="Game Search Engine")
     parser.add_argument(
@@ -47,10 +46,8 @@ def main():
 
     args = parser.parse_args()
 
-    # Get logger after setup_logging() has configured it
     logger = logging.getLogger(__name__)
     logger.info(f"Starting server on {args.host}:{args.port}")
-    logger.info(f"Logs are being written to: {log_file}")
 
     try:
         # Disable uvicorn's default logging configuration to use ours
