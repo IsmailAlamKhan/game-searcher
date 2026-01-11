@@ -123,7 +123,7 @@ final class EngineDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$engineDioHash() => r'1be1aef51087899f87bb1b1e16dfa6a7e622dea8';
+String _$engineDioHash() => r'a4172f74dd600d144af20f6db5d444c17ce3b80c';
 
 @ProviderFor(githubDio)
 const githubDioProvider = GithubDioProvider._();
