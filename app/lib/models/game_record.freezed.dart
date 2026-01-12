@@ -13,6 +13,290 @@ part of 'game_record.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
+mixin _$GameRecordListItem {
+
+ int get id; String get name;@JsonKey(name: 'released')@StringToDateConverter() DateTime? get releaseDate; String? get description;@JsonKey(name: 'background_image') String? get imageUrl;@JsonKey(name: 'rating') double? get score; String? get platforms; String? get esrbRating;
+/// Create a copy of GameRecordListItem
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$GameRecordListItemCopyWith<GameRecordListItem> get copyWith => _$GameRecordListItemCopyWithImpl<GameRecordListItem>(this as GameRecordListItem, _$identity);
+
+  /// Serializes this GameRecordListItem to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GameRecordListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.score, score) || other.score == score)&&(identical(other.platforms, platforms) || other.platforms == platforms)&&(identical(other.esrbRating, esrbRating) || other.esrbRating == esrbRating));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,releaseDate,description,imageUrl,score,platforms,esrbRating);
+
+@override
+String toString() {
+  return 'GameRecordListItem(id: $id, name: $name, releaseDate: $releaseDate, description: $description, imageUrl: $imageUrl, score: $score, platforms: $platforms, esrbRating: $esrbRating)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $GameRecordListItemCopyWith<$Res>  {
+  factory $GameRecordListItemCopyWith(GameRecordListItem value, $Res Function(GameRecordListItem) _then) = _$GameRecordListItemCopyWithImpl;
+@useResult
+$Res call({
+ int id, String name,@JsonKey(name: 'released')@StringToDateConverter() DateTime? releaseDate, String? description,@JsonKey(name: 'background_image') String? imageUrl,@JsonKey(name: 'rating') double? score, String? platforms, String? esrbRating
+});
+
+
+
+
+}
+/// @nodoc
+class _$GameRecordListItemCopyWithImpl<$Res>
+    implements $GameRecordListItemCopyWith<$Res> {
+  _$GameRecordListItemCopyWithImpl(this._self, this._then);
+
+  final GameRecordListItem _self;
+  final $Res Function(GameRecordListItem) _then;
+
+/// Create a copy of GameRecordListItem
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? releaseDate = freezed,Object? description = freezed,Object? imageUrl = freezed,Object? score = freezed,Object? platforms = freezed,Object? esrbRating = freezed,}) {
+  return _then(_self.copyWith(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,score: freezed == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
+as double?,platforms: freezed == platforms ? _self.platforms : platforms // ignore: cast_nullable_to_non_nullable
+as String?,esrbRating: freezed == esrbRating ? _self.esrbRating : esrbRating // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [GameRecordListItem].
+extension GameRecordListItemPatterns on GameRecordListItem {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GameRecordListItem value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _GameRecordListItem() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GameRecordListItem value)  $default,){
+final _that = this;
+switch (_that) {
+case _GameRecordListItem():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GameRecordListItem value)?  $default,){
+final _that = this;
+switch (_that) {
+case _GameRecordListItem() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'released')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'background_image')  String? imageUrl, @JsonKey(name: 'rating')  double? score,  String? platforms,  String? esrbRating)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _GameRecordListItem() when $default != null:
+return $default(_that.id,_that.name,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.platforms,_that.esrbRating);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String name, @JsonKey(name: 'released')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'background_image')  String? imageUrl, @JsonKey(name: 'rating')  double? score,  String? platforms,  String? esrbRating)  $default,) {final _that = this;
+switch (_that) {
+case _GameRecordListItem():
+return $default(_that.id,_that.name,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.platforms,_that.esrbRating);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String name, @JsonKey(name: 'released')@StringToDateConverter()  DateTime? releaseDate,  String? description, @JsonKey(name: 'background_image')  String? imageUrl, @JsonKey(name: 'rating')  double? score,  String? platforms,  String? esrbRating)?  $default,) {final _that = this;
+switch (_that) {
+case _GameRecordListItem() when $default != null:
+return $default(_that.id,_that.name,_that.releaseDate,_that.description,_that.imageUrl,_that.score,_that.platforms,_that.esrbRating);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _GameRecordListItem implements GameRecordListItem {
+  const _GameRecordListItem({required this.id, required this.name, @JsonKey(name: 'released')@StringToDateConverter() this.releaseDate, this.description, @JsonKey(name: 'background_image') this.imageUrl, @JsonKey(name: 'rating') this.score, this.platforms, this.esrbRating});
+  factory _GameRecordListItem.fromJson(Map<String, dynamic> json) => _$GameRecordListItemFromJson(json);
+
+@override final  int id;
+@override final  String name;
+@override@JsonKey(name: 'released')@StringToDateConverter() final  DateTime? releaseDate;
+@override final  String? description;
+@override@JsonKey(name: 'background_image') final  String? imageUrl;
+@override@JsonKey(name: 'rating') final  double? score;
+@override final  String? platforms;
+@override final  String? esrbRating;
+
+/// Create a copy of GameRecordListItem
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$GameRecordListItemCopyWith<_GameRecordListItem> get copyWith => __$GameRecordListItemCopyWithImpl<_GameRecordListItem>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$GameRecordListItemToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GameRecordListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.releaseDate, releaseDate) || other.releaseDate == releaseDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.imageUrl, imageUrl) || other.imageUrl == imageUrl)&&(identical(other.score, score) || other.score == score)&&(identical(other.platforms, platforms) || other.platforms == platforms)&&(identical(other.esrbRating, esrbRating) || other.esrbRating == esrbRating));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,id,name,releaseDate,description,imageUrl,score,platforms,esrbRating);
+
+@override
+String toString() {
+  return 'GameRecordListItem(id: $id, name: $name, releaseDate: $releaseDate, description: $description, imageUrl: $imageUrl, score: $score, platforms: $platforms, esrbRating: $esrbRating)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$GameRecordListItemCopyWith<$Res> implements $GameRecordListItemCopyWith<$Res> {
+  factory _$GameRecordListItemCopyWith(_GameRecordListItem value, $Res Function(_GameRecordListItem) _then) = __$GameRecordListItemCopyWithImpl;
+@override @useResult
+$Res call({
+ int id, String name,@JsonKey(name: 'released')@StringToDateConverter() DateTime? releaseDate, String? description,@JsonKey(name: 'background_image') String? imageUrl,@JsonKey(name: 'rating') double? score, String? platforms, String? esrbRating
+});
+
+
+
+
+}
+/// @nodoc
+class __$GameRecordListItemCopyWithImpl<$Res>
+    implements _$GameRecordListItemCopyWith<$Res> {
+  __$GameRecordListItemCopyWithImpl(this._self, this._then);
+
+  final _GameRecordListItem _self;
+  final $Res Function(_GameRecordListItem) _then;
+
+/// Create a copy of GameRecordListItem
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? releaseDate = freezed,Object? description = freezed,Object? imageUrl = freezed,Object? score = freezed,Object? platforms = freezed,Object? esrbRating = freezed,}) {
+  return _then(_GameRecordListItem(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as int,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String,releaseDate: freezed == releaseDate ? _self.releaseDate : releaseDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,imageUrl: freezed == imageUrl ? _self.imageUrl : imageUrl // ignore: cast_nullable_to_non_nullable
+as String?,score: freezed == score ? _self.score : score // ignore: cast_nullable_to_non_nullable
+as double?,platforms: freezed == platforms ? _self.platforms : platforms // ignore: cast_nullable_to_non_nullable
+as String?,esrbRating: freezed == esrbRating ? _self.esrbRating : esrbRating // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$GameRecord {
 
  String get id; String get title; List<Platform> get platforms;@JsonKey(name: 'release_date')@StringToDateConverter() DateTime? get releaseDate; String? get description;@JsonKey(name: 'image_url') String? get imageUrl; double? get score; List<Store> get stores; String? get website; List<String> get screenshots; List<Trailer> get trailers; List<DLC> get dlcs;@JsonKey(name: 'same_series') List<SameSeries> get sameSeries;@JsonKey(name: 'reddit_posts') List<RedditPost> get redditPosts; Map<String, dynamic> get extra;@JsonKey(name: 'esrb_rating') EsrbRating? get esrbRating;@JsonKey(includeFromJson: false, includeToJson: false) List<Color>? get colors;

@@ -37,6 +37,22 @@ enum GameOrdering {
 }
 
 @freezed
+abstract class GameRecordListItem with _$GameRecordListItem {
+  const factory GameRecordListItem({
+    required int id,
+    required String name,
+    @JsonKey(name: 'released') @StringToDateConverter() DateTime? releaseDate,
+    String? description,
+    @JsonKey(name: 'background_image') String? imageUrl,
+    @JsonKey(name: 'rating') double? score,
+    String? platforms,
+    String? esrbRating,
+  }) = _GameRecordListItem;
+
+  factory GameRecordListItem.fromJson(Map<String, dynamic> json) => _$GameRecordListItemFromJson(json);
+}
+
+@freezed
 abstract class GameRecord with _$GameRecord {
   const factory GameRecord({
     required String id,

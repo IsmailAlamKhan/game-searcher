@@ -17,10 +17,20 @@ Dio engineDio(Ref ref) {
   String baseUrl = 'api-game-hunter.vercel.app';
   String protocol = 'https://';
 
-  // if (kDebugMode) {
-  //   baseUrl = '127.0.0.1:5678';
-  //   protocol = 'http://';
-  // }
+  return dio(ref, baseUrl: '$protocol$baseUrl');
+}
+
+@Riverpod(keepAlive: true)
+Dio webhookDio(
+  Ref ref, {
+  bool isTest = false,
+}) {
+  String baseUrl = 'localhost:5678/webhook';
+  String protocol = 'http://';
+
+  if (isTest) {
+    baseUrl += '-test';
+  }
 
   return dio(ref, baseUrl: '$protocol$baseUrl');
 }

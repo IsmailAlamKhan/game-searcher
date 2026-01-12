@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:uuid/uuid.dart';
 
 import '../models/app_state.dart';
 import '../services/preferences_service.dart';
@@ -43,7 +44,7 @@ class AppController extends _$AppController {
 
   void setThemeSeedColor({Color? color, bool shouldUpdateStorage = true}) {
     if (color == state.themeSeedColor) return;
-    print('Color----: ${color?.toARGB32()}');
+
     if (color == null && !shouldUpdateStorage) {
       color = _preferencesService.get<Color>(PrefKey.themeSeedColor, defaultValue: defaultSeedColor);
     }
@@ -97,12 +98,30 @@ class AppController extends _$AppController {
       defaultValue: const Duration(hours: 1),
     );
 
+    String? userIdFromStorage = _preferencesService.get<String>(
+      PrefKey.userId,
+      defaultValue: '',
+    );
+    if (userIdFromStorage?.isEmpty == true || userIdFromStorage == null) {
+      final userid = Uuid().v4();
+      _preferencesService.set<String>(PrefKey.userId, userid);
+      userIdFromStorage = userid;
+    }
+
     state = state.copyWith(
       themeMode: ThemeMode.values.firstWhere((e) => e.name == themeModeFromStorage),
       blurAdultContent: blurAdultContentFromStorage!,
       autoUpdateEnabled: autoUpdateEnabledFromStorage!,
       autoUpdateInterval: autoUpdateIntervalFromStorage!,
       themeSeedColor: seedColorFromStorage,
+      userId: userIdFromStorage,
     );
+  }
+
+  String resetUserId() {
+    final userid = Uuid().v4();
+    _preferencesService.set<String>(PrefKey.userId, userid);
+    state = state.copyWith(userId: userid);
+    return userid;
   }
 }

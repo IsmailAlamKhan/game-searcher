@@ -4,6 +4,7 @@ import os
 import time
 from pathlib import Path
 
+import requests
 from dotenv import load_dotenv
 
 from supabase import Client, create_client
@@ -17,7 +18,7 @@ JSONL_FILE = "games.jsonl"
 PROGRESS_FILE = "upload_progress.txt"
 FAILED_GAMES_FILE = "failed_games.log"
 CHUNK_SIZE = 50  # Number of rows to upload at once
-SLEEP_TIME = 2  # Seconds to pause between chunks
+SLEEP_TIME = 10  # Seconds to pause between chunks
 WATCH_INTERVAL = 5  # Seconds to wait for new data when watching
 
 # Initialize Client
@@ -65,10 +66,61 @@ def clean_record(record):
                 cleaned[key] = int(value) if value != "" else None
             except (ValueError, TypeError):
                 cleaned[key] = None
+        elif key == "reviews_text_count" or key == "slug" or key == "tba":
+            continue
         else:
             cleaned[key] = value
 
     return cleaned
+
+
+def get_embeddings(records):
+    """Get embeddings for a batch of records from the edge function (chunked into sub-batches)"""
+    url = f"{SUPABASE_URL}/functions/v1/embed-game-manual"
+    headers = {
+        "Content-Type": "application/json",
+    }
+
+    SUB_BATCH_SIZE = 10
+    all_embeddings = []
+
+    for i in range(0, len(records), SUB_BATCH_SIZE):
+        sub_batch = records[i : i + SUB_BATCH_SIZE]
+        try:
+            # We only send the fields used by the embedding function to reduce payload size
+            minimal_records = []
+            for r in sub_batch:
+                minimal_records.append(
+                    {
+                        "name": r.get("name"),
+                        "genres": r.get("genres"),
+                        "tags": r.get("tags"),
+                        "platforms": r.get("platforms"),
+                        "requirements": r.get("requirements"),
+                        "stores": r.get("stores"),
+                        "released": r.get("released"),
+                        "esrb_rating": r.get("esrb_rating"),
+                    }
+                )
+
+            response = requests.post(
+                url, json={"records": minimal_records}, headers=headers
+            )
+            response.raise_for_status()
+            sub_embeddings = response.json().get("embeddings", [])
+            all_embeddings.extend(sub_embeddings)
+
+            # Small pause to be gentle on the local Edge Runtime
+            if i + SUB_BATCH_SIZE < len(records):
+                time.sleep(0.1)
+
+        except Exception as e:
+            print(
+                f"⚠️  Error fetching embeddings for sub-batch {i // SUB_BATCH_SIZE + 1}: {e}"
+            )
+            all_embeddings.extend([None] * len(sub_batch))
+
+    return all_embeddings
 
 
 def read_games_from_line(start_line, max_count=None):
@@ -159,6 +211,15 @@ def upload_batch(games, start_line, existing_ids=None):
         return len(games)
 
     try:
+        # Fetch embeddings for the new records
+        print(f"🧠 Generating embeddings for {len(records)} games...")
+        embeddings = get_embeddings(records)
+
+        # Add embeddings to records
+        for i, record in enumerate(records):
+            if i < len(embeddings):
+                record["embedding"] = embeddings[i]
+
         # Try to upsert the entire batch
         supabase.table("games").upsert(records).execute()
         uploaded_count = len(records)
@@ -294,9 +355,6 @@ def upload_all():
         time.sleep(SLEEP_TIME)
 
     print(f"\n🎉 Upload Complete! Total processed: {total_uploaded}")
-    print(
-        "Note: The 'embedding' column might take a few seconds to populate for the last batch."
-    )
 
 
 if __name__ == "__main__":

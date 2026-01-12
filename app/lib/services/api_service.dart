@@ -1,14 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../models/app_exception.dart';
 import '../models/compatibility_report.dart';
 import '../models/game_record.dart';
 import '../models/response.dart';
 import '../models/search.dart';
 import '../models/tag.dart';
+import '../utils/catch_exception.dart';
 import '../utils/dio.dart';
-import '../utils/logger.dart';
+import '../utils/supabase.dart';
 
 part 'api_service.g.dart';
 
@@ -19,10 +20,11 @@ ApiService apiService(Ref ref) {
 
 class ApiService {
   final Dio _dio;
+  final SupabaseClient _supabase;
 
-  ApiService(Ref ref) : _dio = ref.read(engineDioProvider);
+  ApiService(Ref ref) : _dio = ref.read(engineDioProvider), _supabase = ref.read(supabaseProvider);
 
-  Future<PagainatedApiResponse<GameRecord>> search({
+  Future<PagainatedApiResponse<GameRecordListItem>> search({
     int pageSize = 100,
     int page = 1,
     required SearchQueryParams parms,
@@ -36,24 +38,58 @@ class ApiService {
         :ordering,
         :searchPrecise,
         :searchExact,
+        :reverseOrder,
       ) = parms;
-      final response = await _dio.get(
-        '/search',
-        queryParameters: {
-          'page_size': pageSize,
-          'page': page,
-          if (query != null && query.isNotEmpty) 'q': query,
-          if (tags.isNotEmpty) 'tags': tags.map((t) => t.slug).join(','),
-          'ordering': ordering.ordering(parms.reverseOrder),
-          if (platform != null) 'platform': platform.id,
-          if (genres.isNotEmpty) 'genres': genres.join(','),
-          'search_precise': searchPrecise,
-          'search_exact': searchExact,
-        },
-      );
-      return PagainatedApiResponse<GameRecord>.fromJSON(
-        response.data as Map<String, dynamic>,
-        GameRecord.fromJson,
+      // final response = await _dio.get(
+      //   '/search',
+      //   queryParameters: {
+      //     'page_size': pageSize,
+      //     'page': page,
+      //     if (query != null && query.isNotEmpty) 'q': query,
+      //     if (tags.isNotEmpty) 'tags': tags.map((t) => t.slug).join(','),
+      //     'ordering': ordering.ordering(parms.reverseOrder),
+      //     if (platform != null) 'platform': platform.id,
+      //     if (genres.isNotEmpty) 'genres': genres.join(','),
+      //     'search_precise': searchPrecise,
+      //     'search_exact': searchExact,
+      //   },
+      // );
+      // return PagainatedApiResponse<GameRecord>.fromJSON(
+      //   response.data as Map<String, dynamic>,
+      //   GameRecord.fromJson,
+      // );
+      PostgrestFilterBuilder<List<Map<String, dynamic>>> supabaseQuery = _supabase.from('games').select();
+
+      if (query != null && query.isNotEmpty) {
+        supabaseQuery = supabaseQuery.textSearch('name', query, type: TextSearchType.phrase);
+      }
+      if (tags.isNotEmpty) {
+        supabaseQuery = supabaseQuery.filter(
+          'tags',
+          'in',
+          tags.map((t) => t.name).toList(),
+        );
+      }
+      // if (platform != null) supabaseQuery.eq('platform', platform.id);
+      // if (genres.isNotEmpty) supabaseQuery.in('genres', genres);
+      // if (searchPrecise) supabaseQuery.eq('name', query);
+      // if (searchExact) supabaseQuery.eq('name', query);
+      final response = await supabaseQuery
+          .order(ordering.name, ascending: !reverseOrder)
+          .limit(pageSize)
+          .range(
+            (page - 1) * pageSize,
+            page * pageSize,
+          )
+          .then((value) {
+            final _value = value;
+            return _value;
+          });
+      final count = await supabaseQuery.count();
+
+      return PagainatedApiResponse(
+        count: count.count,
+        results: response.map(GameRecordListItem.fromJson).toList(),
       );
     });
   }
@@ -143,96 +179,4 @@ class ApiService {
       );
     });
   }
-}
-
-Future<T> catchException<T>(Future<T> Function() func) async {
-  AppException? exception;
-  StackTrace? stackTrace;
-  try {
-    return await func();
-  } on DioException catch (e, s) {
-    exception = handleDioException(e);
-    stackTrace = s;
-  } catch (e, s) {
-    exception = AppException('An unexpected error occurred');
-    stackTrace = s;
-  }
-
-  appLogger.e('Exception: ${exception.message}', error: exception, stackTrace: stackTrace);
-
-  throw exception;
-}
-
-AppException handleDioException(DioException e) {
-  AppException exception;
-  switch (e.type) {
-    case DioExceptionType.connectionTimeout:
-    case DioExceptionType.sendTimeout:
-    case DioExceptionType.receiveTimeout:
-      exception = AppException(
-        'The server took too long to respond',
-        code: 504,
-        type: 'connection-timeout',
-      );
-      break;
-    case DioExceptionType.badResponse:
-      final res = e.response;
-      String message = "An unexpected error occurred";
-      if (res?.statusCode == 401) {
-        message = "You are not authorized to perform this action";
-      } else if (res?.statusCode == 404 || res?.statusCode == 409) {
-        message = "The resource you are trying to access does not exist";
-      } else {
-        if (res?.data is Map<String, dynamic>) {
-          if (res?.data['message'] case String messageFromServer) {
-            message = messageFromServer;
-          }
-          if (res?.data['detail'] case Map<String, dynamic> detail) {
-            if (detail['message'] case String messageFromServer) {
-              message = messageFromServer;
-            }
-          }
-          if (res?.data['detail'] case String messageFromServer) {
-            message = messageFromServer;
-          }
-        }
-      }
-
-      exception = AppException(
-        message,
-        code: e.response?.statusCode,
-        type: 'bad-response',
-        detail: e.response?.data,
-      );
-      break;
-    case DioExceptionType.cancel:
-      exception = AppException(
-        'Request was canceled',
-        code: 499,
-        type: 'cancel',
-      );
-      break;
-    case DioExceptionType.badCertificate:
-      exception = AppException(
-        'The server certificate is not trusted',
-        code: 500,
-        type: 'bad-certificate',
-      );
-      break;
-    case DioExceptionType.unknown:
-      exception = AppException(
-        'An unknown error occurred',
-        code: 500,
-        type: 'unknown',
-      );
-    case DioExceptionType.connectionError:
-      exception = AppException(
-        'We could not connect to the server, maybe its an internet connection issue',
-        code: 500,
-        type: 'connection-error',
-      );
-      break;
-  }
-
-  return exception;
 }

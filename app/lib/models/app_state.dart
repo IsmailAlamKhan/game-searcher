@@ -12,7 +12,13 @@ abstract class AppState with _$AppState {
     @Default(ThemeMode.system) ThemeMode themeMode,
     @Default(true) bool autoUpdateEnabled,
     @Default(Duration(hours: 1)) Duration autoUpdateInterval,
+    @Default('') String userId,
   }) = _AppState;
 
-  static const routes = ["/", "/tags", "/settings"];
+  static const routes = [
+    "/",
+    "/tags",
+    "/ai-chat",
+    "/settings",
+  ];
 }

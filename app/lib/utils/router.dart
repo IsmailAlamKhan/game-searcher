@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../providers/app_provider.dart';
+import '../screens/ai_chat_screen.dart';
 import '../screens/game_details_screen.dart';
 import '../screens/home_screen.dart';
 import '../screens/search_screen.dart';
@@ -38,6 +39,13 @@ GoRouter appRouter(Ref ref) {
             path: '/tags',
             builder: (BuildContext context, GoRouterState state) {
               return const TagsScreen();
+            },
+          ),
+          GoRoute(
+            parentNavigatorKey: _shellNavigatorKey,
+            path: '/ai-chat',
+            builder: (BuildContext context, GoRouterState state) {
+              return const AiChatScreen();
             },
           ),
           GoRoute(

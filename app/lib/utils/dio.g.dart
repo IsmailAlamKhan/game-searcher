@@ -125,6 +125,82 @@ final class EngineDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
 
 String _$engineDioHash() => r'a4172f74dd600d144af20f6db5d444c17ce3b80c';
 
+@ProviderFor(webhookDio)
+const webhookDioProvider = WebhookDioFamily._();
+
+final class WebhookDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
+    with $Provider<Dio> {
+  const WebhookDioProvider._({
+    required WebhookDioFamily super.from,
+    required bool super.argument,
+  }) : super(
+         retry: null,
+         name: r'webhookDioProvider',
+         isAutoDispose: false,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$webhookDioHash();
+
+  @override
+  String toString() {
+    return r'webhookDioProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $ProviderElement<Dio> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  Dio create(Ref ref) {
+    final argument = this.argument as bool;
+    return webhookDio(ref, isTest: argument);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Dio value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Dio>(value),
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is WebhookDioProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$webhookDioHash() => r'ca3f88b15c3288af0c81ba70fea39e3893102067';
+
+final class WebhookDioFamily extends $Family
+    with $FunctionalFamilyOverride<Dio, bool> {
+  const WebhookDioFamily._()
+    : super(
+        retry: null,
+        name: r'webhookDioProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: false,
+      );
+
+  WebhookDioProvider call({bool isTest = false}) =>
+      WebhookDioProvider._(argument: isTest, from: this);
+
+  @override
+  String toString() => r'webhookDioProvider';
+}
+
 @ProviderFor(githubDio)
 const githubDioProvider = GithubDioProvider._();
 

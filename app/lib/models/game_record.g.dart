@@ -6,6 +6,32 @@ part of 'game_record.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_GameRecordListItem _$GameRecordListItemFromJson(Map<String, dynamic> json) =>
+    _GameRecordListItem(
+      id: (json['id'] as num).toInt(),
+      name: json['name'] as String,
+      releaseDate: const StringToDateConverter().fromJson(
+        json['released'] as String?,
+      ),
+      description: json['description'] as String?,
+      imageUrl: json['background_image'] as String?,
+      score: (json['rating'] as num?)?.toDouble(),
+      platforms: json['platforms'] as String?,
+      esrbRating: json['esrbRating'] as String?,
+    );
+
+Map<String, dynamic> _$GameRecordListItemToJson(_GameRecordListItem instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+      'released': const StringToDateConverter().toJson(instance.releaseDate),
+      'description': instance.description,
+      'background_image': instance.imageUrl,
+      'rating': instance.score,
+      'platforms': instance.platforms,
+      'esrbRating': instance.esrbRating,
+    };
+
 _GameRecord _$GameRecordFromJson(Map<String, dynamic> json) => _GameRecord(
   id: json['id'] as String,
   title: json['title'] as String,

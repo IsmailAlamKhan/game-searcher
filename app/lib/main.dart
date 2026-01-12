@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:window_manager/window_manager.dart';
 
 import 'models/app_state.dart';
@@ -51,6 +52,12 @@ Future<void> main() async {
     await windowManager.show();
     await windowManager.focus();
   });
+
+  // const SUPABASE_PUBLISHABLE_KEY
+  const key = String.fromEnvironment("SUPABASE_PUBLISHABLE_KEY");
+  const url = String.fromEnvironment("SUPABASE_URL");
+
+  await Supabase.initialize(url: url, anonKey: key);
 
   await launchApp();
 }

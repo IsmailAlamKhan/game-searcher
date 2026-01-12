@@ -27,8 +27,8 @@ class SearchController {
   SearchController(this.ref);
   final debouncer = Debouncer(delay: const Duration(seconds: 1));
 
-  late PagingController<int, GameRecord> _pagingController;
-  PagingController<int, GameRecord> get pagingController => _pagingController;
+  late PagingController<int, GameRecordListItem> _pagingController;
+  PagingController<int, GameRecordListItem> get pagingController => _pagingController;
 
   int _count = 0;
   int get totalCount => _count;
@@ -37,7 +37,7 @@ class SearchController {
   int? get next => _next;
 
   void init() {
-    _pagingController = PagingController<int, GameRecord>(
+    _pagingController = PagingController<int, GameRecordListItem>(
       fetchPage: _fetchPage,
       getNextPageKey: (state) {
         return _next;
@@ -97,7 +97,7 @@ class SearchController {
     refresh();
   }
 
-  Future<List<GameRecord>> _fetchPage(int pageKey) async {
+  Future<List<GameRecordListItem>> _fetchPage(int pageKey) async {
     final api = ref.read(apiServiceProvider);
 
     final newGames = await api.search(

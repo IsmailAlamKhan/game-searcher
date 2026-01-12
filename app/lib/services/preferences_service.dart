@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:ui';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../models/ai_chat_state.dart';
 import '../utils/get_color_from_int.dart';
 
 part 'preferences_service.g.dart';
@@ -22,6 +24,8 @@ enum PrefKey {
   themeMode('theme_mode'),
   themeSeedColor('theme_seed_color'),
   adultContentBlur('adult_content_blur'),
+  userId('user_id'),
+  userChatHistory('user_chat_history'),
   ;
 
   final String key;
@@ -54,6 +58,8 @@ class PreferencesService {
       return Duration(milliseconds: value as int) as T;
     } else if (T == DateTime) {
       return DateTime.fromMillisecondsSinceEpoch(value as int) as T;
+    } else if (T == List<AiChatItem>) {
+      return (value as List<dynamic>).map((e) => AiChatItem.fromJson(jsonDecode(e))).toList() as T;
     }
     return value as T;
   }
@@ -76,6 +82,8 @@ class PreferencesService {
       _sharedPref.setInt(key.key, (value as Duration).inMilliseconds);
     } else if (T == DateTime) {
       _sharedPref.setInt(key.key, (value as DateTime).millisecondsSinceEpoch);
+    } else if (T == List<AiChatItem>) {
+      _sharedPref.setStringList(key.key, (value as List<AiChatItem>).map((e) => jsonEncode(e)).toList());
     } else {
       throw UnsupportedError('Unsupported type: $T');
     }

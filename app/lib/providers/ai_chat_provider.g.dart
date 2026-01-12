@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'app_provider.dart';
+part of 'ai_chat_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,52 +9,52 @@ part of 'app_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(AppController)
-const appControllerProvider = AppControllerProvider._();
+@ProviderFor(AiChatController)
+const aiChatControllerProvider = AiChatControllerProvider._();
 
-final class AppControllerProvider
-    extends $NotifierProvider<AppController, AppState> {
-  const AppControllerProvider._()
+final class AiChatControllerProvider
+    extends $NotifierProvider<AiChatController, AiChatState> {
+  const AiChatControllerProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'appControllerProvider',
-        isAutoDispose: false,
+        name: r'aiChatControllerProvider',
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$appControllerHash();
+  String debugGetCreateSourceHash() => _$aiChatControllerHash();
 
   @$internal
   @override
-  AppController create() => AppController();
+  AiChatController create() => AiChatController();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(AppState value) {
+  Override overrideWithValue(AiChatState value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<AppState>(value),
+      providerOverride: $SyncValueProvider<AiChatState>(value),
     );
   }
 }
 
-String _$appControllerHash() => r'2b6cb5d5c9cc6739d649867c55807eb4321c403b';
+String _$aiChatControllerHash() => r'819b057a8099e8fa76fefcf25b44b7c35ff918a6';
 
-abstract class _$AppController extends $Notifier<AppState> {
-  AppState build();
+abstract class _$AiChatController extends $Notifier<AiChatState> {
+  AiChatState build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AppState, AppState>;
+    final ref = this.ref as $Ref<AiChatState, AiChatState>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AppState, AppState>,
-              AppState,
+              AnyNotifier<AiChatState, AiChatState>,
+              AiChatState,
               Object?,
               Object?
             >;

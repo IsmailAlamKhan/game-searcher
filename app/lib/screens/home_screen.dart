@@ -45,6 +45,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             destinations: const <NavigationRailDestination>[
               NavigationRailDestination(icon: Icon(Icons.search), label: Text('Search')),
               NavigationRailDestination(icon: Icon(Icons.tag), label: Text('Tags')),
+              NavigationRailDestination(icon: Icon(Icons.chat_bubble), label: Text('AI Chat')),
               NavigationRailDestination(icon: Icon(Icons.settings), label: Text('Settings')),
             ],
           ),

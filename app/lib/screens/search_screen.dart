@@ -46,7 +46,7 @@ class SearchScreen extends HookConsumerWidget {
                 return PagingListener(
                   controller: searchController.pagingController,
                   builder: (context, state, fetchNextPage) {
-                    return PagedGridView<int, GameRecord>(
+                    return PagedGridView<int, GameRecordListItem>(
                       // separatorBuilder: (context, index) => const SizedBox(height: 8),
                       state: state,
                       padding: const EdgeInsets.all(8),
@@ -57,7 +57,7 @@ class SearchScreen extends HookConsumerWidget {
                         mainAxisSpacing: 8,
                         childAspectRatio: .8,
                       ),
-                      builderDelegate: AppPagedChildBuilderDelegate<int, GameRecord>(
+                      builderDelegate: AppPagedChildBuilderDelegate<int, GameRecordListItem>(
                         itemBuilder: (context, item, index) => GameTile(item: item),
                         pagingController: searchController.pagingController,
                         emptyTitle: "No games found",
@@ -79,7 +79,7 @@ class SearchScreen extends HookConsumerWidget {
 class GameTile extends ConsumerWidget {
   const GameTile({super.key, this.item});
 
-  final GameRecord? item;
+  final GameRecordListItem? item;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -93,7 +93,7 @@ class GameTile extends ConsumerWidget {
     }
     Widget Function(Widget child) builder = (child) => child;
 
-    final isAdultOnly = item.esrbRating?.isAdultOnly ?? false;
+    final isAdultOnly = item.esrbRating == "Adult";
     if (item.imageUrl != null) {
       builder = (child) {
         Widget _child = Ink.image(
@@ -127,12 +127,12 @@ class GameTile extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  item.title,
+                  item.name,
                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.white),
                 ),
                 const Spacer(),
                 Text(
-                  "${item.releaseDate != null ? appDateFormat.format(item.releaseDate!) : 'Unknown'} • ${item.platforms.map((e) => e.name).take(3).join(', ')}",
+                  "${item.releaseDate != null ? appDateFormat.format(item.releaseDate!) : 'Unknown'} • ${item.platforms}",
                   style: const TextStyle(fontSize: 10, color: Colors.white70),
                 ),
                 const SizedBox(height: 2),
