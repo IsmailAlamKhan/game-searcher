@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="logo.png" alt="GameHunter Logo" width="120" />
+<img src="logo.png" alt="GameHunter Logo" width="140" />
 
 # GameHunter
 
@@ -19,17 +19,17 @@
 
 ---
 
-## Overview
+## 📖 Overview
 
-**GameHunter** helps PC gamers discover new titles and instantly determine whether their machine can run them. Powered by the [RAWG.io](https://rawg.io) game database and a local Python intelligence engine, GameHunter combines rich game metadata — trailers, screenshots, store links, DLCs, and Reddit discussions — with real-time hardware compatibility analysis, wrapped in a polished cross-platform desktop UI built with Flutter.
+**GameHunter** helps PC gamers discover new titles and instantly determine whether their machine can run them. Powered by the [RAWG.io](https://rawg.io) game database and a local Python intelligence engine, GameHunter combines rich game metadata — trailers, screenshots, store links, DLCs, and Reddit discussions — with real-time hardware compatibility analysis, all wrapped in a polished cross-platform desktop UI built with Flutter.
 
 ---
 
 ## ✨ Features
 
 | Feature | Description |
-|---|---|
-| 🔍 **Smart Game Search** | Search across thousands of titles with powerful filters for tags, genres, and platforms via RAWG.io |
+|:---|:---|
+| 🔍 **Smart Game Search** | Search thousands of titles with powerful filters for tags, genres, and platforms via RAWG.io |
 | 🖥️ **"Can I Run It?" Check** | Instantly compare your PC's CPU, GPU, and RAM against a game's minimum and recommended requirements |
 | 🏷️ **Discovery Tags** | Browse curated tag collections to find your next favourite genre or niche |
 | 📋 **Detailed Insights** | Access trailers, screenshots, store links, DLC info, and live Reddit discussions for any title |
@@ -53,15 +53,19 @@ game-searcher/
 ```
 
 ### Frontend — `app/`
+
 A Flutter desktop application following a **feature-first architecture** with [Riverpod](https://riverpod.dev/) for state management. Key packages include `go_router` for navigation, `dio` for networking, and `cached_network_image` for performant image loading.
 
 ### Backend — `engine/`
+
 A Python [FastAPI](https://fastapi.tiangolo.com/) service responsible for wrapping the RAWG API, detecting local hardware specs (CPU, GPU, RAM, OS), and running compatibility analysis against game requirements. The engine can be compiled into a standalone binary via PyInstaller or Nuitka for bundled distribution.
 
 ### Database & Functions — `supabase/`
+
 Supabase handles persistent storage and hosts the Edge Functions that power the AI chat feature.
 
 ### Automation — `n8n/`
+
 An n8n workflow engine (Docker-based) handles background data processing and enrichment pipelines.
 
 ---
@@ -70,99 +74,101 @@ An n8n workflow engine (Docker-based) handles background data processing and enr
 
 ### Prerequisites
 
+Before you begin, make sure you have the following:
+
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (stable channel)
-- - [Python 3.9+](https://www.python.org/downloads/)
-  - - A free **RAWG API Key** → [rawg.io/apidocs](https://rawg.io/apidocs)
-    - - Desktop build tools: **Visual Studio** (Windows) · **Xcode** (macOS) · **Ninja + GTK** (Linux)
-     
-      - ---
+- [Python 3.9+](https://www.python.org/downloads/)
+- A free **RAWG API Key** → [rawg.io/apidocs](https://rawg.io/apidocs)
+- Desktop build tools: **Visual Studio** (Windows) · **Xcode** (macOS) · **Ninja + GTK** (Linux)
 
-      ### 1. Clone the Repository
+---
 
-      ```bash
-      git clone https://github.com/IsmailAlamKhan/game-searcher.git
-      cd game-searcher
-      ```
+### 1. Clone the Repository
 
-      ### 2. Set Up the Engine (Python Backend)
+```bash
+git clone https://github.com/IsmailAlamKhan/game-searcher.git
+cd game-searcher
+```
 
-      ```bash
-      cd engine
+### 2. Set Up the Engine (Python Backend)
 
-      # Create and activate a virtual environment
-      python -m venv .venv
-      source .venv/bin/activate        # macOS / Linux
-      # .venv\Scripts\activate         # Windows
+```bash
+cd engine
 
-      # Install dependencies
-      pip install -r requirements.txt
+# Create and activate a virtual environment
+python -m venv .venv
+source .venv/bin/activate        # macOS / Linux
+# .venv\Scripts\activate         # Windows
 
-      # Configure environment variables
-      echo "RAWG_API_KEY=your_rawg_api_key_here" > .env
-      ```
+# Install dependencies
+pip install -r requirements.txt
 
-      Start the engine server:
+# Configure environment variables
+echo "RAWG_API_KEY=your_rawg_api_key_here" > .env
+```
 
-      ```bash
-      python main.py
-      ```
+Start the engine server:
 
-      The API will be live at `http://localhost:8000` with Swagger docs at `http://localhost:8000/docs`.
+```bash
+python main.py
+```
 
-      ### 3. Set Up the Flutter App
+> The API will be live at `http://localhost:8000` with Swagger docs at `http://localhost:8000/docs`.
 
-      ```bash
-      cd ../app
+### 3. Set Up the Flutter App
 
-      flutter pub get
-      flutter run -d windows    # or: macos | linux
-      ```
+```bash
+cd ../app
 
-      > **Note:** The app connects to the engine on `localhost:8000` by default. Ensure the engine is running before launching in development mode.
-      >
-      > ### 4. Build for Production
-      >
-      > ```bash
-      > # App
-      > flutter build windows   # or: macos | linux
-      >
-      > # Engine — see /scripts for PyInstaller / Nuitka packaging
-      ```
+flutter pub get
+flutter run -d windows    # or: macos | linux
+```
 
-      ---
+> **Note:** The app connects to the engine on `localhost:8000` by default. Ensure the engine is running before launching in development mode.
 
-      ## ⚙️ Configuration
+### 4. Build for Production
 
-      | Parameter | Location | Description |
-      |---|---|---|
-      | `RAWG_API_KEY` | `engine/.env` | Your RAWG.io API key |
-      | Engine URL | `app/` source | Defaults to `localhost:8000` |
-      | Bundle ID | `app/` | `com.ismail.gamehunter` |
+```bash
+# App
+flutter build windows   # or: macos | linux
 
-      ---
+# Engine — see /scripts for PyInstaller / Nuitka packaging
+```
 
-      ## 🔧 Tech Stack
+---
 
-      **Frontend:** Flutter · Dart · Riverpod · go_router · dio · cached_network_image
+## ⚙️ Configuration
 
-      **Backend:** Python 3.9+ · FastAPI · PyInstaller / Nuitka
+| Parameter | Location | Description |
+|:---|:---|:---|
+| `RAWG_API_KEY` | `engine/.env` | Your RAWG.io API key |
+| Engine URL | `app/` source | Defaults to `localhost:8000` |
+| Bundle ID | `app/` | `com.ismail.gamehunter` |
 
-      **Infrastructure:** Supabase (DB + Edge Functions) · n8n (workflow automation) · RAWG.io API · GitHub Actions (CI/CD)
+---
 
-      ---
+## 🔧 Tech Stack
 
-      ## 🤝 Contributing
+| Layer | Technologies |
+|:---|:---|
+| **Frontend** | Flutter · Dart · Riverpod · go_router · dio · cached_network_image |
+| **Backend** | Python 3.9+ · FastAPI · PyInstaller / Nuitka |
+| **Infrastructure** | Supabase · n8n · RAWG.io API · GitHub Actions |
 
-      1. Fork the repository
-      2. Create a feature branch: `git checkout -b feature/your-feature-name`
-      3. Commit your changes: `git commit -m 'feat: add some feature'`
-      4. Push to your branch: `git push origin feature/your-feature-name`
-      5. Open a Pull Request
+---
 
-      Please ensure your code passes linting (`flake8` for Python, `flutter analyze` for Dart) before submitting.
+## 🤝 Contributing
 
-      ---
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/your-feature-name`
+3. Commit your changes: `git commit -m 'feat: add some feature'`
+4. Push to your branch: `git push origin feature/your-feature-name`
+5. Open a Pull Request
 
-      ## 📄 License
+Please ensure your code passes linting (`flake8` for Python, `flutter analyze` for Dart) before submitting.
 
-      Copyright © 2025 Ismail. All rights reserved.
+---
+
+## 📄 License
+
+Copyright © 2025 Ismail. All rights reserved.
